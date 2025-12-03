@@ -37,7 +37,7 @@ export default function CategoryIcon({ slug, name, className = '', size = 'md' }
 
   return (
     <div className={`${sizeClass} ${className} flex items-center justify-center`}>
-      <IconComponent className={`${sizeClass} text-blue-600`} />
+      <IconComponent className={`${sizeClass} text-blue-600`} aria-label={name} />
     </div>
   )
 }

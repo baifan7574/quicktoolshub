@@ -10,10 +10,10 @@ export default function ToolCard({ tool }: ToolCardProps) {
   return (
     <Link
       href={`/tools/${tool.slug}`}
-      className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow block"
+      className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg transition-shadow block min-h-[120px] touch-manipulation"
     >
-      <div className="flex items-start space-x-4">
-        <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+      <div className="flex items-start space-x-3 sm:space-x-4">
+        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
           {tool.icon_url ? (
             <Image 
               src={tool.icon_url} 
@@ -24,15 +24,15 @@ export default function ToolCard({ tool }: ToolCardProps) {
               loading="lazy"
             />
           ) : (
-            <span className="text-2xl">🔧</span>
+            <span className="text-xl sm:text-2xl">🔧</span>
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-lg mb-1 truncate">{tool.name}</h3>
+          <h3 className="font-semibold text-base sm:text-lg mb-1 truncate">{tool.name}</h3>
           <p className="text-gray-600 text-sm line-clamp-2 mb-3">
             {tool.short_description || tool.description}
           </p>
-          <div className="flex items-center space-x-2 flex-wrap">
+          <div className="flex items-center space-x-2 flex-wrap gap-1">
             <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
               Free
             </span>

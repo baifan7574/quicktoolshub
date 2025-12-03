@@ -31,28 +31,28 @@ export default async function Home() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-12 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
               Free Online Tools
             </h1>
-            <p className="text-2xl text-gray-600 mb-2">
+            <p className="text-xl sm:text-2xl text-gray-600 mb-2">
               Quick & Easy Solutions
             </p>
-            <p className="text-lg text-gray-500 mb-8">
+            <p className="text-base sm:text-lg text-gray-500 mb-6 sm:mb-8">
               50+ Free Tools for PDF, Image, Text, and More
             </p>
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
               <Link
                 href="/tools"
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-base min-h-[44px] flex items-center justify-center"
               >
                 Explore Tools
               </Link>
               <Link
                 href="/categories"
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold border-2 border-blue-600 hover:bg-blue-50 transition-colors"
+                className="bg-white text-blue-600 px-6 sm:px-8 py-3 rounded-lg font-semibold border-2 border-blue-600 hover:bg-blue-50 transition-colors text-base min-h-[44px] flex items-center justify-center"
               >
                 View All Categories
               </Link>
@@ -85,17 +85,17 @@ export default async function Home() {
       </section>
 
       {/* Search Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-8 sm:py-12 bg-gray-50">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <form action="/search" method="get" className="relative">
             <input
               type="text"
               name="q"
               placeholder="Search tools, articles..."
-              className="w-full px-6 py-4 pl-12 pr-24 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 sm:px-6 py-3 sm:py-4 pl-10 sm:pl-12 pr-20 sm:pr-24 border border-gray-300 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
             />
             <svg
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400"
+              className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -104,7 +104,7 @@ export default async function Home() {
             </svg>
             <button
               type="submit"
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base min-h-[36px] min-w-[60px]"
             >
               Search
             </button>
@@ -112,25 +112,25 @@ export default async function Home() {
           <div className="mt-4 flex flex-wrap gap-2 justify-center">
             <Link
               href="/search?q=PDF Tools"
-              className="px-4 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors"
+              className="px-3 sm:px-4 py-2 bg-white rounded-full text-xs sm:text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors min-h-[36px] flex items-center"
             >
               PDF Tools
             </Link>
             <Link
               href="/search?q=Image Tools"
-              className="px-4 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors"
+              className="px-3 sm:px-4 py-2 bg-white rounded-full text-xs sm:text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors min-h-[36px] flex items-center"
             >
               Image Tools
             </Link>
             <Link
               href="/search?q=Text Tools"
-              className="px-4 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors"
+              className="px-3 sm:px-4 py-2 bg-white rounded-full text-xs sm:text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors min-h-[36px] flex items-center"
             >
               Text Tools
             </Link>
             <Link
               href="/search?q=Developer Tools"
-              className="px-4 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors"
+              className="px-3 sm:px-4 py-2 bg-white rounded-full text-xs sm:text-sm text-gray-600 border border-gray-200 hover:bg-blue-50 transition-colors min-h-[36px] flex items-center"
             >
               Developer Tools
             </Link>
@@ -142,11 +142,11 @@ export default async function Home() {
       {featuredTools && featuredTools.length > 0 && (
         <section className="py-16 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold">Featured Tools</h2>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-3 sm:gap-0">
+              <h2 className="text-2xl sm:text-3xl font-bold">Featured Tools</h2>
               <Link
                 href="/tools"
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-blue-600 hover:text-blue-700 font-semibold text-sm sm:text-base min-h-[36px] flex items-center"
               >
                 View All Tools →
               </Link>
@@ -163,21 +163,22 @@ export default async function Home() {
       {/* Categories Preview */}
       <section className="py-16 bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Browse by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Browse by Category</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
             {categories && categories.map((category: any) => (
               <Link
                 key={category.id}
                 href={`/categories/${category.slug}`}
-                className="bg-white p-6 rounded-lg text-center hover:bg-blue-50 transition-all border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
+                className="bg-white p-4 sm:p-6 rounded-lg text-center hover:bg-blue-50 transition-all border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md touch-manipulation"
               >
-                <div className="flex justify-center mb-3">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg flex items-center justify-center shadow-sm">
-                    <CategoryIcon slug={category.slug} name={category.name} size="md" />
+                <div className="flex justify-center mb-2 sm:mb-3">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg flex items-center justify-center shadow-sm">
+                    <CategoryIcon slug={category.slug} name={category.name} size="sm" className="sm:hidden" />
+                    <CategoryIcon slug={category.slug} name={category.name} size="md" className="hidden sm:flex" />
                   </div>
                 </div>
-                <div className="font-semibold text-gray-900 mb-1">{category.name}</div>
-                <div className="text-sm text-gray-500">{category.tool_count} tools</div>
+                <div className="font-semibold text-sm sm:text-base text-gray-900 mb-1">{category.name}</div>
+                <div className="text-xs sm:text-sm text-gray-500">{category.tool_count} tools</div>
                 <div className="text-xs text-blue-600 mt-2 font-medium">View All →</div>
               </Link>
             ))}
@@ -189,11 +190,11 @@ export default async function Home() {
       {latestArticles && latestArticles.length > 0 && (
         <section className="py-16 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold">Latest Articles</h2>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-3 sm:gap-0">
+              <h2 className="text-2xl sm:text-3xl font-bold">Latest Articles</h2>
               <Link
                 href="/blog"
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-blue-600 hover:text-blue-700 font-semibold text-sm sm:text-base min-h-[36px] flex items-center"
               >
                 View All Articles →
               </Link>
