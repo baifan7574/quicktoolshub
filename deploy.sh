@@ -14,7 +14,7 @@ cd /var/www/quicktoolshub
 
 # 拉取最新代码
 echo "正在拉取最新代码..."
-git pull origin main
+git pull origin master
 
 # 安装新依赖（如果有）
 echo "正在检查依赖..."
