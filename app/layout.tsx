@@ -1,3 +1,4 @@
+// 自动部署测试 - 2024-12-XX (测试自动部署流程是否正常工作)
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
