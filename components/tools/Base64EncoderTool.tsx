@@ -82,7 +82,7 @@ export default function Base64EncoderTool() {
       <div className="flex gap-3">
         <button
           onClick={handleConvert}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+          className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
         >
           {mode === 'encode' ? 'Encode' : 'Decode'}
         </button>
@@ -104,7 +104,7 @@ export default function Base64EncoderTool() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Enter Base64 to decode...'}
-          className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono text-sm"
+          className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono text-base sm:text-sm min-h-[120px] touch-manipulation"
         />
       </div>
 
@@ -117,7 +117,7 @@ export default function Base64EncoderTool() {
           <button
             onClick={handleCopy}
             disabled={!output}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+            className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
           >
             Copy
           </button>

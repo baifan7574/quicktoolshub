@@ -32,14 +32,14 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         )}
 
         {/* 文章内容 */}
-        <div className="flex-1 p-6">
-          <h3 className="font-semibold text-xl mb-2 hover:text-blue-600 transition-colors">
+        <div className="flex-1 p-4 sm:p-6">
+          <h3 className="font-semibold text-lg sm:text-xl mb-2 hover:text-blue-600 transition-colors">
             {article.title}
           </h3>
           {article.excerpt && (
-            <p className="text-gray-600 mb-3 line-clamp-2">{article.excerpt}</p>
+            <p className="text-sm sm:text-base text-gray-600 mb-3 line-clamp-2">{article.excerpt}</p>
           )}
-          <div className="flex items-center flex-wrap gap-3 text-sm text-gray-500">
+          <div className="flex items-center flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500">
             {article.reading_time && (
               <div className="flex items-center space-x-1">
                 <ClockIcon className="h-4 w-4" />

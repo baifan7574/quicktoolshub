@@ -77,13 +77,13 @@ export default function JSONFormatterTool() {
       <div className="flex flex-wrap gap-3">
         <button
           onClick={formatJSON}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+          className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
         >
           Format JSON
         </button>
         <button
           onClick={minifyJSON}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+          className="px-4 py-3 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
         >
           Minify JSON
         </button>
@@ -110,7 +110,7 @@ export default function JSONFormatterTool() {
           id="indent"
           value={indent}
           onChange={(e) => setIndent(Number(e.target.value))}
-          className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-3 py-2.5 sm:py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-sm min-h-[44px] touch-manipulation"
         >
           <option value={2}>2 spaces</option>
           <option value={4}>4 spaces</option>
@@ -140,7 +140,7 @@ export default function JSONFormatterTool() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder='Paste your JSON here, e.g., {"name": "John", "age": 30}'
-          className="w-full h-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono text-sm"
+          className="w-full h-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono text-base sm:text-sm min-h-[150px] touch-manipulation"
         />
       </div>
 
@@ -157,7 +157,7 @@ export default function JSONFormatterTool() {
             <button
               onClick={handleCopy}
               disabled={!output}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+              className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
             >
               Copy
             </button>
@@ -167,7 +167,7 @@ export default function JSONFormatterTool() {
           id="json-output"
           value={output}
           readOnly
-          className="w-full h-48 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none font-mono text-sm"
+          className="w-full h-48 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none font-mono text-base sm:text-sm min-h-[150px] touch-manipulation"
         />
       </div>
     </div>

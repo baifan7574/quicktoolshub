@@ -86,7 +86,7 @@ export default function LoremIpsumGeneratorTool() {
             id="type"
             value={type}
             onChange={(e) => setType(e.target.value as 'words' | 'sentences' | 'paragraphs')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-sm min-h-[44px] touch-manipulation"
           >
             <option value="words">Words</option>
             <option value="sentences">Sentences</option>
@@ -104,7 +104,7 @@ export default function LoremIpsumGeneratorTool() {
             max={type === 'words' ? 1000 : type === 'sentences' ? 100 : 50}
             value={count}
             onChange={(e) => setCount(Number(e.target.value))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-sm min-h-[44px] touch-manipulation"
           />
         </div>
       </div>
@@ -113,13 +113,13 @@ export default function LoremIpsumGeneratorTool() {
       <div className="flex gap-3">
         <button
           onClick={generate}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+          className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
         >
           Generate Lorem Ipsum
         </button>
         <button
           onClick={handleClear}
-          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+          className="px-4 py-3 sm:py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
         >
           Clear
         </button>
@@ -134,7 +134,7 @@ export default function LoremIpsumGeneratorTool() {
           <button
             onClick={handleCopy}
             disabled={!output}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+            className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
           >
             Copy
           </button>
@@ -143,7 +143,7 @@ export default function LoremIpsumGeneratorTool() {
           id="lorem-output"
           value={output}
           readOnly
-          className="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none"
+          className="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none text-base sm:text-sm min-h-[200px] touch-manipulation"
         />
       </div>
     </div>

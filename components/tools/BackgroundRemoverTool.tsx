@@ -124,7 +124,7 @@ export default function BackgroundRemoverTool() {
           multiple
           onChange={handleFileSelect}
           disabled={isProcessing}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+          className="block w-full text-base sm:text-sm text-gray-500 file:mr-4 file:py-3 sm:file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50 file:min-h-[44px] touch-manipulation"
         />
         <p className="mt-2 text-sm text-gray-500">
           Select one or multiple images (JPEG/PNG only)
@@ -198,7 +198,7 @@ export default function BackgroundRemoverTool() {
                 </div>
                 <button
                   onClick={() => handleDownload(image, index)}
-                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
                 >
                   <ArrowDownTrayIcon className="h-5 w-5" />
                   <span>Download</span>

@@ -152,7 +152,7 @@ export default function PDFSplitterTool() {
           type="file"
           accept=".pdf,application/pdf"
           onChange={handleFileSelect}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block w-full text-base sm:text-sm text-gray-500 file:mr-4 file:py-3 sm:file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:min-h-[44px] touch-manipulation"
         />
         {pdfFile && (
           <div className="mt-2 p-3 bg-gray-50 rounded-lg">
@@ -241,7 +241,7 @@ export default function PDFSplitterTool() {
           <button
             onClick={handleSplit}
             disabled={isProcessing || splitPages.length === 0}
-            className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="mt-4 w-full px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
           >
             {isProcessing ? 'Splitting PDF...' : 'Split PDF'}
           </button>
@@ -267,7 +267,7 @@ export default function PDFSplitterTool() {
                 </div>
                 <button
                   onClick={() => handleDownload(pdf.url, pdf.name)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm ml-4"
+                  className="flex items-center space-x-2 px-4 py-3 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation ml-2 sm:ml-4"
                 >
                   <ArrowDownTrayIcon className="h-5 w-5" />
                   <span>Download</span>

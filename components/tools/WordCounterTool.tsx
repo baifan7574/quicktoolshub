@@ -88,7 +88,7 @@ export default function WordCounterTool() {
           </label>
           <button
             onClick={handleClear}
-            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            className="text-sm text-gray-600 hover:text-gray-900 transition-colors min-h-[36px] px-2 touch-manipulation"
           >
             Clear
           </button>
@@ -98,7 +98,7 @@ export default function WordCounterTool() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Start typing or paste your text here..."
-          className="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono text-sm"
+          className="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono text-base sm:text-sm min-h-[120px] touch-manipulation"
         />
         <div className="mt-2 text-sm text-gray-500">
           Tip: The statistics update automatically as you type

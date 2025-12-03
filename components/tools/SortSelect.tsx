@@ -33,12 +33,12 @@ export default function SortSelect({ currentSort, categorySlug }: SortSelectProp
   }
 
   return (
-    <div className="flex items-center space-x-2">
-      <label className="text-sm text-gray-600">Sort by:</label>
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+      <label className="text-xs sm:text-sm text-gray-600">Sort by:</label>
       <select
         value={currentSort}
         onChange={handleSortChange}
-        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="border border-gray-300 rounded-lg px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] w-full sm:w-auto touch-manipulation"
       >
         <option value="popular">Most Popular</option>
         <option value="recent">Recently Added</option>

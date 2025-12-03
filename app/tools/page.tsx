@@ -75,12 +75,12 @@ export default async function ToolsPage({
         <div className="flex flex-col lg:flex-row gap-8">
           {/* 左侧分类筛选 */}
           <aside className="lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-              <h2 className="text-lg font-semibold mb-4">Categories</h2>
-              <nav className="space-y-2">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-20 sm:top-24">
+              <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Categories</h2>
+              <nav className="space-y-1 sm:space-y-2">
                 <Link
                   href="/tools"
-                  className={`block px-4 py-2 rounded-lg transition-colors ${
+                  className={`block px-3 sm:px-4 py-2.5 sm:py-2 rounded-lg transition-colors text-sm sm:text-base min-h-[44px] flex items-center ${
                     !categorySlug || categorySlug === 'all'
                       ? 'bg-blue-100 text-blue-700 font-semibold'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -92,7 +92,7 @@ export default async function ToolsPage({
                   <Link
                     key={category.id}
                     href={`/tools?category=${category.slug}`}
-                    className={`block px-4 py-2 rounded-lg transition-colors ${
+                    className={`block px-3 sm:px-4 py-2.5 sm:py-2 rounded-lg transition-colors text-sm sm:text-base min-h-[44px] flex items-center ${
                       categorySlug === category.slug
                         ? 'bg-blue-100 text-blue-700 font-semibold'
                         : 'text-gray-700 hover:bg-gray-100'
@@ -108,9 +108,9 @@ export default async function ToolsPage({
           {/* 中间工具列表 */}
           <main className="flex-1">
             {/* 排序和标题 */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <h1 className="text-2xl font-bold">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                <h1 className="text-xl sm:text-2xl font-bold">
                   {categorySlug && categorySlug !== 'all'
                     ? categories?.find((c: Category) => c.slug === categorySlug)?.name || 'Tools'
                     : 'All Tools'}
@@ -130,7 +130,7 @@ export default async function ToolsPage({
 
                 {/* 分页 */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center space-x-2">
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-2">
                     {page > 1 && (
                       <Link
                         href={`/tools?${new URLSearchParams({
@@ -138,12 +138,12 @@ export default async function ToolsPage({
                           ...(sort && { sort }),
                           page: (page - 1).toString(),
                         }).toString()}`}
-                        className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="px-4 py-2.5 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base min-h-[44px] flex items-center justify-center touch-manipulation"
                       >
                         Previous
                       </Link>
                     )}
-                    <span className="px-4 py-2 text-gray-600">
+                    <span className="px-4 py-2 text-gray-600 text-sm sm:text-base">
                       Page {page} of {totalPages}
                     </span>
                     {page < totalPages && (
@@ -153,7 +153,7 @@ export default async function ToolsPage({
                           ...(sort && { sort }),
                           page: (page + 1).toString(),
                         }).toString()}`}
-                        className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="px-4 py-2.5 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base min-h-[44px] flex items-center justify-center touch-manipulation"
                       >
                         Next
                       </Link>

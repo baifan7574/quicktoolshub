@@ -72,7 +72,7 @@ export default function TextCaseConverterTool() {
           id="case-type"
           value={caseType}
           onChange={(e) => setCaseType(e.target.value as CaseType)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-sm min-h-[44px] touch-manipulation"
         >
           <option value="lowercase">lowercase</option>
           <option value="uppercase">UPPERCASE</option>
@@ -93,7 +93,7 @@ export default function TextCaseConverterTool() {
           </label>
           <button
             onClick={handleClear}
-            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            className="text-sm text-gray-600 hover:text-gray-900 transition-colors min-h-[36px] px-2 touch-manipulation"
           >
             Clear
           </button>
@@ -103,7 +103,7 @@ export default function TextCaseConverterTool() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Enter or paste your text here..."
-          className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base sm:text-sm min-h-[120px] touch-manipulation"
         />
       </div>
 
@@ -116,7 +116,7 @@ export default function TextCaseConverterTool() {
           <button
             onClick={handleCopy}
             disabled={!convertedText}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+            className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
           >
             Copy
           </button>

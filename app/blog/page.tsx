@@ -80,24 +80,24 @@ export default async function BlogPage({
     <div className="bg-gray-50 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* 页面标题 */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Blog</h1>
-          <p className="text-gray-600">Articles, tutorials, and guides about our tools</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Blog</h1>
+          <p className="text-sm sm:text-base text-gray-600">Articles, tutorials, and guides about our tools</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* 左侧主要内容（70%） */}
           <main className="flex-1 lg:w-2/3">
             {/* 分类筛选和排序 */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 {/* 分类筛选 */}
                 <div className="flex flex-wrap gap-2">
                   {articleCategories.map((cat: any) => (
                     <Link
                       key={cat.value}
                       href={`/blog${cat.value === 'all' ? '' : `?category=${encodeURIComponent(cat.value)}`}`}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors min-h-[36px] sm:min-h-[44px] flex items-center justify-center touch-manipulation ${
                         category === cat.value
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -124,7 +124,7 @@ export default async function BlogPage({
 
                 {/* 分页 */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center space-x-2">
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-2">
                     {page > 1 && (
                       <Link
                         href={`/blog?${new URLSearchParams({
@@ -132,12 +132,12 @@ export default async function BlogPage({
                           ...(sort && { sort }),
                           page: (page - 1).toString(),
                         }).toString()}`}
-                        className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="px-4 py-2.5 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base min-h-[44px] flex items-center justify-center touch-manipulation"
                       >
                         Previous
                       </Link>
                     )}
-                    <span className="px-4 py-2 text-gray-600">
+                    <span className="px-4 py-2 text-gray-600 text-sm sm:text-base">
                       Page {page} of {totalPages}
                     </span>
                     {page < totalPages && (
@@ -147,7 +147,7 @@ export default async function BlogPage({
                           ...(sort && { sort }),
                           page: (page + 1).toString(),
                         }).toString()}`}
-                        className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="px-4 py-2.5 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base min-h-[44px] flex items-center justify-center touch-manipulation"
                       >
                         Next
                       </Link>
@@ -178,17 +178,17 @@ export default async function BlogPage({
 
               {/* 热门文章 */}
               {popularArticles && popularArticles.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">Popular Articles</h3>
-                  <div className="space-y-4">
+                <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Popular Articles</h3>
+                  <div className="space-y-3 sm:space-y-4">
                     {popularArticles.map((article: Article) => (
                       <Link
                         key={article.id}
                         href={`/blog/${article.slug}`}
-                        className="block hover:text-blue-600 transition-colors"
+                        className="block hover:text-blue-600 transition-colors min-h-[44px] touch-manipulation"
                       >
-                        <h4 className="font-medium mb-1 line-clamp-2">{article.title}</h4>
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                        <h4 className="font-medium mb-1 line-clamp-2 text-sm sm:text-base">{article.title}</h4>
+                        <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
                           {article.reading_time && (
                             <span>{article.reading_time} min read</span>
                           )}

@@ -115,11 +115,11 @@ export default async function ArticleDetailPage({
           {/* 左侧主要内容（70%） */}
           <main className="flex-1 lg:w-2/3">
             {/* 文章标题和元信息 */}
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">{article.title}</h1>
 
               {/* 文章元信息 */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
                 {publishedDate && (
                   <span>Published on {publishedDate}</span>
                 )}
@@ -132,7 +132,7 @@ export default async function ArticleDetailPage({
                 {article.category && (
                   <Link
                     href={`/blog?category=${encodeURIComponent(article.category)}`}
-                    className="bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors"
+                    className="bg-gray-100 px-3 py-1.5 sm:py-1 rounded-full hover:bg-gray-200 transition-colors text-xs sm:text-sm min-h-[32px] sm:min-h-[28px] flex items-center touch-manipulation"
                   >
                     {article.category}
                   </Link>
@@ -202,8 +202,8 @@ export default async function ArticleDetailPage({
             {/* 相关工具推荐 */}
             {toolArticles && toolArticles.length > 0 && (
               <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-6">Related Tools</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Related Tools</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {toolArticles.map((item: any) => (
                     item.tools && <ToolCard key={item.tools.id} tool={item.tools} />
                   ))}
@@ -214,7 +214,7 @@ export default async function ArticleDetailPage({
             {/* 相关文章推荐 */}
             {relatedArticles && relatedArticles.length > 0 && (
               <section>
-                <h2 className="text-2xl font-semibold mb-6">Related Articles</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Related Articles</h2>
                 <div className="space-y-4">
                   {relatedArticles.map((relatedArticle: Article) => (
                     <ArticleCard key={relatedArticle.id} article={relatedArticle} />

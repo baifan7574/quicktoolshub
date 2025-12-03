@@ -102,7 +102,7 @@ export default function PDFToWordTool() {
           type="file"
           accept=".pdf,application/pdf"
           onChange={handleFileSelect}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block w-full text-base sm:text-sm text-gray-500 file:mr-4 file:py-3 sm:file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:min-h-[44px] touch-manipulation"
         />
         {pdfFile && (
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
@@ -124,7 +124,7 @@ export default function PDFToWordTool() {
             <button
               onClick={convertPDFToWord}
               disabled={isProcessing}
-              className="w-full mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full mt-3 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
             >
               {isProcessing ? 'Converting PDF to Word...' : 'Convert to Word'}
             </button>

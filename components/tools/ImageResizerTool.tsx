@@ -184,7 +184,7 @@ export default function ImageResizerTool() {
             step="10"
             value={width}
             onChange={(e) => setWidth(Number(e.target.value))}
-            className="w-full"
+            className="w-full h-10 sm:h-8 touch-manipulation"
           />
         </div>
         <div>
@@ -199,7 +199,7 @@ export default function ImageResizerTool() {
             step="10"
             value={height}
             onChange={(e) => setHeight(Number(e.target.value))}
-            className="w-full"
+            className="w-full h-10 sm:h-8 touch-manipulation"
           />
         </div>
       </div>
@@ -234,7 +234,7 @@ export default function ImageResizerTool() {
           multiple
           onChange={handleFileSelect}
           disabled={isProcessing}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+          className="block w-full text-base sm:text-sm text-gray-500 file:mr-4 file:py-3 sm:file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50 file:min-h-[44px] touch-manipulation"
         />
         <p className="mt-2 text-sm text-gray-500">
           Select one or multiple images to resize
@@ -246,7 +246,7 @@ export default function ImageResizerTool() {
         <button
           onClick={handleResize}
           disabled={isProcessing}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+          className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
         >
           {isProcessing ? 'Resizing...' : 'Resize with New Settings'}
         </button>
@@ -287,7 +287,7 @@ export default function ImageResizerTool() {
                   </div>
                   <button
                     onClick={() => removeImage(index)}
-                    className="p-1 text-gray-400 hover:text-red-600 ml-2"
+                    className="p-2 text-gray-400 hover:text-red-600 ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
                     title="Remove"
                   >
                     <XMarkIcon className="h-5 w-5" />
@@ -302,7 +302,7 @@ export default function ImageResizerTool() {
                 </div>
                 <button
                   onClick={() => handleDownload(image, index)}
-                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
                 >
                   <ArrowDownTrayIcon className="h-5 w-5" />
                   <span>Download</span>

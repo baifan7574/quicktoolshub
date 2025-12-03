@@ -63,29 +63,29 @@ export default async function SearchPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Search Results</h1>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Search Results</h1>
         {query && (
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Found {totalResults} results for "{query}"
           </p>
         )}
       </div>
 
       {/* Search Box */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <form action="/search" method="get" className="relative">
           <input
             type="text"
             name="q"
             defaultValue={query}
             placeholder="Search tools, articles..."
-            className="w-full px-6 py-4 pl-12 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 sm:px-6 py-3 sm:py-4 pl-10 sm:pl-12 pr-20 sm:pr-24 border border-gray-300 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
           />
-          <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-gray-400" />
           <button
             type="submit"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base min-h-[36px] min-w-[60px] touch-manipulation"
           >
             Search
           </button>
@@ -121,9 +121,9 @@ export default async function SearchPage({
 
       {/* Tools Results */}
       {tools.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Tools ({tools.length})</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Tools ({tools.length})</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {tools.map((tool: any) => (
               <Link
                 key={tool.id}
@@ -159,8 +159,8 @@ export default async function SearchPage({
 
       {/* Articles Results */}
       {articles.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Articles ({articles.length})</h2>
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Articles ({articles.length})</h2>
           <div className="space-y-4">
             {articles.map((article: any) => (
               <Link
@@ -188,9 +188,9 @@ export default async function SearchPage({
 
       {/* Categories Results */}
       {categories.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Categories ({categories.length})</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Categories ({categories.length})</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {categories.map((category: any) => (
               <Link
                 key={category.id}

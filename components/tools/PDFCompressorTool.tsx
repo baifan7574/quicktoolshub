@@ -148,7 +148,7 @@ export default function PDFCompressorTool() {
           type="file"
           accept=".pdf,application/pdf"
           onChange={handleFileSelect}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block w-full text-base sm:text-sm text-gray-500 file:mr-4 file:py-3 sm:file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:min-h-[44px] touch-manipulation"
         />
         {pdfFile && (
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
@@ -161,7 +161,7 @@ export default function PDFCompressorTool() {
               </div>
               <button
                 onClick={handleClear}
-                className="p-1 text-red-400 hover:text-red-600"
+                className="p-2 text-red-400 hover:text-red-600 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
                 title="Remove file"
               >
                 <TrashIcon className="h-5 w-5" />
@@ -175,7 +175,7 @@ export default function PDFCompressorTool() {
               <select
                 value={compressionQuality}
                 onChange={(e) => setCompressionQuality(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-sm min-h-[44px] touch-manipulation"
                 disabled={isProcessing}
               >
                 <option value="screen">Screen (Lowest quality, smallest size)</option>
@@ -187,7 +187,7 @@ export default function PDFCompressorTool() {
             <button
               onClick={compressPDF}
               disabled={isProcessing}
-              className="w-full mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full mt-3 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
             >
               {isProcessing ? 'Compressing PDF...' : 'Compress PDF'}
             </button>
@@ -225,7 +225,7 @@ export default function PDFCompressorTool() {
           </div>
           <button
             onClick={handleDownload}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-3 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-base sm:text-sm font-semibold min-h-[44px] touch-manipulation"
           >
             <ArrowDownTrayIcon className="h-5 w-5" />
             <span>Download Compressed PDF</span>
