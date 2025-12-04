@@ -10,9 +10,9 @@ MAX_RESTART_ATTEMPTS=3
 RESTART_COUNT_FILE="$PROJECT_DIR/logs/restart_count.txt"
 MAX_LOG_SIZE=10485760  # 10MB，超过则清理
 
-# 日志函数（限制日志大小，减少磁盘消耗）
+# 日志函数（限制日志大小）
 log() {
-    # 检查日志文件大小，超过限制则清理（只保留最近1000行）
+    # 检查日志文件大小，超过限制则清理
     if [ -f "$LOG_FILE" ] && [ $(stat -f%z "$LOG_FILE" 2>/dev/null || stat -c%s "$LOG_FILE" 2>/dev/null || echo 0) -gt $MAX_LOG_SIZE ]; then
         tail -n 1000 "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
     fi
@@ -41,97 +41,82 @@ increment_restart_count() {
 
 cd "$PROJECT_DIR"
 
-log "========================================="
-log "监控检查开始"
-log "========================================="
+# 快速检查模式（只检查关键项，不执行恢复）
+QUICK_CHECK=true
 
 # ========================================
-# 1. 基础检查
+# 1. 快速检查 PM2 状态（轻量级）
 # ========================================
-log "1. 检查 PM2 进程..."
 PM2_STATUS=$(pm2 jlist 2>/dev/null | grep -o '"quicktoolshub".*"status":"[^"]*"' | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
 
 if [ "$PM2_STATUS" != "online" ]; then
     log "⚠️ PM2 进程状态异常: $PM2_STATUS"
+    QUICK_CHECK=false
     
     # 检查重启次数
     RESTART_COUNT=$(get_restart_count)
     if [ "$RESTART_COUNT" -ge "$MAX_RESTART_ATTEMPTS" ]; then
         log "❌ 已达到最大重启次数 ($MAX_RESTART_ATTEMPTS)，停止自动重启"
-        log "请手动检查问题"
         exit 1
     fi
     
-    log "尝试重启应用 (第 $((RESTART_COUNT + 1)) 次)..."
+    log "触发自动恢复..."
     increment_restart_count
+    "$PROJECT_DIR/scripts/auto-recovery.sh" >/dev/null 2>&1
     
-    # 执行自动恢复
-    "$PROJECT_DIR/scripts/auto-recovery.sh"
-    
-    # 如果恢复成功，重置计数
     if pm2 list | grep -q "quicktoolshub.*online"; then
         reset_restart_count
-        log "✅ 恢复成功，重置重启计数"
+        log "✅ 恢复成功"
     fi
-else
-    log "✅ PM2 进程正常"
-    reset_restart_count
+    exit 0
 fi
 
 # ========================================
-# 2. 应用访问检查（快速检查，超时5秒）
+# 2. 快速检查应用访问（轻量级，超时5秒）
 # ========================================
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 --connect-timeout 3 http://localhost:3000 2>/dev/null || echo "000")
 
 if [ "$HTTP_CODE" != "200" ]; then
     log "⚠️ 应用无法访问 (HTTP $HTTP_CODE)"
+    QUICK_CHECK=false
     
     RESTART_COUNT=$(get_restart_count)
     if [ "$RESTART_COUNT" -lt "$MAX_RESTART_ATTEMPTS" ]; then
-        log "尝试自动恢复..."
+        log "触发自动恢复..."
         increment_restart_count
-        "$PROJECT_DIR/scripts/auto-recovery.sh"
+        "$PROJECT_DIR/scripts/auto-recovery.sh" >/dev/null 2>&1
     else
-        log "❌ 已达到最大重启次数，停止自动恢复"
+        log "❌ 已达到最大重启次数"
     fi
-else
-    log "✅ 应用访问正常 (HTTP $HTTP_CODE)"
+    exit 0
 fi
 
 # ========================================
-# 3. 构建完整性检查
+# 3. 快速检查构建完整性（轻量级）
 # ========================================
-log "3. 检查构建完整性..."
 if [ ! -f ".next/BUILD_ID" ]; then
     log "⚠️ 构建不完整，触发自动恢复..."
-    "$PROJECT_DIR/scripts/auto-recovery.sh"
-else
-    log "✅ 构建完整"
+    QUICK_CHECK=false
+    "$PROJECT_DIR/scripts/auto-recovery.sh" >/dev/null 2>&1
+    exit 0
 fi
 
 # ========================================
-# 4. 资源使用检查（只在内存超过90%时执行）
+# 4. 如果所有检查都通过，只记录一次（减少日志）
 # ========================================
-MEM_PERCENT=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100}')
-
-if [ "$MEM_PERCENT" -gt 90 ]; then
-    log "⚠️ 内存使用过高 (${MEM_PERCENT}%)，清理缓存..."
-    npm cache clean --force 2>/dev/null || true
-    find /var/www -name ".cache" -type d -exec rm -rf {} + 2>/dev/null || true
-    log "✅ 缓存已清理"
-fi
-
-# 只在有问题时记录日志，正常情况不记录（减少日志量）
-if [ "$PM2_STATUS" != "online" ] || [ "$HTTP_CODE" != "200" ] || [ ! -f ".next/BUILD_ID" ] || [ "$MEM_PERCENT" -gt 90 ]; then
-    log "监控检查完成（发现问题）"
-else
-    # 正常情况每小时只记录一次（减少日志）
+if [ "$QUICK_CHECK" = "true" ]; then
+    # 只在每小时记录一次正常状态（减少日志量）
     LAST_CHECK_FILE="$PROJECT_DIR/logs/last_check.txt"
     LAST_CHECK=$(cat "$LAST_CHECK_FILE" 2>/dev/null || echo "0")
     CURRENT_TIME=$(date +%s)
+    
+    # 如果距离上次记录超过1小时，才记录
     if [ $((CURRENT_TIME - LAST_CHECK)) -gt 3600 ]; then
         log "✅ 所有检查通过（正常状态）"
         echo "$CURRENT_TIME" > "$LAST_CHECK_FILE"
     fi
 fi
+
+# 重置重启计数（如果一切正常）
+reset_restart_count
 

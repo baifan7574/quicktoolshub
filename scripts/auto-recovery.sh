@@ -6,9 +6,14 @@ set -e
 
 LOG_FILE="/var/www/quicktoolshub/logs/auto-recovery.log"
 PROJECT_DIR="/var/www/quicktoolshub"
+MAX_LOG_SIZE=10485760  # 10MB，超过则清理
 
-# 日志函数
+# 日志函数（限制日志大小，减少磁盘消耗）
 log() {
+    # 检查日志文件大小，超过限制则清理（只保留最近500行）
+    if [ -f "$LOG_FILE" ] && [ $(stat -f%z "$LOG_FILE" 2>/dev/null || stat -c%s "$LOG_FILE" 2>/dev/null || echo 0) -gt $MAX_LOG_SIZE ]; then
+        tail -n 500 "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
+    fi
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
 }
 
@@ -44,7 +49,7 @@ HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/
 if [ "$HTTP_CODE" != "200" ]; then
     log "⚠️ 应用无法访问 (HTTP $HTTP_CODE)，尝试重启..."
     pm2 restart quicktoolshub
-    sleep 10
+    sleep 5  # 减少等待时间
     HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null || echo "000")
     if [ "$HTTP_CODE" = "200" ]; then
         log "✅ 应用已恢复"
@@ -66,12 +71,12 @@ if [ ! -f ".next/BUILD_ID" ]; then
     # 停止应用
     pm2 stop quicktoolshub
     
-    # 清理并重新构建
+    # 只清理必要的文件（不清理 node_modules/.cache，节省时间）
     rm -rf .next
-    rm -rf node_modules/.cache
     
     log "开始构建（使用最小内存限制）..."
-    NODE_OPTIONS="--max-old-space-size=512" npm run build
+    # 构建时静默输出，减少 I/O 消耗
+    NODE_OPTIONS="--max-old-space-size=512" npm run build >/dev/null 2>&1
     
     # 验证构建
     if [ -f ".next/BUILD_ID" ]; then
