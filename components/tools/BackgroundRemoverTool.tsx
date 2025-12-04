@@ -218,7 +218,7 @@ export default function BackgroundRemoverTool() {
           <li>Preview and download images with backgrounds removed</li>
         </ol>
         <p className="text-xs text-blue-700 mt-2">
-          Powered by Remove.bg AI technology. Fast and accurate background removal.
+          Powered by AI technology. Fast and accurate background removal.
         </p>
       </div>
     </div>

@@ -74,7 +74,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+      >
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-N7EED2NH6J"
@@ -88,10 +90,6 @@ export default function RootLayout({
             gtag('config', 'G-N7EED2NH6J');
           `}
         </Script>
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
         <Header />
         <main className="flex-grow">
           {children}
