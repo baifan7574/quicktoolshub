@@ -161,7 +161,7 @@ export default function PDFMergerTool() {
             </button>
           </div>
           <div className="space-y-2">
-            {pdfFiles.map((pdfFile: File, index: number) => (
+            {pdfFiles.map((pdfFile: PDFFile, index: number) => (
               <div
                 key={pdfFile.id}
                 className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg"
