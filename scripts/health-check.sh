@@ -47,10 +47,13 @@ echo ""
 
 # PM2 状态
 if pm2 list | grep -q "quicktoolshub.*online"; then
-    UPTIME=$(pm2 jlist | grep -o '"pm_uptime":[0-9]*' | head -1 | cut -d: -f2)
-    MEMORY=$(pm2 jlist | grep -o '"memory":[0-9]*' | head -1 | cut -d: -f2)
-    MEMORY_MB=$((MEMORY / 1024 / 1024))
-    check_pass "PM2 进程运行中 (运行时间: ${UPTIME}s, 内存: ${MEMORY_MB}MB)"
+    MEMORY=$(pm2 jlist 2>/dev/null | grep -o '"memory":[0-9]*' | head -1 | cut -d: -f2 || echo "0")
+    if [ "$MEMORY" != "0" ] && [ -n "$MEMORY" ]; then
+        MEMORY_MB=$((MEMORY / 1024 / 1024))
+        check_pass "PM2 进程运行中 (内存: ${MEMORY_MB}MB)"
+    else
+        check_pass "PM2 进程运行中"
+    fi
 else
     check_fail "PM2 进程未运行"
 fi

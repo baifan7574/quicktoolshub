@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Article } from '@/types'
 import { ClockIcon } from '@heroicons/react/24/outline'
 
@@ -17,12 +16,18 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         {/* 文章缩略图 */}
         {article.featured_image ? (
           <div className="sm:w-48 sm:flex-shrink-0 h-48 sm:h-auto bg-gray-200 relative">
-            <Image
+            <img
               src={article.featured_image}
               alt={article.title}
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
               loading="lazy"
+              onError={(e) => {
+                // 如果图片加载失败，隐藏图片容器
+                const target = e.target as HTMLImageElement
+                if (target.parentElement) {
+                  target.parentElement.style.display = 'none'
+                }
+              }}
             />
           </div>
         ) : (
