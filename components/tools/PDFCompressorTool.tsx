@@ -10,6 +10,7 @@ export default function PDFCompressorTool() {
   const [compressedSize, setCompressedSize] = useState(0)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
+  const [infoMessage, setInfoMessage] = useState('') // 用于显示友好的信息提示
   const [compressionQuality, setCompressionQuality] = useState<'ebook' | 'screen' | 'printer' | 'prepress'>('ebook')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -25,6 +26,7 @@ export default function PDFCompressorTool() {
     setPdfFile(file)
     setOriginalSize(file.size)
     setError('')
+    setInfoMessage('')
     setCompressedPdfUrl(null)
     
     if (fileInputRef.current) {
@@ -40,6 +42,7 @@ export default function PDFCompressorTool() {
 
     setIsProcessing(true)
     setError('')
+    setInfoMessage('')
     setCompressedPdfUrl(null)
 
     try {
@@ -64,14 +67,33 @@ export default function PDFCompressorTool() {
       if (contentType === 'application/json') {
         // 如果返回 JSON，说明压缩失败或效果不明显
         const data = await response.json()
-        setError(data.message || 'Unable to compress this PDF further.')
-        setCompressedSize(data.compressedSize || originalSize)
         
-        // 仍然提供下载选项（原始文件）
-        const arrayBuffer = await pdfFile.arrayBuffer()
-        const blob = new Blob([arrayBuffer as any], { type: 'application/pdf' })
-        const url = URL.createObjectURL(blob)
-        setCompressedPdfUrl(url)
+        // 如果 success 为 true，说明处理成功但压缩率低，显示为信息提示
+        if (data.success) {
+          setError('') // 清空错误
+          setCompressedSize(data.compressedSize || originalSize)
+          
+          // 仍然提供下载选项
+          const arrayBuffer = await pdfFile.arrayBuffer()
+          const blob = new Blob([arrayBuffer as any], { type: 'application/pdf' })
+          const url = URL.createObjectURL(blob)
+          setCompressedPdfUrl(url)
+          
+          // 显示友好的信息提示
+          if (data.message) {
+            setInfoMessage(data.message)
+          }
+        } else {
+          // 真正的错误
+          setError(data.message || 'Unable to compress this PDF further.')
+          setCompressedSize(data.compressedSize || originalSize)
+          
+          // 仍然提供下载选项（原始文件）
+          const arrayBuffer = await pdfFile.arrayBuffer()
+          const blob = new Blob([arrayBuffer as any], { type: 'application/pdf' })
+          const url = URL.createObjectURL(blob)
+          setCompressedPdfUrl(url)
+        }
       } else {
         // 返回的是压缩后的 PDF 文件
         const pdfBytes = await response.arrayBuffer()
@@ -121,6 +143,7 @@ export default function PDFCompressorTool() {
     setOriginalSize(0)
     setCompressedSize(0)
     setError('')
+    setInfoMessage('')
   }
 
   const formatFileSize = (bytes: number) => {
@@ -195,13 +218,16 @@ export default function PDFCompressorTool() {
         )}
       </div>
 
-      {/* 错误提示 */}
+      {/* 信息提示（友好的蓝色提示） */}
+      {infoMessage && (
+        <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-700">
+          {infoMessage}
+        </div>
+      )}
+
+      {/* 错误提示（红色警告） */}
       {error && (
-        <div className={`p-4 rounded-lg ${
-          error.includes('Unable to compress') 
-            ? 'bg-yellow-50 border border-yellow-200 text-yellow-700'
-            : 'bg-red-50 border border-red-200 text-red-700'
-        }`}>
+        <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700">
           {error}
         </div>
       )}

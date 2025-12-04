@@ -220,11 +220,11 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 如果压缩效果不明显（小于1%），也返回提示
+    // 如果压缩效果不明显（小于1%），也返回提示（但使用更友好的消息）
     if (parseFloat(compressionRatio) < 1) {
       return NextResponse.json({
-        success: false,
-        message: 'Compression achieved minimal reduction. The file may already be optimized. Consider installing Ghostscript for better compression.',
+        success: true, // 改为 true，这样前端会显示为成功而不是错误
+        message: `Your PDF has been processed. The file size was reduced by ${compressionRatio}%. This PDF appears to be already well-optimized.`,
         originalSize,
         compressedSize,
         compressionRatio,
