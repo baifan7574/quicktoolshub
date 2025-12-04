@@ -3,22 +3,74 @@
 import dynamic from 'next/dynamic'
 import { Tool } from '@/types'
 
+// 加载中组件
+const LoadingComponent = () => (
+  <div className="flex items-center justify-center py-12">
+    <div className="text-center">
+      <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+      <p className="text-gray-600">Loading tool...</p>
+    </div>
+  </div>
+)
+
 // 动态导入工具组件（按需加载）
 const toolComponents: Record<string, React.ComponentType> = {
-  'word-counter': dynamic(() => import('./WordCounterTool'), { ssr: false }),
-  'text-case-converter': dynamic(() => import('./TextCaseConverterTool'), { ssr: false }),
-  'lorem-ipsum-generator': dynamic(() => import('./LoremIpsumGeneratorTool'), { ssr: false }),
-  'json-formatter': dynamic(() => import('./JSONFormatterTool'), { ssr: false }),
-  'base64-encoder': dynamic(() => import('./Base64EncoderTool'), { ssr: false }),
-  'url-encoder': dynamic(() => import('./URLEncoderTool'), { ssr: false }),
-  'pdf-merger': dynamic(() => import('./PDFMergerTool'), { ssr: false }),
-  'pdf-splitter': dynamic(() => import('./PDFSplitterTool'), { ssr: false }),
-  'pdf-compressor': dynamic(() => import('./PDFCompressorTool'), { ssr: false }),
-  'image-compressor': dynamic(() => import('./ImageCompressorTool'), { ssr: false }),
-  'image-resizer': dynamic(() => import('./ImageResizerTool'), { ssr: false }),
-  'image-converter': dynamic(() => import('./ImageConverterTool'), { ssr: false }),
-  'background-remover': dynamic(() => import('./BackgroundRemoverTool'), { ssr: false }),
-  'pdf-to-word': dynamic(() => import('./PDFToWordTool'), { ssr: false }),
+  'word-counter': dynamic(() => import('./WordCounterTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'text-case-converter': dynamic(() => import('./TextCaseConverterTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'lorem-ipsum-generator': dynamic(() => import('./LoremIpsumGeneratorTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'json-formatter': dynamic(() => import('./JSONFormatterTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'base64-encoder': dynamic(() => import('./Base64EncoderTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'url-encoder': dynamic(() => import('./URLEncoderTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'pdf-merger': dynamic(() => import('./PDFMergerTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'pdf-splitter': dynamic(() => import('./PDFSplitterTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'pdf-compressor': dynamic(() => import('./PDFCompressorTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'image-compressor': dynamic(() => import('./ImageCompressorTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'image-resizer': dynamic(() => import('./ImageResizerTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'image-converter': dynamic(() => import('./ImageConverterTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'background-remover': dynamic(() => import('./BackgroundRemoverTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
+  'pdf-to-word': dynamic(() => import('./PDFToWordTool'), { 
+    ssr: false,
+    loading: () => <LoadingComponent />
+  }),
 }
 
 interface ToolRendererProps {

@@ -16,8 +16,16 @@ cd /var/www/quicktoolshub
 echo "正在拉取最新代码..."
 git pull origin master
 
+# 安装系统依赖（Ghostscript）
+echo "正在检查系统依赖..."
+if ! command -v gs &> /dev/null; then
+    echo "安装 Ghostscript（PDF 压缩优化）..."
+    sudo apt-get update -qq
+    sudo apt-get install -y ghostscript
+fi
+
 # 安装新依赖（如果有）
-echo "正在检查依赖..."
+echo "正在检查 npm 依赖..."
 npm install
 
 # 重新构建
