@@ -96,7 +96,16 @@ export default function BackgroundRemoverTool() {
   const handleDownload = (image: ProcessedImage, index: number) => {
     const a = document.createElement('a')
     a.href = image.url
-    a.download = `no-background-${image.original.name.replace(/\.[^/.]+$/, '')}.png`
+    
+    // 生成安全的下载文件名（避免中文字符问题）
+    const originalName = image.original.name.replace(/\.[^/.]+$/, '')
+    // 检查是否包含中文字符
+    const hasChinese = /[\u4e00-\u9fa5]/.test(originalName)
+    const downloadName = hasChinese
+      ? `no-background-${Date.now()}.png`
+      : `no-background-${originalName}.png`
+    
+    a.download = downloadName
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

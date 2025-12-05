@@ -18,6 +18,15 @@ const BACKGROUND_REMOVAL_APIS = {
   // 可以添加更多 API
 }
 
+// 将文件名转换为安全的 ASCII 文件名
+function sanitizeFileName(fileName: string): string {
+  // 获取文件扩展名
+  const ext = fileName.substring(fileName.lastIndexOf('.'))
+  // 生成安全的文件名（只包含字母、数字、连字符和下划线）
+  const safeName = `image_${Date.now()}_${Math.random().toString(36).substring(2, 9)}${ext}`
+  return safeName
+}
+
 // 尝试使用可用的 API
 async function removeBackgroundWithAPI(
   buffer: Buffer,
@@ -26,6 +35,9 @@ async function removeBackgroundWithAPI(
 ): Promise<{ success: boolean; data?: Buffer; error?: string }> {
   // 优先级：1. Remove.bg 2. Erase.bg
   const apis = ['removebg', 'erasebg'] as const
+
+  // 将文件名转换为安全的 ASCII 文件名，避免编码问题
+  const safeFileName = sanitizeFileName(fileName)
 
   for (const apiName of apis) {
     const api = BACKGROUND_REMOVAL_APIS[apiName]
@@ -38,7 +50,8 @@ async function removeBackgroundWithAPI(
     try {
       const formDataToSend = new FormData()
       const blob = new Blob([buffer as any], { type: fileType })
-      formDataToSend.append('image_file', blob, fileName)
+      // 使用安全的文件名，避免中文字符编码问题
+      formDataToSend.append('image_file', blob, safeFileName)
       formDataToSend.append('size', 'auto')
 
       const response = await fetch(api.url, {
@@ -116,12 +129,19 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 生成安全的下载文件名（避免中文字符问题）
+    const originalName = file.name.replace(/\.[^/.]+$/, '')
+    // 将中文文件名转换为安全的 ASCII 文件名
+    const safeDownloadName = originalName.match(/[\u4e00-\u9fa5]/) 
+      ? `no-background-${Date.now()}.png`
+      : `no-background-${originalName}.png`
+
     // 返回处理后的图片
     return new NextResponse(result.data as any, {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
-        'Content-Disposition': `attachment; filename="no-background-${file.name.replace(/\.[^/.]+$/, '')}.png"`,
+        'Content-Disposition': `attachment; filename="${safeDownloadName}"`,
         'X-Original-Size': file.size.toString(),
         'X-Processed-Size': result.data!.length.toString(),
       },
