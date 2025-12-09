@@ -119,12 +119,12 @@ body {
 .footer {
     background-color: #1f2937;
     color: #d1d5db;
-    padding: 3rem 0 1.5rem;
+    padding: 3rem 0 0;
     margin-top: 4rem;
 }
 .footer-content {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 3rem;
     margin-bottom: 2rem;
 }
@@ -144,6 +144,7 @@ body {
     color: #9ca3af;
     line-height: 1.6;
     margin-bottom: 0.5rem;
+    font-size: 0.875rem;
 }
 .footer-links {
     list-style: none;
@@ -157,21 +158,36 @@ body {
     color: #d1d5db;
     text-decoration: none;
     transition: var(--transition);
+    font-size: 0.875rem;
 }
 .footer-links a:hover {
     color: #fff;
     padding-left: 0.25rem;
 }
-.footer-copyright {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
+.footer-bottom {
     border-top: 1px solid #374151;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+    text-align: center;
+}
+.footer-copyright {
+    color: #9ca3af;
     font-size: 0.875rem;
+    margin: 0;
+}
+@media (max-width: 1024px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
 }
 @media (max-width: 768px) {
     .footer-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+    .footer {
+        padding: 2rem 0 0;
     }
 }
 
@@ -461,6 +477,120 @@ body {
     }
 }
 
+/* 工具统计卡片 */
+.word-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* 工具表单样式 */
+.tool-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.tool-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.tool-form input[type="file"],
+.tool-form select,
+.tool-form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.tool-form input[type="file"]:focus,
+.tool-form select:focus,
+.tool-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.tool-form textarea {
+    resize: vertical;
+    font-family: 'Courier New', monospace;
+}
+
+/* 工具按钮组 */
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.space-x-4 > * + * {
+    margin-left: 1rem;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+    .md\:grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 480px) {
     .btn {
         padding: 0.625rem 1rem;
@@ -469,6 +599,14 @@ body {
     
     .tool-card h3 {
         font-size: 1.125rem;
+    }
+    
+    .word-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
     }
 }
 

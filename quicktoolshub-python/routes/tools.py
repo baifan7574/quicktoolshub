@@ -71,10 +71,28 @@ def tool_detail(slug):
     supabase = get_supabase()
     
     # 获取工具信息
-    tool = supabase.table('tools').select('*, categories(name, slug)').eq('slug', slug).eq('is_active', True).single().execute()
+    tool_result = supabase.table('tools').select('*, categories(name, slug)').eq('slug', slug).eq('is_active', True).single().execute()
     
-    if not tool.data:
-        return "工具不存在", 404
+    if not tool_result.data:
+        return "Tool not found", 404
     
-    return render_template('tools/detail.html', tool=tool.data)
+    tool = tool_result.data
+    
+    # 更新浏览次数
+    try:
+        current_views = tool.get('view_count', 0) or 0
+        supabase.table('tools').update({'view_count': current_views + 1}).eq('id', tool['id']).execute()
+    except:
+        pass  # 如果更新失败，不影响页面显示
+    
+    # 获取同分类的其他工具（相关工具）
+    related_tools = []
+    if tool.get('category_id'):
+        try:
+            related_result = supabase.table('tools').select('*, categories(name, slug)').eq('category_id', tool['category_id']).eq('is_active', True).neq('id', tool['id']).limit(6).execute()
+            related_tools = related_result.data if related_result.data else []
+        except:
+            pass
+    
+    return render_template('tools/detail.html', tool=tool, related_tools=related_tools)
 
