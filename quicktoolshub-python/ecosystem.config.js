@@ -2,9 +2,9 @@
 
 module.exports = {
   apps: [{
-    name: 'quicktoolshub',
+    name: 'quicktoolshub-python',
     script: 'gunicorn',
-    args: '-w 4 -b 0.0.0.0:3000 app:app',
+    args: '-w 2 -b 0.0.0.0:3000 --timeout 120 app:app',
     cwd: '/var/www/quicktoolshub-python',
     instances: 1,
     autorestart: true,
