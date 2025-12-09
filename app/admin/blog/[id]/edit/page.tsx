@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 
 // 文章分类列表
@@ -68,6 +69,7 @@ export default function EditArticlePage() {
     tags: '',
     featured_image: '',
     is_published: false,
+    published_at: undefined as string | undefined,
   })
 
   useEffect(() => {
@@ -88,6 +90,7 @@ export default function EditArticlePage() {
           tags: (article.tags || []).join(', '),
           featured_image: article.featured_image || '',
           is_published: article.is_published || false,
+          published_at: article.published_at || undefined,
         })
       }
     } catch (error) {
