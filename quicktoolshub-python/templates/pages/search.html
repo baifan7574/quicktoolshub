@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Search - QuickToolsHub{% endblock %}
+{% block description %}Search for free online tools, articles, and categories on QuickToolsHub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-page-header">
+        <h1>Search</h1>
+        {% if query %}
+        <p class="search-results-count">Found {{ total_results }} results for "{{ query }}"</p>
+        {% endif %}
+    </div>
+
+    <!-- 搜索框 -->
+    <div class="search-box-container">
+        <form action="/search" method="get" class="search-form">
+            <input
+                type="text"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search tools, articles..."
+                class="search-input"
+                autofocus
+            />
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+
+    {% if not query %}
+    <div class="search-empty">
+        <p>Enter a search term to find tools and articles</p>
+        <div class="search-suggestions">
+            <span class="suggestion-tag">PDF Tools</span>
+            <span class="suggestion-tag">Image Tools</span>
+            <span class="suggestion-tag">Text Tools</span>
+            <span class="suggestion-tag">Developer Tools</span>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if query and total_results == 0 %}
+    <div class="search-empty">
+        <p>No results found for "{{ query }}"</p>
+        <p class="search-empty-hint">Try different keywords or browse our categories</p>
+    </div>
+    {% endif %}
+
+    <!-- 工具结果 -->
+    {% if tools|length > 0 %}
+    <section class="search-results-section">
+        <h2>Tools ({{ tools|length }})</h2>
+        <div class="tools-grid">
+            {% for tool in tools %}
+            <div class="tool-card">
+                <h3><a href="/tools/{{ tool.slug }}">{{ tool.name }}</a></h3>
+                <p>{{ tool.short_description or tool.description[:150] }}...</p>
+                <a href="/tools/{{ tool.slug }}" class="btn">Use Tool</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 文章结果 -->
+    {% if articles|length > 0 %}
+    <section class="search-results-section">
+        <h2>Articles ({{ articles|length }})</h2>
+        <div class="articles-list">
+            {% for article in articles %}
+            <div class="article-card">
+                <h3><a href="/blog/{{ article.slug }}">{{ article.title }}</a></h3>
+                {% if article.excerpt %}
+                <p>{{ article.excerpt[:200] }}...</p>
+                {% endif %}
+                <div class="article-meta">
+                    {% if article.reading_time %}
+                    <span>{{ article.reading_time }} min read</span>
+                    {% endif %}
+                    {% if article.published_at %}
+                    <span>{{ article.published_at[:10] }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 分类结果 -->
+    {% if categories|length > 0 %}
+    <section class="search-results-section">
+        <h2>Categories ({{ categories|length }})</h2>
+        <div class="categories-grid">
+            {% for category in categories %}
+            <div class="category-card">
+                <h3><a href="/categories/{{ category.slug }}">{{ category.name }}</a></h3>
+                {% if category.description %}
+                <p>{{ category.description }}</p>
+                {% endif %}
+                <span class="category-count">{{ category.tool_count or 0 }} tools</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.search-page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.search-page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.search-results-count {
+    color: var(--text-secondary);
+}
+.search-box-container {
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+.search-form {
+    display: flex;
+    gap: 1rem;
+}
+.search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+.search-button {
+    padding: 0.75rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.search-empty {
+    text-align: center;
+    padding: 3rem 0;
+}
+.search-suggestions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+.suggestion-tag {
+    padding: 0.5rem 1rem;
+    background: var(--bg-color);
+    border-radius: 20px;
+    color: var(--text-secondary);
+}
+.search-results-section {
+    margin-bottom: 3rem;
+}
+.search-results-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+.articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.article-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+.article-card h3 {
+    margin-bottom: 0.5rem;
+}
+.article-card h3 a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.article-card h3 a:hover {
+    color: var(--primary-color);
+}
+.article-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+.category-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+.category-card h3 {
+    margin-bottom: 0.5rem;
+}
+.category-card h3 a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.category-count {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-color);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+</style>
+{% endblock %}
+

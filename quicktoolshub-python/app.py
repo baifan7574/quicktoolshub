@@ -1,6 +1,6 @@
 from flask import Flask
 from config import Config
-from routes import tools, blog, api, admin
+from routes import tools, blog, api, admin, pages
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -14,6 +14,7 @@ app.register_blueprint(tools.bp)
 app.register_blueprint(blog.bp)
 app.register_blueprint(api.bp)
 app.register_blueprint(admin.bp)
+app.register_blueprint(pages.bp)
 
 @app.route('/')
 def index():

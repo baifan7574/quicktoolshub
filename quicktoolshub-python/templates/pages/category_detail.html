@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - QuickToolsHub{% endblock %}
+{% block description %}{{ category.description or 'Browse ' + category.name + ' tools on QuickToolsHub' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="category-header">
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}
+        <p>{{ category.description }}</p>
+        {% endif %}
+    </div>
+
+    {% if tools|length > 0 %}
+    <div class="tools-grid">
+        {% for tool in tools %}
+        <div class="tool-card">
+            <h3><a href="/tools/{{ tool.slug }}">{{ tool.name }}</a></h3>
+            <p>{{ tool.short_description or tool.description[:150] }}...</p>
+            <a href="/tools/{{ tool.slug }}" class="btn">Use Tool</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No tools found in this category</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.category-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+.category-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.category-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+}
+</style>
+{% endblock %}
+
