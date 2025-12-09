@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}All Tools - QuickToolsHub{% endblock %}
+{% block description %}Browse all free online tools for PDF, images, text, and more.{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="tools-page-header">
+        <h1>All Tools</h1>
+        <p>Free online tools for all your needs</p>
+    </div>
+
+    <div class="tools-layout">
+        <!-- 左侧分类 -->
+        <aside class="categories-sidebar">
+            <h3>Categories</h3>
+            <nav class="category-nav">
+                <a href="/tools" class="category-link {% if current_category == 'all' or not current_category %}active{% endif %}">
+                    All Tools
+                </a>
+                {% for category in categories %}
+                <a href="/tools?category={{ category.slug }}" class="category-link {% if current_category == category.slug %}active{% endif %}">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </nav>
+
+            <!-- 排序 -->
+            <div class="sort-section">
+                <h3>Sort By</h3>
+                <select id="sort-select" class="sort-select">
+                    <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                    <option value="recent" {% if current_sort == 'recent' %}selected{% endif %}>Most Recent</option>
+                    <option value="alphabetical" {% if current_sort == 'alphabetical' %}selected{% endif %}>Alphabetical</option>
+                    <option value="most-used" {% if current_sort == 'most-used' %}selected{% endif %}>Most Used</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- 右侧工具列表 -->
+        <main class="tools-main">
+            <div class="tools-grid">
+                {% for tool in tools %}
+                <div class="tool-card">
+                    <h3><a href="/tools/{{ tool.slug }}">{{ tool.name }}</a></h3>
+                    <p>{{ tool.short_description or tool.description[:150] }}...</p>
+                    {% if tool.categories %}
+                    <span class="tool-category">{{ tool.categories.name }}</span>
+                    {% endif %}
+                    <a href="/tools/{{ tool.slug }}" class="btn">Use Tool</a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 分页 -->
+            {% if total_pages > 1 %}
+            <div class="pagination">
+                {% if page > 1 %}
+                <a href="?page={{ page - 1 }}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="pagination-link">Previous</a>
+                {% endif %}
+                <span class="pagination-info">Page {{ page }} of {{ total_pages }}</span>
+                {% if page < total_pages %}
+                <a href="?page={{ page + 1 }}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="pagination-link">Next</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.tools-page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.tools-page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+.tools-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+.categories-sidebar {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+.categories-sidebar h3 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+.category-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+.category-link {
+    padding: 0.75rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s;
+}
+.category-link:hover {
+    background-color: #f3f4f6;
+}
+.category-link.active {
+    background-color: #dbeafe;
+    color: #2563eb;
+    font-weight: 500;
+}
+.sort-section h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+.sort-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.tool-category {
+    display: inline-block;
+    background-color: #e5e7eb;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.pagination-link {
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.pagination-info {
+    color: #666;
+}
+@media (max-width: 768px) {
+    .tools-layout {
+        grid-template-columns: 1fr;
+    }
+    .categories-sidebar {
+        position: static;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('sort-select').addEventListener('change', function() {
+    const sort = this.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', sort);
+    window.location.href = url.toString();
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tool.name }} - Free Online Tool | QuickToolsHub{% endblock %}
+{% block description %}{{ tool.short_description or tool.description or 'Use ' + tool.name + ' for free online. No registration required.' }}{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<div class="breadcrumb">
+    <div class="container">
+        <nav>
+            <a href="/">Home</a> / 
+            <a href="/tools">Tools</a> / 
+            {% if tool.categories %}
+            <a href="/tools?category={{ tool.categories.slug }}">{{ tool.categories.name }}</a> / 
+            {% endif %}
+            <span>{{ tool.name }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tool-detail-layout">
+        <!-- 主内容区 -->
+        <main class="tool-main">
+            <!-- 工具标题和描述 -->
+            <div class="tool-header">
+                <h1>{{ tool.name }}</h1>
+                {% if tool.description %}
+                <p class="tool-description">{{ tool.description }}</p>
+                {% endif %}
+                {% if tool.short_description %}
+                <p class="tool-short-desc">{{ tool.short_description }}</p>
+                {% endif %}
+            </div>
+
+            <!-- 工具使用界面 -->
+            <div class="tool-interface">
+                <h2>Use This Tool</h2>
+                
+                <!-- 根据工具类型显示不同的界面 -->
+                {% if 'pdf' in tool.name.lower() or 'compress' in tool.slug %}
+                    <!-- PDF 压缩工具 -->
+                    <form id="compress-pdf-form" class="tool-form">
+                        <div class="form-group">
+                            <label for="pdf-file">Select PDF File</label>
+                            <input type="file" id="pdf-file" name="file" accept=".pdf" required>
+                        </div>
+                        <button type="submit" class="btn">Compress PDF</button>
+                    </form>
+                {% elif 'word' in tool.slug or 'pdf-to-word' in tool.slug %}
+                    <!-- PDF 转 Word 工具 -->
+                    <form id="pdf-to-word-form" class="tool-form">
+                        <div class="form-group">
+                            <label for="pdf-file">Select PDF File</label>
+                            <input type="file" id="pdf-file" name="file" accept=".pdf" required>
+                        </div>
+                        <button type="submit" class="btn">Convert to Word</button>
+                    </form>
+                {% elif 'background' in tool.slug or 'remove' in tool.slug %}
+                    <!-- 背景移除工具 -->
+                    <form id="remove-background-form" class="tool-form">
+                        <div class="form-group">
+                            <label for="image-file">Select Image File</label>
+                            <input type="file" id="image-file" name="file" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn">Remove Background</button>
+                    </form>
+                {% else %}
+                    <!-- 通用工具界面 -->
+                    <div class="generic-tool">
+                        <p>This tool is coming soon. Please check back later.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- 使用说明（SEO内容） -->
+            <div class="tool-instructions">
+                <h2>How to Use {{ tool.name }}</h2>
+                <p>{{ tool.name }} is a free online tool that allows you to {{ (tool.description or 'perform this task')|lower }} quickly and easily. No registration or sign-up is required. Simply upload your files or enter your data, and our tool will process it instantly.</p>
+                
+                <h3>Key Features</h3>
+                <ul>
+                    <li>100% free to use - no hidden costs</li>
+                    <li>No registration required - use instantly</li>
+                    <li>Secure and private - your data is safe</li>
+                    <li>Fast processing - results in seconds</li>
+                    <li>Works in your browser - no software download needed</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <p>{{ tool.name }} is perfect for a variety of tasks. Whether you're working on a personal project, preparing documents for work, or handling files for school, our tool makes it easy to get the job done.</p>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 结构化数据 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "{{ tool.name }}",
+  "description": "{{ tool.description or tool.short_description }}",
+  "url": "https://soeasyhub.com/tools/{{ tool.slug }}",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.breadcrumb {
+    background-color: #f9fafb;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.breadcrumb nav {
+    display: flex;
+    gap: 0.5rem;
+    color: #666;
+}
+.breadcrumb a {
+    color: #2563eb;
+    text-decoration: none;
+}
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+.tool-detail-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.tool-header {
+    margin-bottom: 2rem;
+}
+.tool-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.tool-description {
+    font-size: 1.125rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+.tool-short-desc {
+    color: #888;
+}
+.tool-interface {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+.tool-interface h2 {
+    margin-bottom: 1.5rem;
+}
+.tool-form {
+    max-width: 500px;
+}
+.tool-instructions {
+    background: #f9fafb;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+.tool-instructions h2 {
+    margin-bottom: 1rem;
+}
+.tool-instructions h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.tool-instructions ul {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+.tool-instructions li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}
+
