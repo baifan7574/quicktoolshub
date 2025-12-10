@@ -1,12 +1,46 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from utils.supabase_client import get_supabase
 from datetime import datetime
+import os
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+# 简单的管理员验证（可以通过环境变量配置密码）
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'admin123'
+
+def check_admin():
+    """检查是否为管理员"""
+    return session.get('admin_logged_in') == True
+
+def require_admin():
+    """要求管理员登录"""
+    if not check_admin():
+        return redirect('/admin/login')
+
+@bp.route('/login', methods=['GET', 'POST'])
+def admin_login():
+    """管理员登录"""
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect('/admin/blog')
+        else:
+            return render_template('admin/login.html', error='密码错误')
+    return render_template('admin/login.html')
+
+@bp.route('/logout')
+def admin_logout():
+    """管理员登出"""
+    session.pop('admin_logged_in', None)
+    return redirect('/')
 
 @bp.route('/blog')
 def admin_blog_list():
     """后台博客列表"""
+    if not check_admin():
+        return redirect('/admin/login')
+    
     supabase = get_supabase()
     articles = supabase.table('articles').select('*').order('created_at', desc=True).execute()
     
@@ -15,11 +49,16 @@ def admin_blog_list():
 @bp.route('/blog/new')
 def admin_blog_new():
     """创建新文章"""
+    if not check_admin():
+        return redirect('/admin/login')
     return render_template('admin/blog_new.html')
 
 @bp.route('/blog/<id>/edit')
 def admin_blog_edit(id):
     """编辑文章"""
+    if not check_admin():
+        return redirect('/admin/login')
+    
     supabase = get_supabase()
     article = supabase.table('articles').select('*').eq('id', id).single().execute()
     
