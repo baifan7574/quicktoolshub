@@ -209,10 +209,46 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// 移动端菜单切换
+function initMobileMenu() {
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const menuOverlay = document.querySelector('.nav-links');
+    
+    if (toggle && navLinks) {
+        toggle.addEventListener('click', () => {
+            toggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // 点击菜单项后关闭菜单
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // 点击遮罩关闭菜单
+        navLinks.addEventListener('click', (e) => {
+            if (e.target === navLinks || e.target.classList.contains('nav-links')) {
+                toggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+}
+
 // 初始化文件上传
 document.addEventListener('DOMContentLoaded', () => {
     // 添加淡入动画
     document.body.classList.add('fade-in');
+    
+    // 初始化移动端菜单
+    initMobileMenu();
     
     // PDF 压缩
     if (document.getElementById('compress-pdf-form')) {
