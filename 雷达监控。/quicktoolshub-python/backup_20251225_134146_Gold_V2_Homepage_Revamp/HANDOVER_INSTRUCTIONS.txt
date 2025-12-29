@@ -1,0 +1,45 @@
+# 🚀 HANDOVER INSTRUCTIONS FOR NEXT SESSION
+# Date: 2025-12-24
+# Status: RESTORED & STABLE (Features Active)
+
+## 📌 Context
+The project `soeasyhub.com` is a Flask-based tool website. We encountered a critical regression where the site was broken, but it has now been fully restored to a stable state with **all premium features active**.
+
+## ✅ Current System State
+1. **Core Functionality**: All tools (Image, PDF, Text, etc.) are working.
+2. **"Wish Wall"**: Live at `/tools/wish-wall`. Accessibility via Navbar link (injected via JS).
+3. **"Quick Alert"**: Floating red button (!) on all tool detail pages for instant bug reporting.
+4. **Backend**: 
+   - `tools_new.py`: Contains the `wish-wall` partial logic and hardcoded tool definitions.
+   - `routes/api.py`: Contains the `/api/feedback` endpoint for Supabase integration.
+5. **Frontend**:
+   - `detail_new.html`: Contains the UI for all tools + Quick Alert script + Wish Wall link injection.
+   - `templates/pages/wish_wall.html`: Template for the Wish Wall page.
+
+## 📂 Critical Files (Do NOT Delete or Overwrite without backup)
+- `tools_new.py` (Source of Truth for Tool Logic)
+- `detail_new.html` (Source of Truth for Frontend)
+- `routes/api.py` (API Endpoints, including feedback)
+- `deploy_stable.py` (Use this script to deploy. It handles the 3-file update: tools, blog, detail).
+
+## ⚠️ Important Rules for Next Agent
+1. **Deployment**: ALWAYS use `python deploy_stable.py` to push changes. It uploads `tools_new.py`, `blog_final.py`, and `templates/tools/detail.html`.
+   - *Note*: You must manually ensure `routes/api.py` is uploaded if you change it, as `deploy_stable.py` largely focuses on the main 3 files. (Ideally, update the deploy script to include `routes/api.py` if needed in the future).
+2. **Three-File Rule**: Logic is concentrated to enable easy portability.
+3. **Supabase**: The `user_feedback` table is active and receiving data.
+
+## 🛡️ GOLD STANDARD BACKUP (Emergency Restore)
+- **Location**: `_[GOLD STANDARD BACKUP]
+PATH: d:\quicktoolshub\quicktoolshub-python\backup_20251225_130645_Gold_V2_Homepage_Revamp
+DESCRIPTION: V2.0 Release. Contains the new "Category Grid" Homepage, the "Always-Perfect" Best Regards tool (with 3-piece set), and the updated Blog architecture. Verified live on 2025-12-25.
+USE THIS for any disaster recovery.**: Run `python restore_gold.py`.
+- **Rule**: NEVER edit files in this folder. It is the sterile cockpit.
+
+## 📝 Next Immediate Tasks (If User Requests)
+- Verification: Submit a test wish or alert to confirm database entry.
+- Expansion: Adding more "Expert Advice" content or new tools.
+
+## 🔄 To Resume
+1. Read `tools_new.py` to understand the routing.
+2. Read `detail_new.html` to see the JS logic for Quick Alert.
+3. Use `python deploy_stable.py` for any updates.

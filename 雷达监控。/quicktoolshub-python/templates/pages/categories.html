@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}All Categories - QuickToolsHub{% endblock %}
+{% block description %}Browse all tool categories on QuickToolsHub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>All Categories</h1>
+        <p>Browse tools by category. Find the perfect tool for your needs.</p>
+    </div>
+
+    {% if categories|length > 0 %}
+    <div class="categories-grid">
+        {% for category in categories %}
+        <div class="category-card">
+            <h3><a href="/categories/{{ category.slug }}">{{ category.name }}</a></h3>
+            {% if category.description %}
+            <p>{{ category.description }}</p>
+            {% endif %}
+            <div class="category-footer">
+                <span class="category-count">{{ category.tool_count or 0 }} tools</span>
+                <a href="/categories/{{ category.slug }}" class="category-link">View All →</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No categories found</p>
+        <p class="empty-hint">Categories will appear here once they are added.</p>
+    </div>
+    {% endif %}
+
+    <div class="quick-links">
+        <h2>Quick Links</h2>
+        <div class="links-grid">
+            <a href="/tools" class="quick-link-btn primary">View All Tools</a>
+            <a href="/blog" class="quick-link-btn">Browse Articles</a>
+            <a href="/search" class="quick-link-btn">Search Tools</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.page-header p {
+    color: var(--text-secondary);
+}
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+.category-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+.category-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+.category-card h3 a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.category-card h3 a:hover {
+    color: var(--primary-color);
+}
+.category-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+.category-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+.category-count {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+.category-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.category-link:hover {
+    text-decoration: underline;
+}
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+.empty-hint {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+.quick-links {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-top: 3rem;
+}
+.quick-links h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+.links-grid {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.quick-link-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+.quick-link-btn.primary {
+    background: var(--primary-color);
+    color: white;
+}
+.quick-link-btn.primary:hover {
+    background: var(--primary-hover);
+}
+.quick-link-btn:not(.primary) {
+    background: var(--bg-color);
+    color: var(--text-primary);
+}
+.quick-link-btn:not(.primary):hover {
+    background: var(--border-color);
+}
+</style>
+{% endblock %}
+

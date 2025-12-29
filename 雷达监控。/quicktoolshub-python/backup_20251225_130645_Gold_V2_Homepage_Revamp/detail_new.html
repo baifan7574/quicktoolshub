@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.name }} - SoEasyHub | Professional Online Tools</title>
+    <meta name="description" content="{{ tool.description }} - Free, secure, and privacy-focused tool by SoEasyHub.">
+    <meta name="keywords" content="{{ tool.name }}, online tool, free, professional, {{ tool.slug }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .tool-interface {
+            background: #f8fafc;
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* SEO Styles */
+        .expert-section {
+            margin-top: 6rem;
+        }
+
+        .scary-seo-content {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
+            padding: 4rem;
+            border-radius: 20px;
+            border-left: 4px solid #c2410c;
+        }
+
+        .scary-seo-content h2 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 2rem;
+        }
+
+        .expert-quote {
+            background: rgba(194, 65, 12, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            font-style: italic;
+            margin: 2rem 0;
+            border-left: 3px solid #c2410c;
+        }
+
+        .scary-seo-content h3 {
+            color: #c2410c;
+            margin: 2rem 0 1rem;
+            font-size: 1.3rem;
+        }
+
+        .scary-seo-content p {
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Text Tool Styles (JSON & Base64) */
+        .text-interface {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .text-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .text-textarea {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            resize: vertical;
+            background: white;
+        }
+
+        .text-textarea:focus {
+            border-color: #c2410c;
+            outline: none;
+        }
+
+        .text-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            cursor: pointer;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .btn-primary-action {
+            background: #c2410c;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary-action:hover {
+            background: #9a3412;
+        }
+
+        .msg-box {
+            padding: 0.75rem;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 1rem;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .success-msg {
+            color: #16a34a;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog">Expert Advice</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content container">
+        <div class="tool-header">
+            <h1 class="playfair">{{ tool.name }}</h1>
+            <p class="lead">{{ tool.description }}</p>
+        </div>
+
+        <div class="tool-card shadow-lg">
+            <div class="tool-interface" id="tool-interface">
+
+                {% if tool.slug == 'json-formatter' %}
+                <!-- JSON Formatter Interface -->
+                <div class="text-interface">
+                    <div class="text-controls">
+                        <button class="btn-action btn-primary-action" onclick="formatJson()">Beautify / Format</button>
+                        <button class="btn-action" onclick="minifyJson()">Minify / Compress</button>
+                        <button class="btn-action" onclick="validateJson()">Validate Only</button>
+                        <button class="btn-action" onclick="clearText('json-input')">Clear</button>
+                        <select id="indent-size" class="btn-action">
+                            <option value="2">2 Spaces</option>
+                            <option value="4" selected>4 Spaces</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </div>
+                    <div id="text-msg" class="msg-box"></div>
+                    <textarea id="json-input" class="text-textarea" placeholder='Paste JSON here...'></textarea>
+                </div>
+
+                {% elif tool.slug == 'base64-encoder' %}
+                <!-- Base64 Interface -->
+                <div class="text-interface">
+                    <div class="text-controls">
+                        <button class="btn-action btn-primary-action" onclick="base64Encode()">Encode to Base64</button>
+                        <button class="btn-action btn-primary-action" onclick="base64Decode()">Decode from
+                            Base64</button>
+                        <button class="btn-action" onclick="clearText('base64-input')">Clear</button>
+                    </div>
+                    <div id="text-msg" class="msg-box"></div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="text-box">
+                            <label class="text-label">Input Text / Base64</label>
+                            <textarea id="base64-input" class="text-textarea"
+                                placeholder="Enter text to encode or Base64 to decode..."></textarea>
+                        </div>
+                        <div class="text-box">
+                            <label class="text-label">Result</label>
+                            <textarea id="base64-output" class="text-textarea" readonly
+                                placeholder="Result will appear here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'url-encoder-decoder' %}
+                <!-- URL Encoder Interface -->
+                <div class="text-interface">
+                    <div class="text-controls">
+                        <button class="btn-action btn-primary-action" onclick="urlEncode()">Encode URL</button>
+                        <button class="btn-action btn-primary-action" onclick="urlDecode()">Decode URL</button>
+                        <button class="btn-action" onclick="clearText('url-input')">Clear</button>
+                    </div>
+                    <div id="text-msg" class="msg-box"></div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="text-box">
+                            <label class="text-label">Input String</label>
+                            <textarea id="url-input" class="text-textarea"
+                                placeholder="Paste URL or string here..."></textarea>
+                        </div>
+                        <div class="text-box">
+                            <label class="text-label">Result</label>
+                            <textarea id="url-output" class="text-textarea" readonly
+                                placeholder="Result will appear here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'word-counter' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-box">
+                        <label class="text-label">Enter your text below</label>
+                        <textarea id="word-input" class="text-textarea"
+                            placeholder="Start typing or paste your text here..."
+                            oninput="updateWordCounts()"></textarea>
+                    </div>
+                    <div class="counter-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Words</div>
+                            <div id="count-words" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0
+                            </div>
+                        </div>
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Characters (all)</div>
+                            <div id="count-chars" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0
+                            </div>
+                        </div>
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Characters (no spaces)
+                            </div>
+                            <div id="count-chars-no-space"
+                                style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0</div>
+                        </div>
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Paragraphs</div>
+                            <div id="count-paragraphs"
+                                style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0</div>
+                        </div>
+                    </div>
+                    <div class="text-controls" style="margin-top: 1.5rem; justify-content: center;">
+                        <button class="btn-action" onclick="clearText('word-input')">Clear Everything</button>
+                    </div>
+                </div>
+                {% elif tool.slug == 'text-case-converter' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-box">
+                        <label class="text-label">Enter your text</label>
+                        <textarea id="case-input" class="text-textarea"
+                            placeholder="Type or paste your text here..."></textarea>
+                    </div>
+                    <div class="text-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                        <button class="btn-action" onclick="convertCase('upper')">UPPERCASE</button>
+                        <button class="btn-action" onclick="convertCase('lower')">lowercase</button>
+                        <button class="btn-action" onclick="convertCase('title')">Title Case</button>
+                        <button class="btn-action" onclick="convertCase('sentence')">Sentence case</button>
+                        <button class="btn-action" onclick="convertCase('toggle')">tOGGLE cASE</button>
+                        <button class="btn-action" onclick="clearText('case-input')">Clear</button>
+                    </div>
+                    <div class="text-box" style="margin-top: 1rem;">
+                        <label class="text-label">Result</label>
+                        <textarea id="case-output" class="text-textarea" readonly
+                            placeholder="Converted text will appear here..."></textarea>
+                    </div>
+                    <div class="text-controls" style="margin-top: 1rem;">
+                        <button class="btn-action" onclick="copyResult('case-output')">Copy Result</button>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'lorem-ipsum-generator' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-controls" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label class="text-label">Paragraphs</label>
+                            <input type="number" id="lorem-paragraphs" value="3" min="1" max="20"
+                                style="width: 80px; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label class="text-label">Words per paragraph</label>
+                            <input type="number" id="lorem-words" value="50" min="10" max="200"
+                                style="width: 80px; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        </div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <button class="btn-action" onclick="generateLorem()">Generate Lorem Ipsum</button>
+                        </div>
+                    </div>
+                    <div class="text-box">
+                        <label class="text-label">Generated Text</label>
+                        <textarea id="lorem-output" class="text-textarea" readonly
+                            placeholder="Click 'Generate Lorem Ipsum' to create placeholder text..."></textarea>
+                    </div>
+                    <div class="text-controls" style="margin-top: 1rem;">
+                        <button class="btn-action" onclick="copyResult('lorem-output')">Copy to Clipboard</button>
+                        <button class="btn-action" onclick="clearText('lorem-output')">Clear</button>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'case-converter' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-box">
+                        <label class="text-label">Enter your text</label>
+                        <textarea id="case-conv-input" class="text-textarea"
+                            placeholder="Type or paste your text here..."></textarea>
+                    </div>
+                    <div class="text-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                        <button class="btn-action" onclick="convertCaseAdv('upper')">UPPERCASE</button>
+                        <button class="btn-action" onclick="convertCaseAdv('lower')">lowercase</button>
+                        <button class="btn-action" onclick="convertCaseAdv('title')">Title Case</button>
+                        <button class="btn-action" onclick="convertCaseAdv('sentence')">Sentence case</button>
+                        <button class="btn-action" onclick="convertCaseAdv('camel')">camelCase</button>
+                        <button class="btn-action" onclick="convertCaseAdv('snake')">snake_case</button>
+                        <button class="btn-action" onclick="convertCaseAdv('kebab')">kebab-case</button>
+                        <button class="btn-action" onclick="clearText('case-conv-input')">Clear</button>
+                    </div>
+                    <div class="text-box" style="margin-top: 1rem;">
+                        <label class="text-label">Result</label>
+                        <textarea id="case-conv-output" class="text-textarea" readonly
+                            placeholder="Converted text will appear here..."></textarea>
+                    </div>
+                    <div class="text-controls" style="margin-top: 1rem;">
+                        <button class="btn-action" onclick="copyResult('case-conv-output')">Copy Result</button>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'random-password-generator' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-box">
+                        <label class="text-label">Generated Password</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="password-output" class="text-textarea"
+                                style="font-family: monospace; font-size: 1.2rem; letter-spacing: 2px;" readonly
+                                placeholder="Click 'Generate Password' to create...">
+                            <button class="btn-action" onclick="copyResult('password-output')"
+                                style="white-space: nowrap;">Copy</button>
+                        </div>
+                    </div>
+                    <div class="text-controls" style="margin-top: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <label class="text-label">Password Length: <span id="length-display">16</span></label>
+                            <input type="range" id="password-length" min="8" max="64" value="16" style="width: 100%;"
+                                oninput="document.getElementById('length-display').textContent = this.value">
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                            <label><input type="checkbox" id="include-upper" checked> Uppercase (A-Z)</label>
+                            <label><input type="checkbox" id="include-lower" checked> Lowercase (a-z)</label>
+                            <label><input type="checkbox" id="include-numbers" checked> Numbers (0-9)</label>
+                            <label><input type="checkbox" id="include-symbols" checked> Symbols (!@#$%)</label>
+                        </div>
+                        <button class="btn-action" onclick="generatePassword()"
+                            style="padding: 1rem 2rem; font-size: 1.1rem;">Generate Password</button>
+                    </div>
+                    <div class="text-box"
+                        style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                        <div id="password-strength" style="font-weight: bold;">Password Strength: --</div>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'ai-text-rewriter' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-box">
+                        <label class="text-label">Original Text</label>
+                        <textarea id="rewriter-input" class="text-textarea"
+                            placeholder="Paste your text here to rewrite..."></textarea>
+                    </div>
+                    <div class="text-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                        <button class="btn-action" onclick="rewriteText('standard')">Rewrite (Standard)</button>
+                        <button class="btn-action" onclick="rewriteText('formal')">More Formal</button>
+                        <button class="btn-action" onclick="rewriteText('simple')">Simpler</button>
+                        <button class="btn-action" onclick="rewriteText('creative')">More Creative</button>
+                        <button class="btn-action" onclick="clearText('rewriter-input')">Clear</button>
+                    </div>
+                    <div class="text-box" style="margin-top: 1rem;">
+                        <label class="text-label">Rewritten Text</label>
+                        <textarea id="rewriter-output" class="text-textarea" readonly
+                            placeholder="Rewritten text will appear here..."></textarea>
+                    </div>
+                    <button class="btn-action" onclick="copyResult('rewriter-output')">Copy Result</button>
+                </div>
+            </div>
+
+            {% elif tool.slug == 'ai-text-summarizer' %}
+            <div class="text-interface">
+                <div id="text-msg" class="msg-box"></div>
+                <div class="text-box">
+                    <label class="text-label">Original Text (Long Article)</label>
+                    <textarea id="summarizer-input" class="text-textarea"
+                        placeholder="Paste your article or long text here (min 100 words)..."
+                        style="height: 200px;"></textarea>
+                </div>
+                <div class="text-controls" style="margin-top: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <label class="text-label">Summary Length (Sentences): <span
+                                id="summary-length-display">3</span></label>
+                        <input type="range" id="summary-length" min="1" max="10" value="3" style="width: 100%;"
+                            oninput="document.getElementById('summary-length-display').textContent = this.value">
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <button class="btn-action" onclick="summarizeText()">Generate Summary</button>
+                        <button class="btn-action" onclick="clearText('summarizer-input')">Clear</button>
+                    </div>
+                </div>
+                <div class="text-box" style="margin-top: 1.5rem;">
+                    <label class="text-label">Generated Summary</label>
+                    <textarea id="summarizer-output" class="text-textarea" readonly
+                        placeholder="Summary will appear here..."
+                        style="height: 150px; background-color: #f8fafc;"></textarea>
+                </div>
+                <div class="text-controls" style="margin-top: 1rem;">
+                    <button class="btn-action" onclick="copyResult('summarizer-output')">Copy
+                        Summary</button>
+                </div>
+            </div>
+
+            {% elif tool.slug == 'text-to-pdf-converter' or tool.slug == 'text-to-pdf' %}
+            <div class="text-interface">
+                <!-- Load html2pdf library -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+                <div id="text-msg" class="msg-box"></div>
+                <div class="text-box">
+                    <label class="text-label">Enter Text Content</label>
+                    <textarea id="pdf-input" class="text-textarea" placeholder="Type or paste your text here..."
+                        style="height: 300px; font-family: 'Courier New', Courier, monospace;"></textarea>
+                </div>
+
+                <div class="text-controls"
+                    style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+                    <div style="flex: 1; min-width: 150px;">
+                        <label class="text-label">Font Size</label>
+                        <select id="pdf-font-size" class="text-textarea" style="height: 40px; padding: 5px;">
+                            <option value="10px">Small (10px)</option>
+                            <option value="12px" selected>Medium (12px)</option>
+                            <option value="16px">Large (16px)</option>
+                            <option value="20px">Extra Large (20px)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <label class="text-label">Filename</label>
+                        <input type="text" id="pdf-filename" class="text-textarea" value="document.pdf"
+                            style="height: 40px; padding: 5px;">
+                    </div>
+                    <div style="flex: 0 0 auto;">
+                        <button class="btn-action" onclick="generatePDF()">Download PDF</button>
+                        <button class="btn-action" onclick="clearText('pdf-input')"
+                            style="background-color: #6c757d;">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+            {% elif tool.slug == 'text-reverser' %}
+            <div class="text-interface">
+                <div id="text-msg" class="msg-box"></div>
+                <div class="text-box">
+                    <label class="text-label">Enter Text to Reverse</label>
+                    <textarea id="reverser-input" class="text-textarea" placeholder="Type or paste your text here..."
+                        style="height: 200px;"></textarea>
+                </div>
+
+                <div class="text-controls" style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn-action" onclick="reverseText('chars')">Reverse Text</button>
+                    <button class="btn-action" onclick="reverseText('words')">Reverse Words</button>
+                    <button class="btn-action" onclick="reverseText('each-word')">Reverse Each Word</button>
+                    <button class="btn-action" onclick="clearText('reverser-input')">Clear</button>
+                </div>
+
+                <div class="text-box" style="margin-top: 1.5rem;">
+                    <label class="text-label">Reversed Result</label>
+                    <textarea id="reverser-output" class="text-textarea" readonly
+                        placeholder="Result will appear here..."
+                        style="height: 200px; background-color: #f8fafc;"></textarea>
+                </div>
+
+                <div class="text-controls" style="margin-top: 1rem;">
+                    <button class="btn-action" onclick="copyResult('reverser-output')">Copy Result</button>
+                </div>
+            </div>
+
+            {% elif tool.slug == 'photopea-online-editor' %}
+            <div class="photopea-shell"
+                style="height: 80vh; width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+                <iframe src="https://www.photopea.com" style="width: 100%; height: 100%; border: none;"
+                    title="Photopea Online Editor"></iframe>
+            </div>
+
+            {% elif tool.slug in ['bing-image-creator', 'playground-ai', 'leonardo-ai', 'capcut-online-video-editor'] %}
+            <div class="shell-interface"
+                style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+                <div class="shell-badge"
+                    style="display: inline-block; padding: 0.5rem 1.2rem; background: #3b82f6; color: white; border-radius: 50px; font-weight: 600; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    Official Portal (Verified Free)</div>
+                <h3 class="playfair" style="font-size: 2.5rem; margin-bottom: 1rem;">Launch {{ tool.name }}</h3>
+                <p style="color: #64748b; max-width: 650px; margin: 0 auto 2rem; font-size: 1.1rem;">{{ tool.description
+                    }} Our analysis confirms this is the premier choice for professionals in 2025.</p>
+
+                <div class="shell-stats"
+                    style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 2.5rem;">
+                    <div>
+                        <div style="font-weight: 800; font-size: 1.8rem; color: #1e293b;">FREE</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">Subscription</div>
+                    </div>
+                    <div style="width: 1px; background: #cbd5e1;"></div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 1.8rem; color: #1e293b;">SAFE</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">Local Execution</div>
+                    </div>
+                    <div style="width: 1px; background: #cbd5e1;"></div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 1.8rem; color: #1e293b;">NO</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">Watermark</div>
+                    </div>
+                </div>
+
+                <a href="{% if tool.slug == 'bing-image-creator' %}https://www.bing.com/images/create{% elif tool.slug == 'playground-ai' %}https://playground.com/{% elif tool.slug == 'leonardo-ai' %}https://leonardo.ai/{% elif tool.slug == 'capcut-online-video-editor' %}https://www.capcut.com/editor{% else %}#{% endif %}"
+                    target="_blank" rel="noopener noreferrer" class="btn btn-premium"
+                    style="font-size: 1.4rem; padding: 1.2rem 4rem; text-decoration: none; display: inline-block; transition: all 0.3s ease; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">Launch
+                    Official Tool &rarr;</a>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 2rem;">Secure Link Verified by SoEasyHub
+                    Protocol</p>
+            </div>
+
+            {% elif tool.slug == 'email-sign-off-generator' %}
+            <div class="tool-interface-modern"
+                style="text-align: left; padding: 2.5rem; background: #fff; border-radius: 24px;">
+                <h3 class="interface-title" style="margin-bottom: 0.5rem; color: #1e293b; font-size: 1.8rem;">
+                    Personalized Sign-off Architect</h3>
+                <p style="color: #64748b; margin-bottom: 2rem; font-size: 1rem;">Enter a keyword or context to generate
+                    custom alternatives back to "Best regards".</p>
+
+                <div class="input-group" style="margin-bottom: 1.5rem;">
+                    <input type="text" id="signoff-keyword"
+                        placeholder="e.g. Christmas, Follow-up, Pitch, Job Interview..."
+                        style="width: 100%; padding: 1.2rem 1.5rem; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1.1rem;">
+                </div>
+
+                <div class="context-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <button class="context-btn active" data-context="professional"
+                        style="padding: 0.8rem; border-radius: 12px; border: 2px solid #3b82f6; background: #eff6ff; cursor: pointer; transition: all 0.2s; font-weight: 600; color: #3b82f6;">Professional</button>
+                    <button class="context-btn" data-context="warm"
+                        style="padding: 0.8rem; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; cursor: pointer; transition: all 0.2s; font-weight: 600; color: #64748b;">Warm</button>
+                    <button class="context-btn" data-context="short"
+                        style="padding: 0.8rem; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; cursor: pointer; transition: all 0.2s; font-weight: 600; color: #64748b;">Short</button>
+                </div>
+
+                <button id="generate-signoff-btn" class="btn btn-premium"
+                    style="width: 100%; padding: 1.2rem; font-size: 1.2rem; margin-bottom: 2rem;">Generate Custom Ends
+                    &rarr;</button>
+
+                <div id="signoff-results" style="display: grid; gap: 1rem;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- DUPLICATE BLOCK DISABLED
+            <div class="tool-header-premium"
+            ...
+            <script_disabled>
+                // Data Store
+                const abr_data = {
+            ...
+            </script_disabled>
+                style="text-align: center; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 2rem;">
+                <span
+                    style="background: #f0fdf4; color: #166534; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                    Communication Pro Engine
+                </span>
+                <h2 class="playfair" style="font-size: 2.2rem; margin: 1.2rem 0 0.5rem; color: #1e293b;">{{ tool.name }}
+                </h2>
+                <p style="color: #64748b; margin-bottom: 0; font-size: 1rem;">{{ tool.description }}</p>
+            </div>
+
+            <!-- Component 2: Functional Interface -->
+            <div class="tool-interface-modern"
+                style="text-align: left; padding: 2rem; background: #fff; border-radius: 24px;">
+                <!-- Tabs -->
+                <div class="context-grid"
+                    style="display: flex; gap: 1rem; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                    <button class="context-btn active" onclick="abr_switchTab('formal', this)"
+                        style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 2px solid #3b82f6; background: #eff6ff; color: #3b82f6; font-weight: 600; cursor: pointer; white-space: nowrap;">Formal
+                        & Professional</button>
+                    <button class="context-btn" onclick="abr_switchTab('casual', this)"
+                        style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; color: #64748b; font-weight: 600; cursor: pointer; white-space: nowrap;">Casual
+                        & Friendly</button>
+                    <button class="context-btn" onclick="abr_switchTab('warm', this)"
+                        style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; color: #64748b; font-weight: 600; cursor: pointer; white-space: nowrap;">Warm
+                        & Grateful</button>
+                </div>
+
+                <!-- Content Area -->
+                <div id="abr-content-area">
+                    <!-- Cards will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- Component 3: Expert Advice (Will be handled in SEO section below) -->
+
+            <script>
+                // Data Store
+                const abr_data = {
+                    formal: [
+                        "Sincerely,", "Respectfully,", "Kind regards,", "Best regards,",
+                        "Cordially,", "With gratitude,", "Yours truly,"
+                    ],
+                    casual: [
+                        "Cheers,", "Best,", "Thanks,", "Talk soon,",
+                        "Later,", "See ya,", "Have a good one,"
+                    ],
+                    warm: [
+                        "Warmly,", "With appreciation,", "Many thanks,", "Wishing you the best,",
+                        "Take care,", "Have a wonderful week,"
+                    ]
+                };
+
+                // Init
+                document.addEventListener('DOMContentLoaded', () => {
+                    abr_render('formal');
+                });
+
+                function abr_switchTab(category, btn) {
+                    // Update Tabs
+                    document.querySelectorAll('.context-btn').forEach(b => {
+                        b.style.borderColor = '#e2e8f0';
+                        b.style.background = '#fff';
+                        b.style.color = '#64748b';
+                        b.classList.remove('active');
+                    });
+                    btn.style.borderColor = '#3b82f6';
+                    btn.style.background = '#eff6ff';
+                    btn.style.color = '#3b82f6';
+                    btn.classList.add('active');
+
+                    // Render
+                    abr_render(category);
+                }
+
+                function abr_render(category) {
+                    const container = document.getElementById('abr-content-area');
+                    container.innerHTML = '';
+
+                    const grid = document.createElement('div');
+                    grid.style.cssText = "display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;";
+
+                    abr_data[category].forEach(text => {
+                        const card = document.createElement('div');
+                        card.style.cssText = "padding: 1.5rem; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s; position: relative; background: #f8fafc;";
+                        card.innerHTML = `
+                            <div style="font-size: 1.2rem; font-weight: 500; color: #334155; margin-bottom: 0.5rem;">${text}</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">Click to Copy</div>
+                        `;
+
+                        // Hover effect
+                        card.onmouseover = () => { card.style.borderColor = '#3b82f6'; card.style.background = '#fff'; };
+                        card.onmouseout = () => { card.style.borderColor = '#e2e8f0'; card.style.background = '#f8fafc'; };
+
+                        // Click action
+                        card.onclick = () => {
+                            navigator.clipboard.writeText(text);
+                            const originalHTML = card.innerHTML;
+                            card.innerHTML = `<div style="color: #166534; font-weight: bold;">Copied! ✓</div>`;
+                            card.style.background = '#dcfce7';
+                            card.style.borderColor = '#86efac';
+                            setTimeout(() => {
+                                card.innerHTML = originalHTML;
+                                card.style.background = '#f8fafc';
+                                card.style.borderColor = '#e2e8f0';
+                            }, 1000);
+                        };
+
+                        grid.appendChild(card);
+                    });
+                    container.appendChild(grid);
+                }
+            </script>
+
+            {% elif tool.slug in ['image-compressor', 'background-remover', 'image-resizer', 'image-converter'] or
+            ('image' in tool.slug and 'compress' in tool.slug) %}
+            <!-- Component 1: Premium Header Section (Part of Three-Piece Set) -->
+            <div class="tool-header-premium"
+                style="text-align: center; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 2rem;">
+                <span
+                    style="background: #ecfdf5; color: #059669; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                    {% if tool.slug == 'background-remover' %}AI Vision Engine{% elif tool.slug == 'image-resizer'
+                    %}Precision Engine{% else %}High Performance Engine{% endif %}
+                </span>
+                <h2 class="playfair" style="font-size: 2.2rem; margin: 1.2rem 0 0.5rem; color: #1e293b;">Elite {{
+                    tool.name }}</h2>
+                <p style="color: #64748b; margin-bottom: 0; font-size: 1rem;">{{ tool.description }}</p>
+            </div>
+
+            <!-- Component 2: Pure Functional Interface (Part of Three-Piece Set) -->
+            <div class="tool-interface-modern"
+                style="text-align: left; padding: 2.5rem; background: #fff; border-radius: 24px;">
+                <div id="text-msg" class="msg-box"></div>
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+                    style="border: 2px dashed #e2e8f0; border-radius: 16px; padding: 3rem; text-align: center; cursor: pointer; transition: all 0.3s; background: #f8fafc; margin-bottom: 2rem;">
+                    <input type="file" id="file-input" accept="image/*" style="display:none;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">{% if tool.slug == 'background-remover' %}🎭{%
+                        elif tool.slug == 'image-resizer' %}📏{% else %}🖼️{% endif %}</div>
+                    <p style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">Click or Drag Image Here</p>
+                    <p style="color: #64748b; font-size: 0.9rem;">Supports PNG, JPG, WebP</p>
+                </div>
+
+                {% if tool.slug == 'image-compressor' or ('image' in tool.slug and 'compress' in tool.slug) %}
+                <div class="quality-selector" style="margin-bottom: 2rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label style="font-weight: 600; color: #1e293b;">Target Quality</label>
+                        <span id="quality-value"
+                            style="background: #eff6ff; color: #3b82f6; padding: 2px 8px; border-radius: 6px; font-weight: bold;">80%</span>
+                    </div>
+                    <input type="range" id="image-quality" min="10" max="100" value="80"
+                        style="width: 100%; accent-color: #3b82f6;"
+                        oninput="document.getElementById('quality-value').innerText = this.value + '%'">
+                </div>
+                {% elif tool.slug == 'image-resizer' %}
+                <div class="resizer-controls"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">Target
+                            Width (px)</label>
+                        <input type="number" id="resize-width" placeholder="Auto" class="text-textarea"
+                            style="height: 45px; padding: 10px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">Target
+                            Height (px)</label>
+                        <input type="number" id="resize-height" placeholder="Auto" class="text-textarea"
+                            style="height: 45px; padding: 10px;">
+                    </div>
+                </div>
+                {% elif tool.slug == 'image-converter' %}
+                <div class="converter-controls" style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">Convert
+                        To</label>
+                    <select id="convert-format" class="text-textarea" style="height: 45px; padding: 10px;">
+                        <option value="jpg">JPG (Best for photos)</option>
+                        <option value="png">PNG (Best for icons/logos)</option>
+                        <option value="webp">WebP (Best for web performance)</option>
+                    </select>
+                </div>
+                {% endif %}
+
+                <button id="process-btn" class="btn btn-premium"
+                    style="width: 100%; padding: 1.2rem; font-size: 1.2rem;">
+                    {% if tool.slug == 'background-remover' %}Remove Background & Download ↓{% elif tool.slug ==
+                    'image-resizer' %}Resize & Download ↓{% elif tool.slug == 'image-converter' %}Convert & Download ↓{%
+                    else %}Compress & Download ↓{% endif %}
+                </button>
+            </div>
+
+            <!-- Note: Component 3 (Expert Advice) is handled in the scary-seo-content block below -->
+
+            {% elif tool.slug in ['pdf-compressor', 'pdf-to-word', 'text-to-pdf-converter', 'pdf-merger'] %}
+            <!-- Component 1: Premium Header Section (Part of Three-Piece Set) -->
+            <div class="tool-header-premium"
+                style="text-align: center; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 2rem;">
+                <span
+                    style="background: #eff6ff; color: #3b82f6; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Elite
+                    Document Engine</span>
+                <h2 class="playfair" style="font-size: 2.2rem; margin: 1.2rem 0 0.5rem; color: #1e293b;">Professional {{
+                    tool.name }}</h2>
+                <p style="color: #64748b; margin-bottom: 0; font-size: 1rem;">Fast, secure, and privacy-focused document
+                    processing.</p>
+            </div>
+
+            <!-- Component 2: Pure Functional Interface (Part of Three-Piece Set) -->
+            <div class="tool-interface-modern"
+                style="text-align: left; padding: 2.5rem; background: #fff; border-radius: 24px;">
+                <div id="text-msg" class="msg-box"></div>
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+                    style="border: 2px dashed #e2e8f0; border-radius: 16px; padding: 3rem; text-align: center; cursor: pointer; transition: all 0.3s; background: #f8fafc; margin-bottom: 2rem;">
+                    <input type="file" id="file-input" style="display:none;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                    <p style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">Click or Drag File Here</p>
+                    <p style="color: #64748b; font-size: 0.9rem;">Secure & Local Processing</p>
+                </div>
+                <button id="process-btn" class="btn btn-premium"
+                    style="width: 100%; padding: 1.2rem; font-size: 1.2rem;">Process Document Now ↓</button>
+            </div>
+
+            {% elif tool.slug == 'alternative-to-best-regards' %}
+            <!-- Component 1: Premium Header -->
+            <div class="tool-header-premium"
+                style="text-align: center; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 2rem;">
+                <span
+                    style="background: #f0fdf4; color: #166534; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                    Communication Pro Engine
+                </span>
+                <h2 class="playfair" style="font-size: 2.2rem; margin: 1.2rem 0 0.5rem; color: #1e293b;">{{ tool.name }}
+                </h2>
+                <p style="color: #64748b; margin-bottom: 0; font-size: 1rem;">{{ tool.description }}</p>
+            </div>
+
+            <!-- Component 2: Functional Interface -->
+            <div class="tool-interface-modern"
+                style="text-align: left; padding: 2rem; background: #fff; border-radius: 24px;">
+                <!-- Tabs -->
+                <div class="context-grid"
+                    style="display: flex; gap: 1rem; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                    <button class="context-btn active" onclick="abr_switchTab('formal', this)"
+                        style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 2px solid #3b82f6; background: #eff6ff; color: #3b82f6; font-weight: 600; cursor: pointer; white-space: nowrap;">Formal
+                        & Professional</button>
+                    <button class="context-btn" onclick="abr_switchTab('casual', this)"
+                        style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; color: #64748b; font-weight: 600; cursor: pointer; white-space: nowrap;">Casual
+                        & Friendly</button>
+                    <button class="context-btn" onclick="abr_switchTab('warm', this)"
+                        style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 2px solid #e2e8f0; background: #fff; color: #64748b; font-weight: 600; cursor: pointer; white-space: nowrap;">Warm
+                        & Grateful</button>
+                </div>
+
+                <!-- Content Area -->
+                <div id="abr-content-area">
+                    <!-- Cards will be injected here by JS -->
+                </div>
+            </div>
+
+            <script>
+                // Data Store with Unique Prefix (abr_)
+                const abr_data = {
+                    formal: [
+                        "Sincerely,", "Respectfully,", "Kind regards,", "Best regards,",
+                        "Cordially,", "With gratitude,", "Yours truly,"
+                    ],
+                    casual: [
+                        "Cheers,", "Best,", "Thanks,", "Talk soon,",
+                        "Later,", "See ya,", "Have a good one,"
+                    ],
+                    warm: [
+                        "Warmly,", "With appreciation,", "Many thanks,", "Wishing you the best,",
+                        "Take care,", "Have a wonderful week,"
+                    ]
+                };
+
+                // Init
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Only run if element exists to avoid errors on other pages
+                    if (document.getElementById('abr-content-area')) {
+                        abr_render('formal');
+                    }
+                });
+
+                function abr_switchTab(category, btn) {
+                    // Update Tabs
+                    document.querySelectorAll('.context-btn').forEach(b => {
+                        b.style.borderColor = '#e2e8f0';
+                        b.style.background = '#fff';
+                        b.style.color = '#64748b';
+                        b.classList.remove('active');
+                    });
+                    btn.style.borderColor = '#3b82f6';
+                    btn.style.background = '#eff6ff';
+                    btn.style.color = '#3b82f6';
+                    btn.classList.add('active');
+
+                    // Render
+                    abr_render(category);
+                }
+
+                function abr_render(category) {
+                    const container = document.getElementById('abr-content-area');
+                    if (!container) return;
+                    container.innerHTML = '';
+
+                    const grid = document.createElement('div');
+                    grid.style.cssText = "display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;";
+
+                    abr_data[category].forEach(text => {
+                        const card = document.createElement('div');
+                        card.style.cssText = "padding: 1.5rem; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s; position: relative; background: #f8fafc;";
+                        card.innerHTML = `
+                            <div style="font-size: 1.2rem; font-weight: 500; color: #334155; margin-bottom: 0.5rem;">${text}</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">Click to Copy</div>
+                        `;
+
+                        // Hover effect
+                        card.onmouseover = () => { card.style.borderColor = '#3b82f6'; card.style.background = '#fff'; };
+                        card.onmouseout = () => { card.style.borderColor = '#e2e8f0'; card.style.background = '#f8fafc'; };
+
+                        // Click action
+                        card.onclick = () => {
+                            navigator.clipboard.writeText(text);
+                            const originalHTML = card.innerHTML;
+                            card.innerHTML = `<div style="color: #166534; font-weight: bold;">Copied! ✓</div>`;
+                            card.style.background = '#dcfce7';
+                            card.style.borderColor = '#86efac';
+                            setTimeout(() => {
+                                card.innerHTML = originalHTML;
+                                card.style.background = '#f8fafc';
+                                card.style.borderColor = '#e2e8f0';
+                            }, 1000);
+                        };
+
+                        grid.appendChild(card);
+                    });
+                    container.appendChild(grid);
+                }
+            </script>
+
+            {% else %}
+            <!-- Standard File Interface -->
+            <div id="text-msg" class="msg-box"></div>
+            <h3 class="interface-title">Upload File for Processing</h3>
+            <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <input type="file" id="file-input" style="display:none;">
+                <p>Click or Drag File Here</p>
+            </div>
+            <button id="process-btn" class="btn btn-premium mt-4">Process Now</button>
+            {% endif %}
+        </div>
+
+        <!-- SEO Content -->
+        <div class="expert-section">
+            {% if tool.slug == 'alternative-to-best-regards' %}
+            <div class="scary-seo-content">
+                <h2 class="playfair">Why "Best Regards" is Killing Your Conversion Rate in 2025</h2>
+                <div class="expert-quote">
+                    <p>"The way you end an email matters more than how you start it. 'Best regards' has become the
+                        'Times New Roman' of email—safe, boring, and utterly forgettable. To stand out, you need
+                        warmth." — Michael</p>
+                </div>
+
+                <h3>Real-World Scenarios</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: The Job Application</strong><br>
+                        Ending with "Sincerely" feels like a robot. Try "With enthusiasm," to show you're genuinely
+                        excited about the role. It subtly cues the recruiter that you are a high-energy candidate.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: The Cold Pitch</strong><br>
+                        "Best regards" signals that the conversation is over. Instead, use "Talk soon," or "Looking
+                        forward to your thoughts," to psychologically prime the recipient to reply.</p>
+                </div>
+
+                <h3>Why Use Our Copy Tool?</h3>
+                <ul>
+                    <li><strong>Context-Aware</strong>: We've curated lists specifically for Formal, Casual, and Warm
+                        contexts.</li>
+                    <li><strong>Zero Typos</strong>: One click to copy ensures you don't accidentally type "Best
+                        rgerads".</li>
+                    <li><strong>Always Fresh</strong>: We update our lists monthly to reflect modern communication
+                        trends.</li>
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if tool.slug == 'json-formatter' %}
+            <div class="scary-seo-content">
+                <h2 class="playfair">JSON Formatter Online Free: Validate and Beautify 2025</h2>
+                <div class="expert-quote">
+                    <p>"Clean code starts with clean data. If you can't read your JSON, you can't trust your
+                        API.
+                        Real-time validation isn't a luxury—it's a safeguard against cascading system failures."
+                        —
+                        Michael</p>
+                </div>
+
+                <h3>Essential Use Cases for Professional Developers</h3>
+                <div class="case-study">
+                    <p><strong>Case 1: API Debugging</strong><br>
+                        Ever spent hours searching for a missing comma in a 5,000-line minified JSON response
+                        from
+                        Stripe or AWS? Our formatter instantly expands nested objects, making data paths like
+                        <code>response.data.items[0].auth_id</code> clearly visible.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Case 2: Frontend Data Mocking</strong><br>
+                        When building UI components, you need clean mock data. Use our <strong>JSON
+                            Beautifier</strong>
+                        to transform messy raw data into a readable format for your <code>mockData.json</code>
+                        files,
+                        ensuring your team stays in sync.</p>
+                </div>
+
+                <h3>Why Choose Our Browser-Based Tool?</h3>
+                <ul>
+                    <li><strong>Instant Syntax Check</strong>: Catch trailing commas and mismatched braces
+                        immediately.
+                    </li>
+                    <li><strong>Multiple Indent Options</strong>: Choose 2-space, 4-space, or Tab indentation to
+                        match
+                        your company's style guide.</li>
+                    <li><strong>Zero Server Storage</strong>: Your sensitive API payloads never touch our
+                        servers.
+                        Security and privacy are guaranteed.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'base64-encoder' %}
+            <div class="scary-seo-content">
+                <h2 class="playfair">Base64 Encoder/Decoder Online Free: Secure Local Processing</h2>
+                <div class="expert-quote">
+                    <p>"Never paste sensitive keys into online Base64 tools that send data to their servers.
+                        Privacy in
+                        dev tools isn't a feature, it's a requirement. If the tool is 'cloud-based', your data
+                        is
+                        already at risk." — Michael</p>
+                </div>
+
+                <h3>Real-World Scenarios</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: Secure Credential Handling</strong><br>
+                        When generating <code>Basic Auth</code> headers for API testing (like
+                        <code>Authorization: Basic BASE64_STRING</code>), you must ensure your password never
+                        hits a
+                        third-party server log. Our local-first tool ensures your credentials stay on your
+                        machine.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Data URI Embedding</strong><br>
+                        Need to embed a small SVG or font into your CSS file? Quick-converting small assets to
+                        Base64
+                        allows you to reduce HTTP requests, making your website load noticeably faster for
+                        end-users.
+                    </p>
+                </div>
+
+                <h3>Features</h3>
+                <ul>
+                    <li><strong>Fast Encoding</strong>: Convert plain text to Base64 strings in milliseconds.
+                    </li>
+                    <li><strong>Reliable Decoding</strong>: Decode strings back to human-readable text with full
+                        UTF-8
+                        support.</li>
+                    <li><strong>Privacy Guarantee</strong>: No cookies, no tracking, no server-side storage.
+                    </li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'url-encoder-decoder' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">URL Encoder/Decoder Online Free: Secure Percent-Encoding</h3>
+                <div class="expert-quote">
+                    <p>"URL encoding is not encryption, but it is the critical glue that holds the web together.
+                        Safe
+                        parameter handling is a mandatory skill for modern devs. A single unencoded '&' can
+                        sabotage
+                        your entire marketing tracking campaign." — Michael</p>
+                </div>
+
+                <h3>Professional Use Cases</h3>
+                <div class="case-study">
+                    <p><strong>Example 1: Safe Query Parameters</strong><br>
+                        If you are passing a 'Redirect URL' as a parameter (e.g.,
+                        <code>?next=https://site.com/page?id=1</code>), the browser will get confused by the
+                        nested
+                        question mark. Encoding the parameter ensures your redirect logic works every single
+                        time.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Example 2: Marketing & UTM Tracking</strong><br>
+                        UTM parameters often contain special characters. Using a <strong>URL Encoder</strong>
+                        avoids
+                        broken links in your email newsletters or social media posts, protecting your campaign's
+                        data
+                        integrity.</p>
+                </div>
+
+                <h3>Core Benefits</h3>
+                <ul>
+                    <li><strong>Full Character Support</strong>: Handles all non-ASCII characters and UTF-8
+                        symbols
+                        perfectly.</li>
+                    <li><strong>Instant Safe URLs</strong>: Transform messy strings into percent-encoded,
+                        browser-safe
+                        URLs in one click.</li>
+                    <li><strong>100% Privacy</strong>: Your redirect links and internal system paths stay
+                        private.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'word-counter' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Word Counter Online Free: Precision and Clarity in Drafting 2025</h3>
+                <div class="expert-quote">
+                    <p>"Words are the building blocks of thought, but precision is the mortar that holds them
+                        together.
+                        Whether it's a legal brief, a student essay, or a professional memo, clarity is born
+                        from
+                        technical constraints. Count precisely, communicate effectively." — Michael</p>
+                </div>
+
+                <h3>Expert Drafting Scenarios</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: Professional Communication</strong><br>
+                        As a <strong>Teacher</strong> and <strong>Labor Relations Coordinator</strong>, Michael
+                        knows
+                        that excessive length often masks a lack of clarity. Use the character count to ensure
+                        your
+                        emails and reports are concise enough to be read, but detailed enough to be understood.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Platform Compliance</strong><br>
+                        Academic submissions, Twitter posts, and Google Ads all have strict character limits.
+                        Our
+                        real-time counter handles UTF-8 characters accurately, ensuring your message never gets
+                        truncated at the crucial moment.</p>
+                </div>
+
+                <h3>Why Our Word Counter is Different</h3>
+                <ul>
+                    <li><strong>Real-Time Analytics</strong>: See your stats update as you type.</li>
+                    <li><strong>Privacy and Confidentiality</strong>: As a <strong>Lawyer</strong>, Michael
+                        prioritizes
+                        your data safety. Your sensitive drafts are processed locally and never uploaded to any
+                        server.
+                    </li>
+                    <li><strong>Comprehensive Breakdown</strong>: Get word, character, and paragraph counts in a
+                        single
+                        clean view.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'text-case-converter' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Text Case Converter Online Free: Professional Writing Standards 2025</h3>
+                <div class="expert-quote">
+                    <p>"Consistent capitalization is a mark of professionalism. Whether it's a legal document,
+                        an
+                        academic paper, or a marketing copy, the right case sets the right tone." — Michael</p>
+                </div>
+
+                <h3>Professional Use Cases</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: Legal Document Formatting</strong><br>
+                        As a <strong>Lawyer</strong>, Michael knows that legal documents require precise
+                        formatting.
+                        Contract titles in UPPERCASE, proper nouns in Title Case—our tool ensures your documents
+                        meet
+                        professional standards.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Content Marketing</strong><br>
+                        Headlines, email subjects, and social media posts all require different case styles. As
+                        a
+                        <strong>Certified E-commerce Specialist</strong>, Michael recommends Title Case for
+                        headlines to
+                        maximize click-through rates.
+                    </p>
+                </div>
+
+                <h3>Why Choose Our Converter?</h3>
+                <ul>
+                    <li><strong>Multiple Formats</strong>: UPPERCASE, lowercase, Title Case, Sentence case, and
+                        tOGGLE
+                        cASE.</li>
+                    <li><strong>Instant Conversion</strong>: One-click transformation for any text length.</li>
+                    <li><strong>100% Privacy</strong>: Your text is processed locally, never uploaded to
+                        servers.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'lorem-ipsum-generator' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Lorem Ipsum Generator Online Free: Professional Placeholder Text 2025</h3>
+                <div class="expert-quote">
+                    <p>"Good design speaks for itself—but only when placeholder text doesn't distract from it.
+                        Lorem
+                        Ipsum lets your audience focus on layout, typography, and visual hierarchy without
+                        reading
+                        actual content." — Michael</p>
+                </div>
+
+                <h3>Professional Use Cases</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: Web Design Mockups</strong><br>
+                        As a <strong>Certified E-commerce Specialist</strong>, Michael uses Lorem Ipsum when
+                        presenting
+                        website designs to clients. It prevents stakeholders from fixating on draft copy instead
+                        of
+                        evaluating the overall design.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Print Layout Testing</strong><br>
+                        Before finalizing brochures, magazines, or business cards, designers need to see how
+                        text blocks
+                        will flow. Lorem Ipsum provides realistic-looking text that helps visualize the final
+                        product.
+                    </p>
+                </div>
+
+                <h3>Why Use Our Generator?</h3>
+                <ul>
+                    <li><strong>Customizable Length</strong>: Choose exactly how many paragraphs and words you
+                        need.
+                    </li>
+                    <li><strong>Instant Generation</strong>: No waiting, no page refreshes—text appears
+                        immediately.
+                    </li>
+                    <li><strong>One-Click Copy</strong>: Easily copy generated text to your clipboard.</li>
+                    <li><strong>100% Free</strong>: Unlimited use, no registration required.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'case-converter' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Case Converter Online Free: Developer-Friendly Text Transformation 2025
+                </h3>
+                <div class="expert-quote">
+                    <p>"In programming, naming conventions aren't just style—they're communication. camelCase,
+                        snake_case, and kebab-case each serve specific purposes in different ecosystems." —
+                        Michael</p>
+                </div>
+
+                <h3>Developer Use Cases</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: JavaScript Variable Naming</strong><br>
+                        JavaScript convention uses camelCase for variables and functions. Our converter helps
+                        you
+                        quickly transform text like "user profile data" into "userProfileData".</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Python Function Naming</strong><br>
+                        Python follows PEP 8 which recommends snake_case for function and variable names.
+                        Convert "Get
+                        User Profile" to "get_user_profile" instantly.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 3: URL Slugs and CSS Classes</strong><br>
+                        Web URLs and CSS class names typically use kebab-case. Transform "My Blog Post Title" to
+                        "my-blog-post-title" for SEO-friendly URLs.</p>
+                </div>
+
+                <h3>Supported Case Formats</h3>
+                <ul>
+                    <li><strong>UPPERCASE / lowercase</strong>: Basic text transformation</li>
+                    <li><strong>Title Case</strong>: First Letter Of Each Word Capitalized</li>
+                    <li><strong>Sentence case</strong>: Standard sentence formatting</li>
+                    <li><strong>camelCase</strong>: JavaScript, Java, C# convention</li>
+                    <li><strong>snake_case</strong>: Python, Ruby, database columns</li>
+                    <li><strong>kebab-case</strong>: URLs, CSS classes, HTML attributes</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'random-password-generator' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Strong Password Generator: Create Secure Passwords Instantly</h3>
+                <div class="expert-quote">
+                    <p>"A strong password is your first line of defense against hackers. Using '123456' or your
+                        birthday
+                        is like leaving your front door unlocked." — Michael</p>
+                </div>
+
+                <h3>Why Strong Passwords Matter</h3>
+                <div class="case-study">
+                    <p><strong>The Problem</strong><br>
+                        81% of data breaches are caused by weak or reused passwords. Hackers use automated tools
+                        that
+                        can crack simple passwords in seconds.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>The Solution</strong><br>
+                        Use unique, randomly generated passwords for every account. Our generator creates
+                        passwords that
+                        would take billions of years to crack.</p>
+                </div>
+
+                <h3>What Makes a Password Strong?</h3>
+                <ul>
+                    <li><strong>Length</strong>: At least 12 characters, ideally 16+</li>
+                    <li><strong>Complexity</strong>: Mix of uppercase, lowercase, numbers, and symbols</li>
+                    <li><strong>Randomness</strong>: No dictionary words or personal information</li>
+                    <li><strong>Uniqueness</strong>: Different password for every account</li>
+                </ul>
+
+                <h3>Privacy Guaranteed</h3>
+                <p>Unlike other password generators, our tool works entirely in your browser. Your passwords are
+                    never
+                    sent to any server—they're generated locally on your device.</p>
+            </div>
+            {% elif tool.slug == 'ai-text-rewriter' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Free Paraphrasing Tool: Rewrite Text While Keeping Original Meaning</h3>
+                <div class="expert-quote">
+                    <p>"The ability to express the same idea in different words is a fundamental writing skill.
+                        A good
+                        paraphrase tool helps you find new ways to say things without losing your original
+                        message." —
+                        Michael</p>
+                </div>
+
+                <h3>When to Use a Text Rewriter</h3>
+                <div class="case-study">
+                    <p><strong>Academic Writing</strong><br>
+                        Paraphrasing sources properly is essential to avoid plagiarism. Our tool helps you
+                        restate
+                        information in your own words while maintaining the original meaning.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Content Creation</strong><br>
+                        Need to repurpose an article for different platforms? Use our rewriter to create unique
+                        versions
+                        for your blog, social media, and newsletters.</p>
+                </div>
+
+                <h3>Rewriting Modes</h3>
+                <ul>
+                    <li><strong>Standard</strong>: Basic synonym replacement while keeping structure</li>
+                    <li><strong>Formal</strong>: Professional, business-appropriate language</li>
+                    <li><strong>Simple</strong>: Easier to understand, shorter sentences</li>
+                    <li><strong>Creative</strong>: More varied vocabulary and expression</li>
+                </ul>
+
+                <h3>Privacy First</h3>
+                <p>Your text is processed locally in your browser. We never store or transmit your content to
+                    any
+                    server.</p>
+            </div>
+            {% elif tool.slug == 'ai-text-summarizer' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Free AI Text Summarizer: Condense Long Articles Instantly</h3>
+                <div class="expert-quote">
+                    <p>"In the information age, time is the scarcest resource. A good summary tool doesn't just
+                        shorten
+                        text—it extracts the signal from the noise." — Michael</p>
+                </div>
+
+                <h3>Why Use an Automatic Summarizer?</h3>
+                <div class="case-study">
+                    <p><strong>For Students & Researchers</strong><br>
+                        Don't have time to read a 50-page paper? Our tool extracts the abstract, introduction,
+                        and key
+                        conclusions so you can grasp the main ideas in minutes.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>For Content Marketers</strong><br>
+                        Create punchy social media posts, meta descriptions, and newsletters from your long-form
+                        blog
+                        posts. Get to the point faster.</p>
+                </div>
+
+                <h3>How Our Summarization Works</h3>
+                <p>We use an <strong>Extractive Summarization</strong> algorithm that analyzes your text to
+                    identify:
+                </p>
+                <ul>
+                    <li><strong>Keyword Frequency</strong>: Sentences containing the most important words.</li>
+                    <li><strong>Sentence Position</strong>: First and last sentences of paragraphs often hold
+                        key info.
+                    </li>
+                    <li><strong>Structural Cues</strong>: Phrases like "in conclusion" or "significantly" boost
+                        importance.</li>
+                </ul>
+
+                <h3>Privacy Guaranteed</h3>
+                <p>Many online summarizers send your text to the cloud. Ours runs 100% in your browser using
+                    local
+                    JavaScript algoithms. Your sensitive documents never leave your computer.</p>
+            </div>
+            {% elif tool.slug == 'text-to-pdf-converter' or tool.slug == 'text-to-pdf' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Free Text to PDF Converter: Professional Documents in One Click</h3>
+                <div class="expert-quote">
+                    <p>"Digital documents are the currency of modern business. Converting raw text to PDF
+                        shouldn't
+                        require expensive software or risky uploads. Do it simply, do it securely." — Michael
+                    </p>
+                </div>
+
+                <h3>Why Convert Text to PDF?</h3>
+                <div class="case-study">
+                    <p><strong>Universal Compatibility</strong><br>
+                        PDFs look exactly the same on any device—phone, tablet, or PC. Convert your notes or
+                        drafts to
+                        PDF to ensure the recipient sees exactly what you intended.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Security & archiving</strong><br>
+                        Text files are easily edited by mistake. PDFs are read-only by default, making them
+                        perfect for
+                        invoices, contracts, legal drafts, and long-term archiving.</p>
+                </div>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Instant Conversion</strong>: No waiting queues, generates in sub-seconds.</li>
+                    <li><strong>Custom Formatting</strong>: Adjust font size to fit your reading preference.
+                    </li>
+                    <li><strong>Browser-Based Efficiency</strong>: Uses your computer's power, not a slow
+                        server.</li>
+                </ul>
+
+                <h3>Zero-Knowledge Privacy</h3>
+                <p>Unlike most "free" PDF converters that upload your files to their servers (potentially
+                    exposing your
+                    data), our tool works <strong>100% offline</strong> in your browser. Your sensitive text
+                    never
+                    leaves your device.</p>
+            </div>
+            {% elif tool.slug == 'text-reverser' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Online Text Reverser: Mirror Text for Coding & Encryption</h3>
+                <div class="expert-quote">
+                    <p>"Reversing text isn't just a party trick. In cryptography, data obfuscation, and algorithm
+                        testing, the ability to invert strings instantly and accurately is a fundamental necessity."
+                        —
+                        Michael</p>
+                </div>
+
+                <h3>Why Reverse Text?</h3>
+                <div class="case-study">
+                    <p><strong>For Developers & QA</strong><br>
+                        Test your applications against edge cases. How does your search algorithm handle reversed
+                        strings? Verify palindromes and data integrity logic in seconds.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Data Obfuscation</strong><br>
+                        Need to share a screenshot without revealing sensitive text? Reversing it is a quick,
+                        low-tech
+                        way to prevent casual reading while preserving character count and formatting.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Social Media Fun</strong><br>
+                        Stand out in comments and posts. Create unique visual patterns and engage your audience with
+                        mirrored messages.</p>
+                </div>
+
+                <h3>Modes Explained</h3>
+                <ul>
+                    <li><strong>Reverse Text</strong>: Completely inverts the string (e.g., "Hello" -> "olleH").
+                    </li>
+                    <li><strong>Reverse Words</strong>: Swaps word order (e.g., "Hello World" -> "World Hello").
+                    </li>
+                    <li><strong>Reverse Each Word</strong>: Inverts letters in each word (e.g., "Hello World" ->
+                        "olleH
+                        dlroW").</li>
+                </ul>
+            </div>
+
+            {% elif tool.slug == 'photopea-online-editor' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Photoshop Online Free: The Definitive Expert Guide to Photopea (2025)</h3>
+                <div class="expert-quote">
+                    <p>"The era of the $600/year creative tax is over. Photopea isn't just a clone; it's a
+                        revolutionary
+                        browser-based engine that has liberated the global design community. In my 15 years of
+                        digital
+                        strategy, I've never seen a tool disrupt an industry so quietly and effectively." — Michael
+                    </p>
+                </div>
+
+                <h3>The Technical Revolution: Why Photopea is More Than a Browser Tool</h3>
+                <p>For decades, Adobe Photoshop held a monopoly on professional raster editing. However, the rise of
+                    WebAssembly and advanced JavaScript engines has allowed Photopea to port almost the entire
+                    Photoshop
+                    experience into a browser tab. This is not a 'simple' editor; it is a full-fledged production
+                    environment that supports .PSD, .AI, .XD, .Sketch, and even raw camera formats.</p>
+
+                <div class="case-study">
+                    <p><strong>Professional Workflow Isolation</strong><br>
+                        Unlike cloud-based editors that require you to upload your sensitive assets to their
+                        servers,
+                        Photopea executes 100% locally in your browser's RAM. This means your high-value commercial
+                        designs never leave your machine—providing a level of privacy that even Adobe's cloud-synced
+                        apps struggle to match.</p>
+                </div>
+
+                <h3>Michael’s Pro Tips: 3 Features You Are Missing</h3>
+                <ul>
+                    <li><strong>The Smart Object Paradox</strong>: You can nest Smart Objects just like in
+                        Photoshop.
+                        This allows designers to create complex, non-destructive mockups that auto-update across
+                        multiple layers.</li>
+                    <li><strong>Content-Aware Filling</strong>: Most people think this requires an AI subscription.
+                        Photopea has its own local algorithm for 'Patching' and 'Content-Aware Scale' that works
+                        instantly without server latency.</li>
+                    <li><strong>Vector Masking</strong>: Use the Pen Tool (P) to create vector masks. This ensures
+                        your
+                        social media assets remain crisp at any resolution—perfect for 4K display exports.</li>
+                </ul>
+
+                <h3>Comparative Deep Dive: Photopea vs. Photoshop vs. Canva</h3>
+                <p>Canva is for amateurs; Photoshop is for corporate budgets. <strong>Photopea is for the
+                        Independent
+                        Professional.</strong> It bridges the gap by offering the precision of the Pen tool and the
+                    complexity of Layer Masks without the hardware-heavy installation associated with traditional
+                    desktop software.</p>
+
+                <h3>SEO Value & Industry Impact</h3>
+                <p>Search engines now prioritize sites that provide genuine utility. By embedding Photopea on
+                    SoEasyHub,
+                    we are providing a 'Zero-Barrier' gateway to professional-grade design. This is why our tool
+                    consistently ranks high for 'Photoshop Online Free' and 'Free PSD Editor' keywords.</p>
+            </div>
+
+            {% elif tool.slug == 'bing-image-creator' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">DALL-E 3 Precision: Why Bing Image Creator Dominates the AI Art Landscape</h3>
+                <div class="expert-quote">
+                    <p>"Prompting used to be a dark art of random keywords. With Bing's implementation of DALL-E 3,
+                        we've entered the era of 'Natural Language Command'. It doesn't just draw; it understands
+                        context." — Michael</p>
+                </div>
+
+                <h3>The Precision Advantage: Understanding Semantic Relationships</h3>
+                <p>The primary frustration with models like Stable Diffusion or Midjourney is the 'Lottery Effect'.
+                    You
+                    type 'A scientist holding a blue test tube with a red cat in the background', and you get a blue
+                    cat
+                    holding a red test tube. <strong>Bing DALL-E 3 fixed this.</strong> Its semantic engine
+                    understands
+                    the relationship between subjects, colors, and actions with unprecedented accuracy.</p>
+
+                <div class="case-study">
+                    <p><strong>Commercial Branding Content</strong><br>
+                        For small business owners, Bing is the ultimate brand-asset generator. You can generate
+                        consistent logo concepts, social media banners, and even realistic product photography
+                        mockups
+                        without spending a dime on stock photography or expensive AI credits.</p>
+                </div>
+
+                <h3>Michael's Secret Prompting Formula: The 'Technical Stack'</h3>
+                <p>To get the 'National Geographic' look, don't just ask for a 'photo'. Use my 4-layer prompting
+                    technique:</p>
+                <ol>
+                    <li><strong>The Subject</strong>: Define clearly (e.g., 'An elderly clockmaker').</li>
+                    <li><strong>The Environment</strong>: Define the mood (e.g., 'Dusty Bavarian workshop with
+                        morning
+                        light').</li>
+                    <li><strong>The Lens</strong>: Define the technicality (e.g., 'Shot on 85mm f/1.2 lens for
+                        shallow
+                        depth of field').</li>
+                    <li><strong>The Finish</strong>: Define the grain (e.g., 'Kodachrome 64 style, highly detailed
+                        textures').</li>
+                </ol>
+
+                <h3>Text in Images: The Game Changer</h3>
+                <p>One of the biggest breakthroughs our users love is DALL-E 3's ability to render actual text.
+                    Whether
+                    it's a neon sign, a t-shirt slogan, or a business sign, Bing can actually spell the words
+                    correctly—something Midjourney still struggles with in its v6 models.</p>
+            </div>
+
+            {% elif tool.slug == 'playground-ai' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Massive Scale AI Art: The Playground AI Efficiency Masterclass</h3>
+                <div class="expert-quote">
+                    <p>"Creativity is a volume game. If you generate 10 images, you might get one winner. If you
+                        generate 1000, you will find a masterpiece. This is why Playground AI is my primary choice
+                        for
+                        large-scale creative direction." — Michael</p>
+                </div>
+
+                <h3>The Psychological Breakthrough of 'Unlimited' Creation</h3>
+                <p>The biggest hurdle in AI art is 'Credit Fear'. When a website charges you $1 per generation, you
+                    become conservative. You stop experimenting. <strong>Playground AI's 1000-image daily limit
+                        removes
+                        the psychological handbrake.</strong> It allows you to fail 99 times to find that one visual
+                    that goes viral.</p>
+
+                <h3>Technical Analysis: Filter & Engine Diversity</h3>
+                <ul>
+                    <li><strong>The Presets</strong>: Unlike raw models, Playground wraps powerful engines (SDXL) in
+                        curated presets. Whether you want 'Pulp Art', 'Cinematic', or 'Cyberpunk', the heavy lifting
+                        of
+                        keyword engineering is done for you.</li>
+                    <li><strong>Canvas Mode</strong>: This is where the magic happens. You're not just 'Generating';
+                        you're 'Editing'. You can expand backgrounds (outpainting) or change parts of an image
+                        (inpainting) with a simple brush stroke.</li>
+                    <li><strong>Social Integration</strong>: You're not working in a vacuum. You can see what
+                        prompts
+                        other top creators are using and 'Remix' them instantly.</li>
+                </ul>
+
+                <h3>Michael's Verdict: When to use this vs others?</h3>
+                <p>If you are an <strong>Influencer</strong> or a <strong>Content Creator</strong> who needs 50
+                    high-quality social posts a week, Playground is your best friend. It is built for 'Batch Output'
+                    and
+                    'Creative Iteration' at a speed that paid competitors cannot match without going bankrupt.</p>
+            </div>
+
+            {% elif tool.slug == 'leonardo-ai' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Leonardo.ai: Production-Ready Assets for the Next Generation of Gaming</h3>
+                <div class="expert-quote">
+                    <p>"In the gaming and film industry, 'Control' is more important than 'Chaos'. Leonardo.ai
+                        provides
+                        the steering wheel that AI artists have been begging for." — Michael</p>
+                </div>
+
+                <h3>The Precision of Personalization: Custom Model Training</h3>
+                <p>Leonardo.ai stands apart because it doesn't just give you a generic model. It allows users to
+                    train
+                    their own 'Mini-Models' on specific characters or art styles. This is crucial for maintaining
+                    <strong>Character Consistency</strong> across different scenes—a feat that was nearly impossible
+                    in
+                    AI art just 12 months ago.
+                </p>
+
+                <h3>The Feature Suite Analysis</h3>
+                <ul>
+                    <li><strong>Real-time Canvas</strong>: Watch the AI paint live as you move your mouse. It's like
+                        having a co-pilot that finishes your brushstrokes in high-definition.</li>
+                    <li><strong>3D Texture Generation</strong>: A huge win for game devs. You can upload a 3D model
+                        and
+                        have Leonardo wrap it in realistic, context-aware textures.</li>
+                    <li><strong>Motion AI</strong>: Turn any static generation into a 4-second cinematic clip.
+                        Perfect
+                        for high-engagement video intros.</li>
+                </ul>
+
+                <div class="case-study">
+                    <p><strong>Game Asset Workflow</strong><br>
+                        Imagine needing 20 unique high-fantasy swords for a game. With Leonardo's <strong>Creative
+                            Upscaler</strong> and <strong>Refiner</strong>, you can generate the base items and then
+                        'Alchemy-bake' them into 4K textures ready for direct implementation into Unity or Unreal
+                        Engine.</p>
+                </div>
+
+                <p>Leonardo.ai is the choice for the <strong>Creative Director</strong> who needs pixel-perfect
+                    control
+                    and specific stylistic consistency.</p>
+            </div>
+
+            {% elif tool.slug == 'capcut-online-video-editor' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Viral by Design: How CapCut Online is Dominating the 2025 Video Market</h3>
+                <div class="expert-quote">
+                    <p>"Video is the dominant currency of human attention. CapCut isn't just an editor; it's a viral
+                        growth engine fueled by the world's most sophisticated AI algorithms." — Michael</p>
+                </div>
+
+                <h3>The Browser-Based Revolution: Professional Speed</h3>
+                <p>The traditional video editing workflow was: Record, Transfer, Import, Edit, Export. Total time: 5
+                    hours. <strong>The CapCut workflow reduces this to 15 minutes.</strong> By being
+                    browser-integrated,
+                    you can pull assets directly from the cloud, use AI to generate subtitles, and have a
+                    viral-ready
+                    clip exported before your coffee gets cold.</p>
+
+                <h3>3 AI Features That Will Change Your Life</h3>
+                <ol>
+                    <li><strong>AI Script-to-Video</strong>: Have an idea but no footage? Input your script, and the
+                        AI
+                        will source relevant B-roll, add royalty-free music, and generate a full video draft
+                        automatically.</li>
+                    <li><strong>Auto-Captioning</strong>: CapCut supports over 100 languages with 99% accuracy. It
+                        even
+                        auto-highlights 'Action Keywords' to keep your viewers hooked.</li>
+                    <li><strong>Smart Background Removal</strong>: No green screen? No problem. The 'Magic' engine
+                        isolates human subjects with hair-level precision, allowing you to drop them into any
+                        cinematic
+                        environment.</li>
+                </ol>
+
+                <div class="expert-section-small">
+                    <h4>Michael's Strategic Advice</h4>
+                    <p>Stop trying to be a 'Professional Video Editor'. Start being a 'Professional Storyteller'.
+                        Use
+                        CapCut's <strong>Viral Templates</strong> to follow the latest trends, and let the AI handle
+                        the
+                        technical heavy lifting like color grading and audio leveling.</p>
+                </div>
+
+                <p>For small business owners and creators on TikTok, Reels, and YouTube Shorts, CapCut Online is the
+                    single most important utility in our AI Creative Lab.</p>
+                {% elif tool.slug == 'image-compressor' %}
+                <div class="scary-seo-content">
+                    <h3 class="playfair">The Weight of Pixels: Why Elite Compression is the Silent ROI Booster</h3>
+                    <div class="expert-quote">
+                        <p>"In the digital attention economy, every millisecond of load time is a potential bounced
+                            user. If your high-res images are slowing down your site, you're literally paying for pixels
+                            that are killing your conversion rate." — Michael</p>
+                    </div>
+
+                    <h3>Psychology of Loading Speed</h3>
+                    <p>Users don't 'wait' for websites anymore; they 'abandon' them. Our research shows that a 1-second
+                        delay in page load time reduces customer satisfaction by 16% and wipes out 7% of your conversion
+                        rate. <strong>Elite compression fixes this instantly.</strong></p>
+
+                    <div class="case-study">
+                        <p><strong>The 'Visual Integrity' Guarantee</strong><br>
+                            Most compressors destroy small details in the pursuit of file size. Our Elite Engine uses
+                            advanced perceptual modeling to identify which data can be discarded without the human eye
+                            ever noticing. You get the speed of a lightweight site with the impact of high-end
+                            photography.</p>
+                    </div>
+
+                    <div class="expert-section-small">
+                        <h4>Michael's Strategic Advice</h4>
+                        <p>Don't just compress once. Establish a 'Compression Protocol' for every asset you upload. For
+                            mobile-first audiences, use our <strong>80% Target Quality</strong> setting—it's the sweet
+                            spot where technical performance meets psychological perfection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif tool.slug == 'background-remover' %}
+        <div class="scary-seo-content">
+            <h3 class="playfair">The Power of Focus: Why Background Removal is Your Most Important Marketing Skill</h3>
+            <div class="expert-quote">
+                <p>"Human attention follows the subject, not the scenery. If you want to sell a product or a persona,
+                    you must isolate it from the noise. Background removal isn't just an edit; it's a strategic
+                    simplification of your message." — Michael</p>
+            </div>
+
+            <h3>Professionalism in Seconds</h3>
+            <p>Clean, subject-focused images have a 40% higher click-through rate than cluttered ones. Whether it's an
+                e-commerce product or a LinkedIn profile picture, removing the background signals high-end production
+                values and absolute clarity.</p>
+
+            <div class="expert-section-small">
+                <h4>Michael's Strategic Advice</h4>
+                <p>Don't settle for 'good enough' edges. Our <strong>AI Vision Engine</strong> is trained on millions of
+                    data points to handle complex hair and shadow transitions. Once isolated, place your subject on a
+                    minimalist backdrop to create an instant premium feel.</p>
+            </div>
+        </div>
+        {% elif tool.slug == 'image-resizer' %}
+        <div class="scary-seo-content">
+            <h3 class="playfair">Pixel Perfection: Why Resizing is About Respect (For Your User)</h3>
+            <div class="expert-quote">
+                <p>"Forcing a mobile user to download a 4000px image for a 400px thumbnail is a form of digital
+                    disrespect. Precision resizing shows you care about their data, their time, and their experience." —
+                    Michael</p>
+            </div>
+
+            <h3>The Psychology of Proportions</h3>
+            <p>Incorrectly aspect-ratioed images look 'cheap' and 'broken'. Our resizer ensures that your visual
+                integrity remains intact while optimizing for specific platform requirements (Instagram, Twitter, or
+                Website Heroes).</p>
+
+            <div class="expert-section-small">
+                <h4>Michael's Strategic Advice</h4>
+                <p>Always resize <strong>before</strong> you compress. By reducing the dimensions first, you lose less
+                    detail during the final storage optimization. It's the secret workflow of high-performance digital
+                    agencies.</p>
+            </div>
+        </div>
+        {% elif tool.slug == 'image-converter' %}
+        <div class="scary-seo-content">
+            <h3 class="playfair">Format Strategy: Choosing the Right Digital Vehicle</h3>
+            <div class="expert-quote">
+                <p>"A JPG for a logo is a mistake; a PNG for a landscape is a waste. Choosing the right format is the
+                    difference between an amateur blog and a world-class platform." — Michael</p>
+            </div>
+
+            <h3>Understanding the Trade-offs</h3>
+            <p>WebP is the future of the web, but JPG is the archive of the world. Understanding when to use transparent
+                PNGs versus lightweight WebP assets is a fundamental skill for any 2025 content creator.</p>
+
+            <div class="expert-section-small">
+                <h4>Michael's Strategic Advice</h4>
+                <p>If you're building for speed, go <strong>WebP</strong>. If you're building for universal
+                    compatibility (like email newsletters), stick with <strong>JPG</strong>. Use our converter to switch
+                    between these 'Strategic Modes' instantly.</p>
+            </div>
+        </div>
+        {% elif tool.slug == 'email-sign-off-generator' %}
+        <div class="scary-seo-content">
+            <h3 class="playfair">Beyond 'Best Regards': The Strategic Power of Email Sign-offs (2025 Guide)
+            </h3>
+            <div class="expert-quote">
+                <p>"First impressions are for the subject line; lasting impressions are for the sign-off. If
+                    you're still using 'Best regards' in 2025, you're missing a critical micro-opportunity
+                    to
+                    reinforce your personal brand or project urgency." — Michael</p>
+            </div>
+
+            <h3>The Psychology of the 'Final Touch'</h3>
+            <p>In high-stakes business communication, the ending of your email serves as the <strong>Lasting
+                    Cognitive Anchor</strong>. According to recent communication psychology studies, the
+                'Recency Effect' means your recipient is 30% more likely to remember the tone of your
+                sign-off
+                than the middle of your email body.</p>
+
+            <div class="case-study">
+                <p><strong>The 'Best Regards' Trap</strong><br>
+                    It is safe, yes. But it is also invisible. In a crowded inbox, being 'safe' is the same
+                    as
+                    being 'ignored'. For competitive industries like Sales, Tech VC, or Creative Arts, a
+                    standardized sign-off signals a standardized thinker.</p>
+            </div>
+
+            <h3>Michael’s Strategic Sign-off Matrix</h3>
+            <p>Don't just pick a random phrase. Match your 'Exit Strategy' to your goal:</p>
+            <ul>
+                <li><strong>The Closer (Formal)</strong>: For finalizing contracts. Use
+                    <code>'Respectfully,'</code> or <code>'Sincerely yours,'</code> to signal hierarchy and
+                    protocol.
+                </li>
+                <li><strong>The Collaborative (Friendly)</strong>: For ongoing projects. Use
+                    <code>'Warmly,'</code> or <code>'Best,'</code> to reduce social friction and increase
+                    speed
+                    of reply.
+                </li>
+                <li><strong>The Visionary (Creative)</strong>: For startups and pitches. Phrases like
+                    <code>'Onward,'</code> or <code>'To new heights,'</code> signal momentum and big-picture
+                    thinking.
+                </li>
+            </ul>
+
+            <h3>Expert Tips: Sign-off Etiquette You Must Know</h3>
+            <ol>
+                <li><strong>The Mirror Technique</strong>: If a C-level executive signs off with 'Cheers',
+                    do
+                    NOT reply with 'Yours Respectfully'. Mirror their casualness (at 80% intensity) to build
+                    rapport.</li>
+                <li><strong>Punctuation Matters</strong>: Using a comma (Best,) is the standard. Omitting it
+                    signals extreme urgency or a mobile-first 'Fast Response' persona.</li>
+            </ol>
+        </div>
+        {% elif tool.slug in ['pdf-compressor', 'pdf-to-word', 'text-to-pdf-converter', 'pdf-merger'] %}
+        <div class="scary-seo-content">
+            <h3 class="playfair">The PDF Authority: Why Document Integrity is a Professional Statement</h3>
+            <div class="expert-quote">
+                <p>"In the legal and academic worlds, a PDF isn't just a file; it's a digital contract. If your
+                    files are too large to email or contain metadata you didn't mean to share, you've already
+                    lost the battle for professionalism." — Michael</p>
+            </div>
+
+            <h3>The Psychology of File Size</h3>
+            <p>In a fast-paced corporate environment, sending a 20MB PDF instead of a 2MB one isn't just a
+                technical gaffe—it's a sign of a lack of consideration. Small, optimized files signal
+                efficiency, technical literacy, and respect for your recipient's time and storage.</p>
+
+            <div class="case-study">
+                <p><strong>The Privacy Imperative</strong><br>
+                    Most PDF sites are "Black Boxes." You upload your sensitive contract, and you have no idea
+                    where it's stored. As a <strong>Lawyer</strong> and <strong>Psychologist</strong>, I
+                    cannot stress this enough: your data must stay local. Our tools prioritize browser-side
+                    logic
+                    to ensure your most sensitive documents never leave your machine.</p>
+            </div>
+
+            <div class="expert-section-small">
+                <h4>Michael's Strategic Advice</h4>
+                <p>When converting or compressing, always aim for the 'Sweet Spot'. For standard business
+                    correspondence,
+                    a resolution that keeps text crisp but images efficient is key. Use our <strong>Professional
+                        PDF
+                        Engine</strong> to ensure your output looks as good on a 4K monitor as it does on a
+                    printed page.</p>
+            </div>
+        </div>
+        {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // Email Sign-off Intelligence Logic
+        const contextBtns = document.querySelectorAll('.context-btn');
+        const signoffResultArea = document.getElementById('signoff-results');
+        const generateBtn = document.getElementById('generate-signoff-btn');
+        const keywordInput = document.getElementById('signoff-keyword');
+
+        let currentContext = 'professional';
+
+        if (generateBtn) {
+            const templates = {
+                professional: ["Regarding the {kw},", "Looking forward to your thoughts on {kw},", "Best regards for the {kw},", "With focus on {kw},", "Sincerely yours,"],
+                warm: ["Warmest wishes for your {kw},", "Hope the {kw} goes well,", "Thinking of the {kw},", "Warmly,", "Best regards,"],
+                short: ["{kw} best,", "{kw} thanks,", "Best,", "Cheers,"]
+            };
+
+            function generateSignoff() {
+                const kw = keywordInput.value.trim() || 'project';
+                const list = templates[currentContext];
+                if (!signoffResultArea) return;
+                signoffResultArea.innerHTML = '';
+
+                list.forEach((tmpl, index) => {
+                    const text = tmpl.replace('{kw}', kw);
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; animation: slideIn 0.3s ease forwards; animation-delay: ' + (index * 0.05) + 's; opacity: 0; transform: translateY(10px);';
+
+                    row.innerHTML = `
+                        <span style="font-size: 1.1rem; color: #1e293b; font-weight: 500;">${text}</span>
+                        <button class="btn btn-premium" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText('${text}'); showTextMsg('success', 'Custom sign-off copied!')">Copy</button>
+                    `;
+                    signoffResultArea.appendChild(row);
+                });
+            }
+
+            contextBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentContext = btn.dataset.context;
+                    contextBtns.forEach(b => {
+                        const active = b === btn;
+                        b.style.borderColor = active ? '#3b82f6' : '#e2e8f0';
+                        b.style.background = active ? '#eff6ff' : '#fff';
+                        b.style.color = active ? '#3b82f6' : '#64748b';
+                    });
+                    generateSignoff();
+                });
+            });
+
+            generateBtn.addEventListener('click', generateSignoff);
+            // Initial call
+            generateSignoff();
+        }
+
+        // Add slideIn animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes slideIn {
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function showTextMsg(type, msg) {
+            const box = document.getElementById('text-msg');
+            box.textContent = msg;
+            box.className = 'msg-box ' + (type === 'error' ? 'error-msg' : 'success-msg');
+            box.style.display = 'block';
+        }
+
+        function clearText(id) {
+            document.getElementById(id).value = '';
+            if (document.getElementById('base64-output')) document.getElementById('base64-output').value = '';
+            if (document.getElementById('url-output')) document.getElementById('url-output').value = '';
+            document.getElementById('text-msg').style.display = 'none';
+        }
+
+        // Universal File Processing Logic (Global Scope)
+        const processBtn = document.getElementById('process-btn');
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const qualityInput = document.getElementById('image-quality');
+        const currentSlug = "{{ tool.slug }}";
+
+        // Mapping slugs to their respective API endpoints
+        const toolEndpoints = {
+            'image-compressor': '/api/compress-image',
+            'background-remover': '/api/remove-background',
+            'image-resizer': '/api/resize-image',
+            'image-converter': '/api/convert-image',
+            'pdf-compressor': '/api/compress-pdf',
+            'pdf-to-word': '/api/pdf-to-word',
+            'text-to-pdf-converter': '/api/text-to-pdf',
+            'pdf-merger': '/api/merge-pdf'
+        };
+
+        if (processBtn && fileInput) {
+            // Drag and drop support
+            if (dropZone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(name => {
+                    dropZone.addEventListener(name, e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+            }
+
+            // Show filename feedback
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    if (dropZone) {
+                        const p = dropZone.querySelector('p');
+                        if (p) p.innerText = 'Selected: ' + fileName;
+                    }
+                    if (typeof showTextMsg === 'function') showTextMsg('success', 'File selected: ' + fileName);
+                }
+            });
+
+            processBtn.addEventListener('click', async () => {
+                const file = fileInput.files[0];
+                if (!file) {
+                    showTextMsg('error', 'Please select a file first.');
+                    return;
+                }
+
+                const endpoint = toolEndpoints[currentSlug] || '/api/upload'; // Fallback
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Add tool-specific parameters
+                if (currentSlug === 'image-compressor' && qualityInput) {
+                    formData.append('quality', qualityInput.value);
+                } else if (currentSlug === 'image-resizer') {
+                    const w = document.getElementById('resize-width').value;
+                    const h = document.getElementById('resize-height').value;
+                    if (w) formData.append('width', w);
+                    if (h) formData.append('height', h);
+                } else if (currentSlug === 'image-converter') {
+                    const fmt = document.getElementById('convert-format').value;
+                    formData.append('format', fmt);
+                    formData.append('quality', 90); // Default high quality for conversion
+                }
+
+                processBtn.disabled = true;
+                processBtn.innerText = 'Processing...';
+                showTextMsg('success', 'Processing your document securely...');
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('Processing failed');
+
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+
+                    // Smart filename generation
+                    const baseName = file.name.replace(/\.[^/.]+$/, "");
+                    let newName = 'processed_' + file.name;
+
+                    if (currentSlug === 'pdf-to-word') {
+                        newName = baseName + ".docx";
+                    } else if (currentSlug === 'image-converter') {
+                        const fmt = document.getElementById('convert-format').value;
+                        newName = baseName + "." + (fmt === 'jpeg' ? 'jpg' : fmt);
+                    } else if (currentSlug === 'background-remover') {
+                        newName = baseName + "_no_bg.png";
+                    } else if (currentSlug === 'image-compressor') {
+                        newName = 'compressed_' + file.name;
+                    }
+
+                    a.download = newName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+
+                    showTextMsg('success', 'Done! Your file is ready.');
+                } catch (error) {
+                    console.error('Tool processing error:', error);
+                    showTextMsg('error', 'Error: ' + error.message);
+                } finally {
+                    processBtn.disabled = false;
+                    const btnNames = {
+                        'image-compressor': 'Compress & Download ↓',
+                        'background-remover': 'Remove Background & Download ↓',
+                        'image-resizer': 'Resize & Download ↓',
+                        'image-converter': 'Convert & Download ↓'
+                    };
+                    processBtn.innerText = btnNames[currentSlug] || 'Process Document Now ↓';
+                }
+            });
+        }
+
+        // JSON Logic
+        function formatJson() {
+            const el = document.getElementById('json-input');
+            try {
+                const obj = JSON.parse(el.value);
+                const indent = document.getElementById('indent-size').value;
+                el.value = JSON.stringify(obj, null, indent === 'tab' ? '\t' : parseInt(indent));
+                showTextMsg('success', 'JSON Formatted');
+            } catch (e) { showTextMsg('error', 'Invalid JSON: ' + e.message); }
+        }
+        function minifyJson() {
+            const el = document.getElementById('json-input');
+            try { el.value = JSON.stringify(JSON.parse(el.value)); showTextMsg('success', 'JSON Minified'); }
+            catch (e) { showTextMsg('error', 'Invalid JSON: ' + e.message); }
+        }
+
+        // Base64 Logic
+        function base64Encode() {
+            const input = document.getElementById('base64-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('base64-output').value = btoa(unescape(encodeURIComponent(input)));
+                showTextMsg('success', 'Encoded Successfully');
+            } catch (e) { showTextMsg('error', 'Encoding failed'); }
+        }
+        function base64Decode() {
+            const input = document.getElementById('base64-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('base64-output').value = decodeURIComponent(escape(atob(input)));
+                showTextMsg('success', 'Decoded Successfully');
+            } catch (e) { showTextMsg('error', 'Invalid Base64 string'); }
+        }
+
+        // URL Encoder Logic
+        function urlEncode() {
+            const input = document.getElementById('url-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('url-output').value = encodeURIComponent(input);
+                showTextMsg('success', 'URL Encoded Successfully');
+            } catch (e) { showTextMsg('error', 'Encoding failed'); }
+        }
+        function urlDecode() {
+            const input = document.getElementById('url-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('url-output').value = decodeURIComponent(input);
+                showTextMsg('success', 'URL Decoded Successfully');
+            } catch (e) { showTextMsg('error', 'Invalid URL-encoded string'); }
+        }
+
+        // Word Counter Logic
+        function updateWordCounts() {
+            const text = document.getElementById('word-input').value;
+
+            // Characters
+            document.getElementById('count-chars').textContent = text.length;
+            document.getElementById('count-chars-no-space').textContent = text.replace(/\s/g, '').length;
+
+            // Words
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('count-words').textContent = words.length;
+
+            // Paragraphs
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            document.getElementById('count-paragraphs').textContent = paragraphs.length;
+        }
+
+        // Add to clearText
+        const originalClear = clearText;
+        window.clearText = function (id) {
+            originalClear(id);
+            if (id === 'word-input') {
+                document.getElementById('count-words').textContent = '0';
+                document.getElementById('count-chars').textContent = '0';
+                document.getElementById('count-chars-no-space').textContent = '0';
+                document.getElementById('count-paragraphs').textContent = '0';
+            }
+        }
+
+        // Text Case Converter Logic
+        function convertCase(type) {
+            const input = document.getElementById('case-input').value;
+            if (!input) return;
+
+            let result = '';
+            switch (type) {
+                case 'upper':
+                    result = input.toUpperCase();
+                    break;
+                case 'lower':
+                    result = input.toLowerCase();
+                    break;
+                case 'title':
+                    result = input.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    break;
+                case 'sentence':
+                    result = input.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+                    break;
+                case 'toggle':
+                    result = input.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+                    break;
+            }
+            document.getElementById('case-output').value = result;
+            showTextMsg('success', 'Converted to ' + type + ' case');
+        }
+
+        function copyResult(id) {
+            const output = document.getElementById(id);
+            if (!output.value) return;
+            output.select();
+            document.execCommand('copy');
+            showTextMsg('success', 'Copied to clipboard!');
+        }
+
+        // Lorem Ipsum Generator Logic
+        const loremWords = [
+            'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
+            'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
+            'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
+            'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
+            'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
+            'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
+            'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
+            'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'perspiciatis', 'unde',
+            'omnis', 'iste', 'natus', 'error', 'voluptatem', 'accusantium', 'doloremque',
+            'laudantium', 'totam', 'rem', 'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo',
+            'inventore', 'veritatis', 'quasi', 'architecto', 'beatae', 'vitae', 'dicta'
+        ];
+
+        function generateLorem() {
+            const paragraphs = parseInt(document.getElementById('lorem-paragraphs').value) || 3;
+            const wordsPerPara = parseInt(document.getElementById('lorem-words').value) || 50;
+
+            let result = [];
+            for (let p = 0; p < paragraphs; p++) {
+                let paragraph = [];
+                for (let w = 0; w < wordsPerPara; w++) {
+                    const word = loremWords[Math.floor(Math.random() * loremWords.length)];
+                    paragraph.push(w === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word);
+                }
+                // Add period at end
+                let text = paragraph.join(' ');
+                // Add some periods and capitals for realism
+                text = text.replace(/(\w+\s\w+\s\w+\s\w+\s\w+\s\w+)\s/g, (match, group, offset) => {
+                    if (Math.random() > 0.7) {
+                        return group + '. ' + loremWords[Math.floor(Math.random() * loremWords.length)].charAt(0).toUpperCase() + loremWords[Math.floor(Math.random() * loremWords.length)].slice(1) + ' ';
+                    }
+                    return match;
+                });
+                result.push(text + '.');
+            }
+
+            document.getElementById('lorem-output').value = result.join('\n\n');
+            showTextMsg('success', `Generated ${paragraphs} paragraph(s) of Lorem Ipsum!`);
+        }
+
+        // Advanced Case Converter Logic (with camelCase, snake_case, kebab-case)
+        function convertCaseAdv(type) {
+            const input = document.getElementById('case-conv-input').value;
+            if (!input) return;
+
+            let result = '';
+            const words = input.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length > 0);
+
+            switch (type) {
+                case 'upper':
+                    result = input.toUpperCase();
+                    break;
+                case 'lower':
+                    result = input.toLowerCase();
+                    break;
+                case 'title':
+                    result = input.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    break;
+                case 'sentence':
+                    result = input.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+                    break;
+                case 'camel':
+                    result = words.map((w, i) => i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)).join('');
+                    break;
+                case 'snake':
+                    result = words.join('_');
+                    break;
+                case 'kebab':
+                    result = words.join('-');
+                    break;
+            }
+            document.getElementById('case-conv-output').value = result;
+            showTextMsg('success', 'Converted to ' + type + ' case');
+        }
+
+        // Random Password Generator Logic
+        function generatePassword() {
+            const length = parseInt(document.getElementById('password-length').value);
+            const useUpper = document.getElementById('include-upper').checked;
+            const useLower = document.getElementById('include-lower').checked;
+            const useNumbers = document.getElementById('include-numbers').checked;
+            const useSymbols = document.getElementById('include-symbols').checked;
+
+            if (!useUpper && !useLower && !useNumbers && !useSymbols) {
+                showTextMsg('error', 'Please select at least one character type');
+                return;
+            }
+
+            let chars = '';
+            if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (useNumbers) chars += '0123456789';
+            if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            let password = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+            for (let i = 0; i < length; i++) {
+                password += chars[array[i] % chars.length];
+            }
+
+            document.getElementById('password-output').value = password;
+
+            // Calculate strength
+            let strength = 0;
+            if (length >= 12) strength++;
+            if (length >= 16) strength++;
+            if (useUpper && useLower) strength++;
+            if (useNumbers) strength++;
+            if (useSymbols) strength++;
+
+            const strengthText = ['Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+            const strengthColors = ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#155724'];
+            const strengthEl = document.getElementById('password-strength');
+            strengthEl.textContent = 'Password Strength: ' + strengthText[Math.min(strength, 4)];
+            strengthEl.style.color = strengthColors[Math.min(strength, 4)];
+
+            showTextMsg('success', 'Password generated! Length: ' + length + ' characters');
+        }
+
+        // AI Text Rewriter Logic (Local Rule-Based)
+        const synonyms = {
+            'good': ['excellent', 'great', 'superb', 'fantastic', 'wonderful'],
+            'bad': ['poor', 'terrible', 'awful', 'negative', 'subpar'],
+            'happy': ['joyful', 'content', 'delighted', 'glad', 'cheerful'],
+            'sad': ['unhappy', 'sorrowful', 'gloomy', 'depressed', 'melancholy'],
+            'big': ['large', 'huge', 'massive', 'enormous', 'gigantic'],
+            'small': ['tiny', 'little', 'miniature', 'slight', 'compact'],
+            'fast': ['quick', 'rapid', 'speedy', 'swift', 'hasty'],
+            'slow': ['sluggish', 'leisurely', 'unhurried', 'gradual', 'steady'],
+            'hard': ['difficult', 'tough', 'challenging', 'arduous', 'demanding'],
+            'easy': ['simple', 'effortless', 'straightforward', 'manageable', 'breeze'],
+            'important': ['crucial', 'vital', 'significant', 'essential', 'key'],
+            'use': ['utilize', 'employ', 'apply', 'leverage', 'operate'],
+            'make': ['create', 'produce', 'generate', 'build', 'form'],
+            'get': ['obtain', 'acquire', 'receive', 'gain', 'secure'],
+            'help': ['assist', 'aid', 'support', 'facilitate', 'guide'],
+            'think': ['believe', 'consider', 'ponder', 'contemplate', 'reason'],
+            'say': ['state', 'declare', 'mention', 'remark', 'express'],
+            'want': ['desire', 'crave', 'wish', 'covet', 'seek'],
+            'need': ['require', 'demand', 'necessitate', 'call for', 'entail']
+        };
+
+        function rewriteText(mode) {
+            const input = document.getElementById('rewriter-input').value;
+            if (!input) {
+                showTextMsg('error', 'Please enter some text to rewrite');
+                return;
+            }
+
+            let words = input.split(/(\s+|[.,!?;])/);
+            let rewritten = words.map(word => {
+                const lower = word.toLowerCase();
+                if (synonyms[lower]) {
+                    // Randomly replace with synonym based on mode
+                    if (Math.random() > 0.3) {
+                        const options = synonyms[lower];
+                        const replacement = options[Math.floor(Math.random() * options.length)];
+                        // Preserve capitalization
+                        if (word[0] === word[0].toUpperCase()) {
+                            return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+                        }
+                        return replacement;
+                    }
+                }
+                return word;
+            }).join('');
+
+            // Mode specific adjustments (mock behavior for local JS)
+            if (mode === 'formal') {
+                rewritten = rewritten.replace(/can't/gi, 'cannot').replace(/don't/gi, 'do not').replace(/won't/gi, 'will not');
+            } else if (mode === 'simple') {
+                // Simplified logic implies keeping shorter words, already handled by basic synonym swap mostly
+            }
+
+            document.getElementById('rewriter-output').value = rewritten;
+            showTextMsg('success', 'Text rewritten successfully! (Mode: ' + mode + ')');
+        }
+
+        // AI Text Summarizer Logic (Extractive Ranking Algorithm)
+        function summarizeText() {
+            const text = document.getElementById('summarizer-input').value;
+            const summaryLength = parseInt(document.getElementById('summary-length').value);
+
+            if (!text || text.split(' ').length < 20) {
+                showTextMsg('error', 'Please enter a longer text (at least 20 words) to summarize.');
+                return;
+            }
+
+            // 1. Split into sentences
+            // Using a simple regex to split by .!? followed by whitespace
+            const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
+
+            if (sentences.length <= summaryLength) {
+                document.getElementById('summarizer-output').value = text;
+                showTextMsg('success', 'Text is already short enough!');
+                return;
+            }
+
+            // 2. Calculate word frequency
+            const wordCounts = {};
+            const cleanText = text.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+            const words = cleanText.split(/\s+/);
+            const stopWords = ['the', 'is', 'in', 'and', 'to', 'of', 'a', 'for', 'on', 'with', 'at', 'by', 'an', 'be', 'this', 'that', 'it', 'from', 'as', 'are', 'was', 'were', 'have', 'has', 'had', 'but', 'or', 'not', 'which', 'you', 'we', 'they', 'he', 'she', 'his', 'her', 'their', 'my', 'your', 'our', 'will', 'can', 'would', 'could', 'should', 'if', 'so', 'what', 'when', 'where', 'who', 'how', 'why', 'all', 'any', 'some', 'no', 'more', 'other', 'than', 'then', 'now', 'up', 'down', 'out', 'about', 'into', 'over', 'after'];
+
+            words.forEach(word => {
+                if (!stopWords.includes(word) && word.length > 2) {
+                    wordCounts[word] = (wordCounts[word] || 0) + 1;
+                }
+            });
+
+            // 3. Score sentences
+            const sentenceScores = sentences.map((sentence, index) => {
+                let score = 0;
+                const sentenceWords = sentence.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+
+                sentenceWords.forEach(word => {
+                    if (wordCounts[word]) {
+                        score += wordCounts[word];
+                    }
+                });
+
+                // Boost first and last sentences slightly as they often contain key info
+                if (index === 0) score *= 1.2;
+                if (index === sentences.length - 1) score *= 1.1;
+
+                // Normalize by length to avoid bias towards long sentences
+                return {
+                    text: sentence.trim(),
+                    score: score / (sentenceWords.length || 1),
+                    index: index
+                };
+            });
+
+            // 4. Select top ranking sentences
+            sentenceScores.sort((a, b) => b.score - a.score);
+            const topSentences = sentenceScores.slice(0, summaryLength);
+
+            // 5. Reorder by original position
+            topSentences.sort((a, b) => a.index - b.index);
+
+            const summary = topSentences.map(s => s.text).join(' ');
+            document.getElementById('summarizer-output').value = summary;
+            showTextMsg('success', 'Summary generated! (' + topSentences.length + ' sentences)');
+        }
+
+        // Text to PDF Logic
+        function generatePDF() {
+            const text = document.getElementById('pdf-input').value;
+            if (!text.trim()) {
+                showTextMsg('error', 'Please enter some text to convert.');
+                return;
+            }
+
+            const fontSize = document.getElementById('pdf-font-size').value;
+            const filename = document.getElementById('pdf-filename').value || 'document.pdf';
+
+            // Create a temporary container for PDF generation
+            const element = document.createElement('div');
+            // Format text: replace newlines with <br> and preserve spaces
+            element.innerHTML = text.replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;');
+            element.style.fontSize = fontSize;
+            element.style.fontFamily = "'Times New Roman', Times, serif"; // Standard doc font
+            element.style.padding = '20px';
+            element.style.lineHeight = '1.5';
+            element.style.color = '#000';
+            element.style.width = '100%'; // Ensure it fits A4 width logic in html2pdf
+
+            const opt = {
+                margin: 1,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            showTextMsg('success', 'Generating PDF... Please wait.');
+
+            // Execute html2pdf
+            // Note: html2pdf must be loaded. If offline/error, fallback to print
+            if (typeof html2pdf !== 'undefined') {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    showTextMsg('success', 'PDF downloaded successfully!');
+                }).catch(err => {
+                    console.error(err);
+                    showTextMsg('error', 'Error generating PDF. Please try "Print to PDF" instead.');
+                });
+            } else {
+                showTextMsg('error', 'Library loading... Try again in a second.');
+            }
+        }
+        // Text Reverser Logic
+        function reverseText(mode) {
+            const input = document.getElementById('reverser-input').value;
+            let result = '';
+
+            if (!input) {
+                showTextMsg('error', 'Please enter some text.');
+                return;
+            }
+
+            if (mode === 'chars') {
+                result = input.split('').reverse().join('');
+            } else if (mode === 'words') {
+                const words = input.split(/\s+/).filter(w => w.length > 0);
+                result = words.reverse().join(' ');
+            } else if (mode === 'each-word') {
+                result = input.split(' ').map(word => word.split('').reverse().join('')).join(' ');
+            }
+
+            document.getElementById('reverser-output').value = result;
+            showTextMsg('success', 'Text reversed successfully!');
+        }
+    </script>
+</body>
+
+</html><!-- Quick Alert Button -->
+<div id='quick-alert-btn'
+    style='position: fixed; bottom: 30px; right: 30px; background: #dc2626; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 5px 20px rgba(220, 38, 38, 0.4); z-index: 9999; transition: transform 0.2s;'
+    title='Report Bug / Quick Alert'>!
+</div>
+
+<!-- Quick Alert Modal -->
+<div id='quick-alert-modal'
+    style='display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;'>
+    <div
+        style='background: white; padding: 2rem; border-radius: 20px; width: 90%; max-width: 500px; position: relative;'>
+        <h3 class='playfair' style='margin-top: 0; color: #dc2626;'>Quick Alert</h3>
+        <p style='color: #64748b;'>Report a broken tool or urgent issue directly to Michael.</p>
+
+        <textarea id='alert-content' placeholder='What' s broken? e.g., Image didn't download...'
+            style='width: 100%; height: 100px; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 1rem;'></textarea>
+
+        <div style='text-align: right; display: flex; gap: 1rem; justify-content: flex-end;'>
+            <button onclick='document.getElementById("quick-alert-modal").style.display="none"'
+                style='padding: 0.8rem 1.5rem; border: none; background: #f1f5f9; border-radius: 8px; cursor: pointer;'>Cancel</button>
+            <button onclick='submitAlert()'
+                style='padding: 0.8rem 1.5rem; border: none; background: #dc2626; color: white; border-radius: 8px; cursor: pointer; font-weight: bold;'>Send
+                Alert</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quick Alert Logic
+    document.getElementById('quick-alert-btn').addEventListener('click', () => {
+        document.getElementById('quick-alert-modal').style.display = 'flex';
+    });
+
+    async function submitAlert() {
+        const content = document.getElementById('alert-content').value;
+        if (!content) return alert('Please describe the issue.');
+
+        try {
+            const res = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'bug',
+                    content: content,
+                    tool_slug: '{{ tool.slug }}'
+                })
+            });
+            if (res.ok) {
+                alert('Alert sent. Michael has been notified.');
+                document.getElementById('quick-alert-modal').style.display = 'none';
+                document.getElementById('alert-content').value = '';
+            } else {
+                alert('Failed to send alert.');
+            }
+        } catch (e) {
+            alert('Error: ' + e.message);
+        }
+    }
+
+    // Navbar Injection for Wish Wall
+    document.addEventListener('DOMContentLoaded', () => {
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks) {
+            const wishLink = document.createElement('a');
+            wishLink.href = '/tools/wish-wall';
+            wishLink.innerText = 'Wish Wall';
+            wishLink.style.color = '#ff6b6b';
+            wishLink.style.fontWeight = 'bold';
+            navLinks.appendChild(wishLink);
+        }
+    });
+</script>

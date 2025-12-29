@@ -1,0 +1,159 @@
+# 添加新工具标准流程 (STANDARD ADD-TOOL PROCEDURE)
+# 版本: 1.0
+# 最后更新: 2025-12-23
+
+## 核心原则
+1. 只改3个文件，绝不触碰其他
+2. 使用固定模板，不自己发挥
+3. 每次部署后立即验证
+
+---
+
+## 第一步：修改 tools_new.py (工具逻辑)
+
+### A. 在 hardcoded 列表添加工具 (约第50行)
+```python
+# 找到这个列表，在最后一个 } 之后添加新工具
+hardcoded = [
+    {...},  # 已有工具
+    {
+        "id": 9995,  # 递增ID
+        "name": "新工具名称", 
+        "slug": "new-tool-slug",
+        "description": "工具描述", 
+        "view_count": 100, 
+        "category_id": 3,  # 1=Image, 2=PDF, 3=Text, 4=Developer
+        "categories": {"name": "Text Tools", "slug": "text-tools"}
+    }
+]
+```
+
+### B. 在 tool_detail 函数添加覆写 (约第160行)
+```python
+elif slug == 'new-tool-slug':
+    tool = {
+        "id": 9995, "name": "新工具名称", "slug": "new-tool-slug",
+        "description": "工具描述",
+        "short_description": "简短描述",
+        "view_count": 100, "category_id": 3,
+        "categories": {"name": "Text Tools", "slug": "text-tools"}
+    }
+```
+
+---
+
+## 第二步：修改 detail_new.html (工具界面 + SEO)
+
+### A. 添加工具界面 (在 {% else %} 之前)
+```html
+{% elif tool.slug == 'new-tool-slug' %}
+<div class="text-interface">
+    <!-- 工具界面代码 -->
+</div>
+```
+
+### B. 添加SEO内容 (在 {% endif %} 之前)
+```html
+{% elif tool.slug == 'new-tool-slug' %}
+<div class="scary-seo-content">
+    <h3 class="playfair">标题</h3>
+    <div class="expert-quote">
+        <p>"专家建议..." — Michael</p>
+    </div>
+    <h3>场景案例</h3>
+    <div class="case-study">...</div>
+</div>
+```
+
+### C. 添加JavaScript逻辑 (在 </script> 之前)
+```javascript
+// 新工具的函数
+function newToolFunction() {
+    // 逻辑代码
+}
+```
+
+---
+
+## 第三步：修改 blog_final.py (SEO文章)
+
+### ⚠️ 必须先搜索长尾关键词！
+```
+search_web("工具名 online free long tail keywords SEO")
+```
+- 如果搜索失败，必须重试或使用其他方法
+- 绝不能跳过关键词搜索直接写文章
+- 记录使用的关键词到文章的keywords字段
+
+### 在 ARTICLES 列表开头添加
+```python
+ARTICLES = [
+    {
+        "slug": "new-tool-seo-guide",
+        "title": "工具标题",  # 包含主要长尾关键词
+        "description": "描述",
+        "keywords": "关键词1, 关键词2, 关键词3",  # 来自搜索结果
+        # "date": 不要写日期！
+        "category": "Text Tools",
+        "tool_name": "新工具名称",
+        "tool_slug": "new-tool-slug",
+        "excerpt": "摘要",
+        "content": """
+        <h1>标题</h1>
+        <p>内容...</p>
+        """
+    },
+    # ...其他文章
+]
+```
+
+---
+
+## 第四步：部署 (使用固定脚本)
+
+```bash
+# 只需运行这一个命令
+python deploy_stable.py
+```
+
+deploy_stable.py 会自动：
+1. 检查语法
+2. 检查端口
+3. 上传文件
+4. 重启服务
+5. 验证结果
+
+---
+
+## 绝对禁止
+
+❌ 不要修改 app.py
+❌ 不要修改 base.html
+❌ 不要修改 index.html
+❌ 不要修改 Nginx 配置
+❌ 不要手动在服务器上操作
+❌ 不要改部署脚本的端口
+
+---
+
+## 时间预估
+
+| 步骤 | 时间 |
+|------|------|
+| 修改 tools_new.py | 2分钟 |
+| 修改 detail_new.html | 5分钟 |
+| 修改 blog_final.py | 5分钟 |
+| 部署 + 验证 | 3分钟 |
+| **总计** | **15分钟** |
+
+---
+
+## 验证清单
+
+部署后必须检查：
+- [ ] 工具在列表页显示
+- [ ] 工具页面可以打开
+- [ ] 工具功能正常工作
+- [ ] SEO内容显示正确
+- [ ] 博客文章可以打开
+- [ ] 其他工具仍然正常

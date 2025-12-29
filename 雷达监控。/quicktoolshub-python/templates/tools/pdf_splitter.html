@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Splitter - SoEasyHub | Extract & Split PDF Pages</title>
+    <meta name="description"
+        content="Split PDF files by page range or extract specific pages. Free, secure, and privacy-focused tool by SoEasyHub.">
+    <meta name="keywords" content="PDF splitter, split PDF, extract PDF pages, PDF tools">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="PDF Splitter - SoEasyHub">
+    <meta property="og:description"
+        content="Extract pages from your PDF files. Split by page range or extract specific pages.">
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .split-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .option-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-card:hover {
+            border-color: #c2410c;
+            box-shadow: 0 4px 12px rgba(194, 65, 12, 0.1);
+        }
+
+        .option-card.active {
+            border-color: #c2410c;
+            background: rgba(194, 65, 12, 0.05);
+        }
+
+        .option-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-desc {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .page-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .page-input:focus {
+            outline: none;
+            border-color: #c2410c;
+        }
+
+        @media (max-width: 768px) {
+            .split-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog">Expert Advice</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content container">
+        <div class="tool-header">
+            <h1 class="playfair">PDF Splitter</h1>
+            <p class="lead">Extract pages from your PDF files. Split by page range or extract specific pages.</p>
+        </div>
+
+        <!-- Tool Interface -->
+        <div class="tool-card shadow-lg">
+            <div class="tool-interface" style="padding: 3rem;">
+                <h3 class="interface-title Outfit" style="margin-bottom: 2rem;">Upload PDF File to Split</h3>
+
+                <!-- 文件上传 -->
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+                    style="border: 2px dashed #c2410c; border-radius: 15px; padding: 3rem; text-align: center; cursor: pointer; transition: all 0.3s;">
+                    <input type="file" id="file-input" accept="application/pdf" style="display: none;">
+                    <div class="upload-prompt" id="upload-prompt">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            style="margin: 0 auto 1rem; color: #c2410c;">
+                            <path
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <p class="Outfit" style="font-size: 1.1rem; color: #0f172a; margin-bottom: 0.5rem;">Click or
+                            Drag PDF File Here</p>
+                    </div>
+                    <div class="file-info" id="file-info" style="display: none;">
+                        <p style="font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;" id="file-name"></p>
+                        <p style="color: #64748b; font-size: 0.9rem;" id="file-size"></p>
+                        <p style="color: #c2410c; font-size: 0.85rem; margin-top: 0.5rem;">✓ File ready to split</p>
+                    </div>
+                </div>
+
+                <!-- 分割选项 -->
+                <div id="split-options-container" style="display: none;">
+                    <h4 class="Outfit" style="margin: 2rem 0 1rem; font-size: 1.1rem; color: #0f172a;">Choose Split
+                        Method:</h4>
+
+                    <div class="split-options">
+                        <div class="option-card active" id="option-range" onclick="selectOption('range')">
+                            <div class="option-title Outfit">Split by Range</div>
+                            <div class="option-desc Outfit">Extract pages 1-10, 15-20, etc.</div>
+                        </div>
+                        <div class="option-card" id="option-pages" onclick="selectOption('pages')">
+                            <div class="option-title Outfit">Extract Specific Pages</div>
+                            <div class="option-desc Outfit">Extract pages 1, 5, 10, 15, etc.</div>
+                        </div>
+                    </div>
+
+                    <div id="range-input" style="margin-top: 1.5rem;">
+                        <label class="Outfit"
+                            style="display: block; margin-bottom: 0.5rem; color: #0f172a; font-weight: 500;">Page Range
+                            (e.g., 1-5, 10-15):</label>
+                        <input type="text" id="page-range" class="page-input Outfit" placeholder="1-10">
+                    </div>
+
+                    <div id="pages-input" style="display: none; margin-top: 1.5rem;">
+                        <label class="Outfit"
+                            style="display: block; margin-bottom: 0.5rem; color: #0f172a; font-weight: 500;">Specific
+                            Pages (e.g., 1, 3, 5, 7):</label>
+                        <input type="text" id="page-numbers" class="page-input Outfit" placeholder="1, 3, 5, 7">
+                    </div>
+
+                    <button id="split-btn" class="btn btn-premium Outfit" style="margin-top: 2rem;">
+                        Split PDF Now
+                    </button>
+                </div>
+
+                <!-- 加载状态 -->
+                <div id="loading" style="display: none; text-align: center; margin-top: 2rem;">
+                    <div class="spinner"
+                        style="border: 4px solid #f3f3f3; border-top: 4px solid #c2410c; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;">
+                    </div>
+                    <p class="Outfit" style="margin-top: 1rem;">Splitting PDF... Please wait.</p>
+                </div>
+
+                <!-- 结果区域 -->
+                <div id="result-zone" style="display: none; text-align: center; margin-top: 2rem;">
+                    <h3 class="playfair" style="color: #22c55e; margin-bottom: 1rem;">✓ PDF Split Successfully!</h3>
+                    <a id="download-link" class="btn btn-premium Outfit" download="split.pdf">Download Split PDF</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO Expert Content -->
+        <div class="expert-section mt-12">
+            <div class="scary-seo-content"
+                style="background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%); padding: 4rem; border-radius: 20px; border-left: 4px solid #c2410c;">
+                <h2 class="playfair" style="font-size: 2rem; color: #0f172a; margin-bottom: 2rem;">Legal Perspective:
+                    Document Extraction & Evidence Management</h2>
+                <div class="expert-quote"
+                    style="background: rgba(194, 65, 12, 0.05); padding: 2rem; border-radius: 15px; font-style: italic; margin: 2rem 0; border-left: 3px solid #c2410c;">
+                    <p>"In legal discovery, the ability to extract specific pages from voluminous documents isn't just
+                        convenient—it's essential for compliance and cost management. Sending a 500-page document when
+                        only pages 47-52 are relevant is both wasteful and unprofessional."</p>
+                </div>
+
+                <h3 style="color: #c2410c; margin: 2rem 0 1rem; font-size: 1.3rem;">⚠️ The Cost of Document Bloat</h3>
+                <p style="line-height: 1.8; color: #334155; margin-bottom: 1.5rem;">
+                    When you send a client a 200-page contract when they only need to review pages 15-20, you're not
+                    demonstrating thoroughness—you're demonstrating a lack of respect for their time. In professional
+                    practice, precision in document delivery signals competence and consideration.
+                </p>
+
+                <h3 style="color: #c2410c; margin: 2rem 0 1rem; font-size: 1.3rem;">The Professional Standard</h3>
+                <p style="line-height: 1.8; color: #334155; margin-bottom: 1.5rem;">
+                    SoEasyHub's PDF splitter maintains the original formatting, quality, and metadata of extracted
+                    pages. This isn't just about separating pages—it's about creating professional, purpose-specific
+                    documents that demonstrate attention to detail and respect for your recipient's workflow.
+                </p>
+
+                <h3 style="color: #c2410c; margin: 2rem 0 1rem; font-size: 1.3rem;">Privacy & Confidentiality</h3>
+                <p style="line-height: 1.8; color: #334155; margin-bottom: 1.5rem;">
+                    Many cloud-based splitters upload your entire document to third-party servers, exposing sensitive
+                    information unnecessarily. SoEasyHub processes everything locally, ensuring that confidential pages
+                    you don't extract never leave your control. Because in professional practice, data minimization
+                    isn't optional—it's a legal requirement.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="grid-footer">
+                <div class="footer-about">
+                    <h3 class="logo">SoEasyHub</h3>
+                    <p>Solving Troubles with Tech, <br>Soothing Minds with Humanities.</p>
+                </div>
+                <div class="footer-group">
+                    <h4>Resources</h4>
+                    <a href="/tools">All Tools</a>
+                    <a href="/blog">Expert Articles</a>
+                </div>
+                <div class="footer-group">
+                    <h4>Company</h4>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-of-service">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p>&copy; 2025 SoEasyHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const uploadPrompt = document.getElementById('upload-prompt');
+        const fileInfo = document.getElementById('file-info');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        const splitOptionsContainer = document.getElementById('split-options-container');
+        const splitBtn = document.getElementById('split-btn');
+        const loading = document.getElementById('loading');
+        const resultZone = document.getElementById('result-zone');
+        const downloadLink = document.getElementById('download-link');
+
+        let selectedFile = null;
+        let splitMethod = 'range';
+
+        // 文件选择
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                selectedFile = file;
+                uploadPrompt.style.display = 'none';
+                fileInfo.style.display = 'block';
+                fileName.textContent = file.name;
+                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileSize.textContent = `${sizeInMB} MB`;
+                splitOptionsContainer.style.display = 'block';
+            }
+        });
+
+        // 选择分割方式
+        function selectOption(method) {
+            splitMethod = method;
+            document.getElementById('option-range').classList.toggle('active', method === 'range');
+            document.getElementById('option-pages').classList.toggle('active', method === 'pages');
+            document.getElementById('range-input').style.display = method === 'range' ? 'block' : 'none';
+            document.getElementById('pages-input').style.display = method === 'pages' ? 'block' : 'none';
+        }
+
+        // 分割 PDF
+        splitBtn.onclick = async () => {
+            if (!selectedFile) {
+                alert('Please select a PDF file first.');
+                return;
+            }
+
+            const pageInput = splitMethod === 'range'
+                ? document.getElementById('page-range').value
+                : document.getElementById('page-numbers').value;
+
+            if (!pageInput.trim()) {
+                alert('Please specify pages to extract.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('method', splitMethod);
+            formData.append('pages', pageInput);
+
+            loading.style.display = 'block';
+            resultZone.style.display = 'none';
+            splitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/split-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    resultZone.style.display = 'block';
+                } else {
+                    alert('Server processing error. Please check your page numbers and try again.');
+                }
+            } catch (e) {
+                alert('Network error. Please check your connection and try again.');
+            } finally {
+                loading.style.display = 'none';
+                splitBtn.disabled = false;
+            }
+        };
+
+        // CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

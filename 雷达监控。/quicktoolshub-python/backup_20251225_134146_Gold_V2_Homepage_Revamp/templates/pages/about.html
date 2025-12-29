@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - QuickToolsHub{% endblock %}
+{% block description %}About QuickToolsHub - Free online tools for PDF, images, text, and more.{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>About Us</h1>
+    </div>
+    
+    <div class="page-content">
+        <section class="content-section">
+            <h2>Our Mission</h2>
+            <p>
+                QuickToolsHub is dedicated to providing free, high-quality online tools that help users 
+                accomplish their tasks quickly and efficiently. We believe that everyone should have access 
+                to powerful tools without barriers.
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2>What We Offer</h2>
+            <p>
+                We offer a wide range of free online tools including:
+            </p>
+            <ul>
+                <li>PDF tools for merging, splitting, and converting</li>
+                <li>Image tools for compression, conversion, and editing</li>
+                <li>Text tools for counting, formatting, and processing</li>
+                <li>Developer tools for coding and testing</li>
+                <li>And many more useful tools</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>Our Values</h2>
+            <ul>
+                <li><strong>Free Access:</strong> All our tools are free to use</li>
+                <li><strong>No Registration:</strong> Use our tools without creating an account</li>
+                <li><strong>Privacy First:</strong> We respect your privacy and data</li>
+                <li><strong>Quality Tools:</strong> We provide reliable and efficient tools</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>Contact Us</h2>
+            <p>
+                If you have any questions, suggestions, or feedback, please contact us at:
+            </p>
+            <p>
+                <a href="mailto:baifan7574@gmail.com">baifan7574@gmail.com</a>
+            </p>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.page-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.content-section {
+    margin-bottom: 3rem;
+}
+.content-section h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+.content-section p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+.content-section ul {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+.content-section li {
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+.content-section a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+.content-section a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
+

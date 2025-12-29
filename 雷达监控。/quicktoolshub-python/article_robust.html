@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }} - SoEasyHub Blog</title>
+    <meta name="description" content="{{ article.description }}">
+    <meta name="keywords" content="{{ article.keywords }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .article-content h1 {
+            font-size: 2.5rem;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin: 2rem 0 1rem;
+        }
+
+        .article-content h3 {
+            font-size: 1.4rem;
+            color: #c2410c;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .article-content p {
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 1rem 0 1.5rem 2rem;
+            line-height: 1.8;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid #c2410c;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .related-articles {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog">Blog</a>
+            </div>
+        </div>
+    </nav>
+    <main class="main-content">
+        <article class="article-content">
+            <div class="article-meta" style="text-align: center; margin-bottom: 2rem;">
+                <span style="color: #64748b;">📅 {{ article.date }} | 📁 {{ article.category }}</span>
+            </div>
+            <div class="article-body">
+                {{ article.content | safe }}
+            </div>
+            <div class="cta-box">
+                <h3 class="playfair" style="color: #c2410c; margin-bottom: 1rem;">Ready to Get Started?</h3>
+                <p class="Outfit" style="margin-bottom: 1.5rem;">Try our free {{ article.tool_name }} now!</p>
+                <a href="/tools/{{ article.tool_slug }}" class="btn btn-premium Outfit">Use {{ article.tool_name }}
+                    →</a>
+            </div>
+
+            <!-- Related Articles Double Check -->
+            <div class="related-articles">
+                <h3 class="playfair" style="margin-bottom: 1rem;">Related Articles</h3>
+                <ul class="Outfit">
+                    {# Try direct variable first #}
+                    {% if related_articles %}
+                    {% for related in related_articles %}
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="/blog/{{ related.slug }}" style="color: #c2410c;">{{ related.title }}</a>
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    {# Fallback to article attribute #}
+                    {% for related in article.related_articles %}
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="/blog/{{ related.slug }}" style="color: #c2410c;">{{ related.title }}</a>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </article>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p style="text-align: center;">&copy; 2025 SoEasyHub. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - SoEasyHub | Expert Guides & Tutorials</title>
+    <meta name="description"
+        content="Expert guides, tutorials, and tips for using online tools. Learn how to work smarter with SoEasyHub.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog" class="active">Blog</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content container">
+        <div class="blog-header" style="text-align: center; padding: 4rem 0;">
+            <h1 class="playfair" style="font-size: 3rem; color: #0f172a; margin-bottom: 1rem;">SoEasyHub Blog</h1>
+            <p class="lead" style="font-size: 1.2rem; color: #64748b;">Expert guides, tutorials, and tips for working
+                smarter</p>
+        </div>
+
+        <div class="blog-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem;">
+            {% for article in articles %}
+            <article class="blog-card"
+                style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s;">
+                <div class="blog-card-image"
+                    style="height: 200px; background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); display: flex; align-items: center; justify-content: center;">
+                    <h3 class="playfair" style="color: white; font-size: 1.5rem; padding: 2rem; text-align: center;">{{
+                        article.title }}</h3>
+                </div>
+                <div class="blog-card-content" style="padding: 2rem;">
+                    <div class="blog-meta"
+                        style="display: flex; gap: 1rem; margin-bottom: 1rem; font-size: 0.9rem; color: #64748b;">
+                        <span>📅 {{ article.date }}</span>
+                        <span>📁 {{ article.category }}</span>
+                    </div>
+                    <p class="blog-excerpt" style="color: #334155; line-height: 1.6; margin-bottom: 1.5rem;">{{
+                        article.excerpt }}</p>
+                    <a href="/blog/{{ article.slug }}" class="btn btn-premium Outfit">Read More →</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="grid-footer">
+                <div class="footer-about">
+                    <h3 class="logo">SoEasyHub</h3>
+                    <p>Solving Troubles with Tech, <br>Soothing Minds with Humanities.</p>
+                </div>
+                <div class="footer-group">
+                    <h4>Resources</h4>
+                    <a href="/tools">All Tools</a>
+                    <a href="/blog">Blog</a>
+                </div>
+                <div class="footer-group">
+                    <h4>Company</h4>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-of-service">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p>&copy; 2025 SoEasyHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

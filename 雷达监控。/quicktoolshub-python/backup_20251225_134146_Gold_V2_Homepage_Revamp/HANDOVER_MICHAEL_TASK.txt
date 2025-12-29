@@ -1,0 +1,75 @@
+# 🚀 Feature Request: Michael's Interactive Persona ("The Whisper")
+
+**Status**: READY FOR DEVELOPMENT
+**Priority**: High (User Experience Differentiator)
+**Assignee**: Next Session AI
+
+---
+
+## 1. The Vision (产品愿景)
+We want to transform `soeasyhub.com` from a static tool site into a "Humanized Service". 
+Users should feel like **Michael** (the multi-expert persona) is sitting right next to them, offering advice at critical moments.
+
+**The Feature**: 
+When a user hovers over specific "high-friction" or "high-emotion" elements (like Upload buttons, Purchase buttons, or confusing inputs), a collaborative "Whisper Bubble" appears with a persona-specific tip.
+
+---
+
+## 2. Technical Implementation (技术方案)
+
+### A. The "Smart Tooltip" Engine
+Do NOT hardcode specific HTML for every tooltip. Instead, build a universal listener.
+
+**HTML Usage (How to use it in templates):**
+```html
+<!-- Lawyer Persona (Blue Theme) -->
+<button class="btn-upload" 
+    data-michael-persona="lawyer" 
+    data-michael-tip="Your files stay on your device. I never see them.">
+    Upload PDF
+</button>
+
+<!-- Psychologist Persona (Green/Warm Theme) -->
+<div class="loading-spinner" 
+    data-michael-persona="psychologist" 
+    data-michael-tip="Breathe in... Breathe out... formatting normally takes 3 seconds.">
+</div>
+```
+
+**JavaScript Logic (pseudo-code):**
+1. Listen for `mouseenter` on any element with `[data-michael-tip]`.
+2. Dynamically create a DOM element (`.michael-whisper-bubble`).
+3. Inject the correct **Avatar Image** based on `data-michael-persona`.
+4. Inject the text from `data-michael-tip`.
+5. Position it near the mouse/element with a bouncy CSS animation.
+
+---
+
+## 3. Asset Generation (美术资产 - 这里的Prompt直接拿去跑)
+
+You need to generate 3 distinct avatars. They must share the **Same Art Style** (e.g., "Minimalist 3D Avatar" or "Flat Vector Style").
+
+**Core Character**: Male, 35-40 years old, glasses, friendly but professional Asian/International look.
+
+### 🎨 Prompts for Image Generation:
+
+**1. The Lawyer (File: `img/michael_lawyer.png`)**
+> **Prompt**: "A friendly 3D cartoon avatar of a professional man named Michael. He is wearing a sharp dark blue suit and tie. He has glasses and looks trustworthy and protective. Solid soft circular background (light blue). High quality, Pixar style icon."
+
+**2. The Psychologist (File: `img/michael_psych.png`)**
+> **Prompt**: "A friendly 3D cartoon avatar of the same character Michael. He is wearing a cozy beige cardigan sweater. He is holding a steaming cup of tea. He has a warm, empathetic smile. Solid soft circular background (warm sage green). High quality, Pixar style icon."
+
+**3. The Teacher (File: `img/michael_teacher.png`)**
+> **Prompt**: "A friendly 3D cartoon avatar of the same character Michael. He is wearing a crisp white shirt with rolled-up sleeves. He is pointing a finger up as if explaining an idea. Enthusiastic expression. Solid soft circular background (energetic orange). High quality, Pixar style icon."
+
+---
+
+## 4. Work Checklist (执行清单)
+- [ ] Generate the 3 images using the prompts above.
+- [ ] Save images to `static/img/`.
+- [ ] Create `static/js/michael_whisper.js` (The engine).
+- [ ] Add CSS for `.michael-whisper-bubble` (Bounce animation).
+- [ ] **Integration**: Add the `data-michael-xxx` attributes to the "Alternative to Best Regards" tool first as a demo.
+
+---
+**Note to AI**: The user loves "Ritual" and "Detail". Make the animation smooth and the bubbles look premium (glassmorphism or clean shadows).

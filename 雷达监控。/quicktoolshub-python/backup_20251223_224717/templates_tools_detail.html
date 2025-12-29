@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.name }} - SoEasyHub | Professional Online Tools</title>
+    <meta name="description" content="{{ tool.description }} - Free, secure, and privacy-focused tool by SoEasyHub.">
+    <meta name="keywords" content="{{ tool.name }}, online tool, free, professional, {{ tool.slug }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .tool-interface {
+            background: #f8fafc;
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* SEO Styles */
+        .expert-section {
+            margin-top: 6rem;
+        }
+
+        .scary-seo-content {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
+            padding: 4rem;
+            border-radius: 20px;
+            border-left: 4px solid #c2410c;
+        }
+
+        .scary-seo-content h2 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 2rem;
+        }
+
+        .expert-quote {
+            background: rgba(194, 65, 12, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            font-style: italic;
+            margin: 2rem 0;
+            border-left: 3px solid #c2410c;
+        }
+
+        .scary-seo-content h3 {
+            color: #c2410c;
+            margin: 2rem 0 1rem;
+            font-size: 1.3rem;
+        }
+
+        .scary-seo-content p {
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Text Tool Styles (JSON & Base64) */
+        .text-interface {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .text-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .text-textarea {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            resize: vertical;
+            background: white;
+        }
+
+        .text-textarea:focus {
+            border-color: #c2410c;
+            outline: none;
+        }
+
+        .text-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            cursor: pointer;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .btn-primary-action {
+            background: #c2410c;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary-action:hover {
+            background: #9a3412;
+        }
+
+        .msg-box {
+            padding: 0.75rem;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 1rem;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .success-msg {
+            color: #16a34a;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog">Expert Advice</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content container">
+        <div class="tool-header">
+            <h1 class="playfair">{{ tool.name }}</h1>
+            <p class="lead">{{ tool.description }}</p>
+        </div>
+
+        <div class="tool-card shadow-lg">
+            <div class="tool-interface" id="tool-interface">
+
+                {% if tool.slug == 'json-formatter' %}
+                <!-- JSON Formatter Interface -->
+                <div class="text-interface">
+                    <div class="text-controls">
+                        <button class="btn-action btn-primary-action" onclick="formatJson()">Beautify / Format</button>
+                        <button class="btn-action" onclick="minifyJson()">Minify / Compress</button>
+                        <button class="btn-action" onclick="validateJson()">Validate Only</button>
+                        <button class="btn-action" onclick="clearText('json-input')">Clear</button>
+                        <select id="indent-size" class="btn-action">
+                            <option value="2">2 Spaces</option>
+                            <option value="4" selected>4 Spaces</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </div>
+                    <div id="text-msg" class="msg-box"></div>
+                    <textarea id="json-input" class="text-textarea" placeholder='Paste JSON here...'></textarea>
+                </div>
+
+                {% elif tool.slug == 'base64-encoder' %}
+                <!-- Base64 Interface -->
+                <div class="text-interface">
+                    <div class="text-controls">
+                        <button class="btn-action btn-primary-action" onclick="base64Encode()">Encode to Base64</button>
+                        <button class="btn-action btn-primary-action" onclick="base64Decode()">Decode from
+                            Base64</button>
+                        <button class="btn-action" onclick="clearText('base64-input')">Clear</button>
+                    </div>
+                    <div id="text-msg" class="msg-box"></div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="text-box">
+                            <label class="text-label">Input Text / Base64</label>
+                            <textarea id="base64-input" class="text-textarea"
+                                placeholder="Enter text to encode or Base64 to decode..."></textarea>
+                        </div>
+                        <div class="text-box">
+                            <label class="text-label">Result</label>
+                            <textarea id="base64-output" class="text-textarea" readonly
+                                placeholder="Result will appear here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'url-encoder-decoder' %}
+                <!-- URL Encoder Interface -->
+                <div class="text-interface">
+                    <div class="text-controls">
+                        <button class="btn-action btn-primary-action" onclick="urlEncode()">Encode URL</button>
+                        <button class="btn-action btn-primary-action" onclick="urlDecode()">Decode URL</button>
+                        <button class="btn-action" onclick="clearText('url-input')">Clear</button>
+                    </div>
+                    <div id="text-msg" class="msg-box"></div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="text-box">
+                            <label class="text-label">Input String</label>
+                            <textarea id="url-input" class="text-textarea"
+                                placeholder="Paste URL or string here..."></textarea>
+                        </div>
+                        <div class="text-box">
+                            <label class="text-label">Result</label>
+                            <textarea id="url-output" class="text-textarea" readonly
+                                placeholder="Result will appear here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif tool.slug == 'word-counter' %}
+                <div class="text-interface">
+                    <div id="text-msg" class="msg-box"></div>
+                    <div class="text-box">
+                        <label class="text-label">Enter your text below</label>
+                        <textarea id="word-input" class="text-textarea"
+                            placeholder="Start typing or paste your text here..."
+                            oninput="updateWordCounts()"></textarea>
+                    </div>
+                    <div class="counter-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Words</div>
+                            <div id="count-words" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0
+                            </div>
+                        </div>
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Characters (all)</div>
+                            <div id="count-chars" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0
+                            </div>
+                        </div>
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Characters (no spaces)
+                            </div>
+                            <div id="count-chars-no-space"
+                                style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0</div>
+                        </div>
+                        <div class="stat-card"
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.3rem;">Paragraphs</div>
+                            <div id="count-paragraphs"
+                                style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0</div>
+                        </div>
+                    </div>
+                    <div class="text-controls" style="margin-top: 1.5rem; justify-content: center;">
+                        <button class="btn-action" onclick="clearText('word-input')">Clear Everything</button>
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Standard File Interface -->
+                <h3 class="interface-title">Upload File for Processing</h3>
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <input type="file" id="file-input" style="display:none;">
+                    <p>Click or Drag File Here</p>
+                </div>
+                <button id="process-btn" class="btn btn-premium mt-4">Process Now</button>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- SEO Content -->
+        <div class="expert-section">
+            {% if tool.slug == 'json-formatter' %}
+            <div class="scary-seo-content">
+                <h2 class="playfair">JSON Formatter Online Free: Validate and Beautify 2025</h2>
+                <div class="expert-quote">
+                    <p>"Clean code starts with clean data. If you can't read your JSON, you can't trust your API.
+                        Real-time validation isn't a luxury—it's a safeguard against cascading system failures." —
+                        Michael</p>
+                </div>
+
+                <h3>Essential Use Cases for Professional Developers</h3>
+                <div class="case-study">
+                    <p><strong>Case 1: API Debugging</strong><br>
+                        Ever spent hours searching for a missing comma in a 5,000-line minified JSON response from
+                        Stripe or AWS? Our formatter instantly expands nested objects, making data paths like
+                        <code>response.data.items[0].auth_id</code> clearly visible.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Case 2: Frontend Data Mocking</strong><br>
+                        When building UI components, you need clean mock data. Use our <strong>JSON Beautifier</strong>
+                        to transform messy raw data into a readable format for your <code>mockData.json</code> files,
+                        ensuring your team stays in sync.</p>
+                </div>
+
+                <h3>Why Choose Our Browser-Based Tool?</h3>
+                <ul>
+                    <li><strong>Instant Syntax Check</strong>: Catch trailing commas and mismatched braces immediately.
+                    </li>
+                    <li><strong>Multiple Indent Options</strong>: Choose 2-space, 4-space, or Tab indentation to match
+                        your company's style guide.</li>
+                    <li><strong>Zero Server Storage</strong>: Your sensitive API payloads never touch our servers.
+                        Security and privacy are guaranteed.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'base64-encoder' %}
+            <div class="scary-seo-content">
+                <h2 class="playfair">Base64 Encoder/Decoder Online Free: Secure Local Processing</h2>
+                <div class="expert-quote">
+                    <p>"Never paste sensitive keys into online Base64 tools that send data to their servers. Privacy in
+                        dev tools isn't a feature, it's a requirement. If the tool is 'cloud-based', your data is
+                        already at risk." — Michael</p>
+                </div>
+
+                <h3>Real-World Scenarios</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: Secure Credential Handling</strong><br>
+                        When generating <code>Basic Auth</code> headers for API testing (like
+                        <code>Authorization: Basic BASE64_STRING</code>), you must ensure your password never hits a
+                        third-party server log. Our local-first tool ensures your credentials stay on your machine.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Data URI Embedding</strong><br>
+                        Need to embed a small SVG or font into your CSS file? Quick-converting small assets to Base64
+                        allows you to reduce HTTP requests, making your website load noticeably faster for end-users.
+                    </p>
+                </div>
+
+                <h3>Features</h3>
+                <ul>
+                    <li><strong>Fast Encoding</strong>: Convert plain text to Base64 strings in milliseconds.</li>
+                    <li><strong>Reliable Decoding</strong>: Decode strings back to human-readable text with full UTF-8
+                        support.</li>
+                    <li><strong>Privacy Guarantee</strong>: No cookies, no tracking, no server-side storage.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'url-encoder-decoder' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">URL Encoder/Decoder Online Free: Secure Percent-Encoding</h3>
+                <div class="expert-quote">
+                    <p>"URL encoding is not encryption, but it is the critical glue that holds the web together. Safe
+                        parameter handling is a mandatory skill for modern devs. A single unencoded '&' can sabotage
+                        your entire marketing tracking campaign." — Michael</p>
+                </div>
+
+                <h3>Professional Use Cases</h3>
+                <div class="case-study">
+                    <p><strong>Example 1: Safe Query Parameters</strong><br>
+                        If you are passing a 'Redirect URL' as a parameter (e.g.,
+                        <code>?next=https://site.com/page?id=1</code>), the browser will get confused by the nested
+                        question mark. Encoding the parameter ensures your redirect logic works every single time.
+                    </p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Example 2: Marketing & UTM Tracking</strong><br>
+                        UTM parameters often contain special characters. Using a <strong>URL Encoder</strong> avoids
+                        broken links in your email newsletters or social media posts, protecting your campaign's data
+                        integrity.</p>
+                </div>
+
+                <h3>Core Benefits</h3>
+                <ul>
+                    <li><strong>Full Character Support</strong>: Handles all non-ASCII characters and UTF-8 symbols
+                        perfectly.</li>
+                    <li><strong>Instant Safe URLs</strong>: Transform messy strings into percent-encoded, browser-safe
+                        URLs in one click.</li>
+                    <li><strong>100% Privacy</strong>: Your redirect links and internal system paths stay private.</li>
+                </ul>
+            </div>
+            {% elif tool.slug == 'word-counter' %}
+            <div class="scary-seo-content">
+                <h3 class="playfair">Word Counter Online Free: Precision and Clarity in Drafting 2025</h3>
+                <div class="expert-quote">
+                    <p>"Words are the building blocks of thought, but precision is the mortar that holds them together.
+                        Whether it's a legal brief, a student essay, or a professional memo, clarity is born from
+                        technical constraints. Count precisely, communicate effectively." — Michael</p>
+                </div>
+
+                <h3>Expert Drafting Scenarios</h3>
+                <div class="case-study">
+                    <p><strong>Scenario 1: Professional Communication</strong><br>
+                        As a <strong>Teacher</strong> and <strong>Labor Relations Coordinator</strong>, Michael knows
+                        that excessive length often masks a lack of clarity. Use the character count to ensure your
+                        emails and reports are concise enough to be read, but detailed enough to be understood.</p>
+                </div>
+                <div class="case-study">
+                    <p><strong>Scenario 2: Platform Compliance</strong><br>
+                        Academic submissions, Twitter posts, and Google Ads all have strict character limits. Our
+                        real-time counter handles UTF-8 characters accurately, ensuring your message never gets
+                        truncated at the crucial moment.</p>
+                </div>
+
+                <h3>Why Our Word Counter is Different</h3>
+                <ul>
+                    <li><strong>Real-Time Analytics</strong>: See your stats update as you type.</li>
+                    <li><strong>Privacy and Confidentiality</strong>: As a <strong>Lawyer</strong>, Michael prioritizes
+                        your data safety. Your sensitive drafts are processed locally and never uploaded to any server.
+                    </li>
+                    <li><strong>Comprehensive Breakdown</strong>: Get word, character, and paragraph counts in a single
+                        clean view.</li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        function showTextMsg(type, msg) {
+            const box = document.getElementById('text-msg');
+            box.textContent = msg;
+            box.className = 'msg-box ' + (type === 'error' ? 'error-msg' : 'success-msg');
+            box.style.display = 'block';
+        }
+
+        function clearText(id) {
+            document.getElementById(id).value = '';
+            if (document.getElementById('base64-output')) document.getElementById('base64-output').value = '';
+            if (document.getElementById('url-output')) document.getElementById('url-output').value = '';
+            document.getElementById('text-msg').style.display = 'none';
+        }
+
+        // JSON Logic
+        function formatJson() {
+            const el = document.getElementById('json-input');
+            try {
+                const obj = JSON.parse(el.value);
+                const indent = document.getElementById('indent-size').value;
+                el.value = JSON.stringify(obj, null, indent === 'tab' ? '\t' : parseInt(indent));
+                showTextMsg('success', 'JSON Formatted');
+            } catch (e) { showTextMsg('error', 'Invalid JSON: ' + e.message); }
+        }
+        function minifyJson() {
+            const el = document.getElementById('json-input');
+            try { el.value = JSON.stringify(JSON.parse(el.value)); showTextMsg('success', 'JSON Minified'); }
+            catch (e) { showTextMsg('error', 'Invalid JSON: ' + e.message); }
+        }
+
+        // Base64 Logic
+        function base64Encode() {
+            const input = document.getElementById('base64-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('base64-output').value = btoa(unescape(encodeURIComponent(input)));
+                showTextMsg('success', 'Encoded Successfully');
+            } catch (e) { showTextMsg('error', 'Encoding failed'); }
+        }
+        function base64Decode() {
+            const input = document.getElementById('base64-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('base64-output').value = decodeURIComponent(escape(atob(input)));
+                showTextMsg('success', 'Decoded Successfully');
+            } catch (e) { showTextMsg('error', 'Invalid Base64 string'); }
+        }
+
+        // URL Encoder Logic
+        function urlEncode() {
+            const input = document.getElementById('url-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('url-output').value = encodeURIComponent(input);
+                showTextMsg('success', 'URL Encoded Successfully');
+            } catch (e) { showTextMsg('error', 'Encoding failed'); }
+        }
+        function urlDecode() {
+            const input = document.getElementById('url-input').value;
+            if (!input) return;
+            try {
+                document.getElementById('url-output').value = decodeURIComponent(input);
+                showTextMsg('success', 'URL Decoded Successfully');
+            } catch (e) { showTextMsg('error', 'Invalid URL-encoded string'); }
+        }
+
+        // Word Counter Logic
+        function updateWordCounts() {
+            const text = document.getElementById('word-input').value;
+
+            // Characters
+            document.getElementById('count-chars').textContent = text.length;
+            document.getElementById('count-chars-no-space').textContent = text.replace(/\s/g, '').length;
+
+            // Words
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('count-words').textContent = words.length;
+
+            // Paragraphs
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            document.getElementById('count-paragraphs').textContent = paragraphs.length;
+        }
+
+        // Add to clearText
+        const originalClear = clearText;
+        window.clearText = function (id) {
+            originalClear(id);
+            if (id === 'word-input') {
+                document.getElementById('count-words').textContent = '0';
+                document.getElementById('count-chars').textContent = '0';
+                document.getElementById('count-chars-no-space').textContent = '0';
+                document.getElementById('count-paragraphs').textContent = '0';
+            }
+        }
+    </script>
+</body>
+
+</html>

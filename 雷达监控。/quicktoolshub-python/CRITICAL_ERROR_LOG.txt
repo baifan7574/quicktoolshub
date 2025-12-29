@@ -1,0 +1,146 @@
+# 致命错误备忘录 (CRITICAL ERROR LOG)
+# 创建日期: 2025-12-23
+# 维护者: Antigravity AI Agent
+
+## ⚠️ 本次事故回顾 (Word Counter 升级失败)
+
+### 错误 #1: 端口配置错误
+**症状**: 部署后网站出现 502 Bad Gateway
+**根本原因**: 
+- Nginx 配置指向 `127.0.0.1:9999`
+- 但部署脚本一直在启动 `0.0.0.0:3000` 的 Gunicorn
+- 导致 Nginx 无法连接到后端服务
+
+**教训**: 
+✅ 部署前必须检查 Nginx 配置文件确认正确端口
+✅ 在 `deploy_full.py` 中硬编码正确端口: `127.0.0.1:9999`
+✅ 部署后必须验证 `curl http://localhost:9999` 返回 200
+
+### 错误 #2: 语法错误 (Python Dictionary)
+**症状**: Gunicorn 启动失败,Worker failed to boot
+**根本原因**: 
+- 在 `tools_new.py` 的 hardcoded 列表中漏掉了一个 `{` 花括号
+- 导致 Python 语法错误,服务器无法启动
+
+**教训**:
+✅ 修改代码后必须本地执行 `python -m py_compile` 验证语法
+✅ 部署脚本中已添加语法检查,如果失败则中止部署
+✅ 永远不要在生产环境直接修改代码
+
+### 错误 #3: 模板逻辑错误 (Jinja2)
+**症状**: 模板渲染失败
+**根本原因**: 
+- 在 Jinja2 模板中,`{% elif %}` 必须在 `{% else %}` 之前
+- 我错误地把新工具的判断放在了 `else` 之后
+
+**教训**:
+✅ Jinja2 语法规则: `if` → `elif` → `else` → `endif`
+✅ 修改模板后必须检查条件分支的顺序
+✅ 使用 `jinja2.Template().render()` 本地测试模板
+
+### 错误 #4: PM2 进程管理冲突
+**症状**: 手动修复后问题反复出现
+**根本原因**: 
+- 服务器上有 PM2 在自动管理进程
+- PM2 使用了错误的配置,不断重启 3000 端口的进程
+
+**教训**:
+✅ 部署前必须检查 `pm2 list` 和 `crontab -l`
+✅ 如果使用 PM2,必须更新 PM2 配置而不是手动启动
+✅ 或者完全停用 PM2,使用 systemd 或 supervisor
+
+---
+
+## 🔒 强制检查清单 (部署前必须执行)
+
+### 1. 本地验证
+- [ ] `python -m py_compile tools_new.py blog_final.py`
+- [ ] `python -m py_compile detail_new.html` (如果是 Python 模板)
+- [ ] 检查所有花括号、引号、缩进是否正确
+
+### 2. 服务器环境检查
+- [ ] `grep proxy_pass /etc/nginx/sites-enabled/*` 确认端口
+- [ ] `pm2 list` 检查是否有冲突进程
+- [ ] `ps aux | grep gunicorn` 查看当前运行状态
+
+### 3. 部署后验证
+- [ ] `curl -s -o /dev/null -w "%{http_code}" http://localhost:9999/tools/word-counter`
+- [ ] 检查 `gunicorn.log` 是否有错误
+- [ ] 在浏览器中实际访问页面
+
+### 4. 回滚准备
+- [ ] 保留上一个可用版本的备份
+- [ ] 记录当前 Git commit hash
+- [ ] 准备快速回滚脚本
+
+---
+
+## 📋 标准部署流程 (Standard Operating Procedure)
+
+```bash
+# Step 1: 本地语法检查
+python -m py_compile tools_new.py blog_final.py
+
+# Step 2: 检查服务器配置
+ssh root@43.130.229.184 "grep proxy_pass /etc/nginx/sites-enabled/*"
+
+# Step 3: 执行部署
+python deploy_full.py
+
+# Step 4: 验证
+ssh root@43.130.229.184 "curl -s -o /dev/null -w '%{http_code}' http://localhost:9999/"
+
+# Step 5: 如果失败,立即回滚
+# ssh root@43.130.229.184 "cd /root/soeasyhub_v2 && git reset --hard HEAD~1"
+```
+
+---
+
+## 🚨 永远不要做的事情 (NEVER DO THIS)
+
+1. ❌ 直接在服务器上修改代码
+2. ❌ 不经过本地测试就部署
+3. ❌ 忽略部署脚本的错误提示
+4. ❌ 假设端口配置"应该"是某个值
+5. ❌ 在生产环境调试语法错误
+
+---
+
+## ✅ 正确的工作流程
+
+1. **本地开发** → 修改 `tools_new.py`, `detail_new.html`, `blog_final.py`
+2. **本地测试** → `python -m py_compile` 验证语法
+3. **提交代码** → Git commit (可选,但推荐)
+4. **检查环境** → 确认 Nginx 端口、PM2 状态
+5. **执行部署** → `python deploy_full.py`
+6. **验证结果** → curl 测试 + 浏览器访问
+7. **监控日志** → 检查 `gunicorn.log` 和 `debug.txt`
+
+---
+
+## 📝 本次事故时间线
+
+- 22:10 - 开始升级 Word Counter
+- 22:15 - 第一次部署,出现 502 错误
+- 22:18 - 发现语法错误,修复后重新部署
+- 22:21 - 仍然 502,开始诊断端口问题
+- 22:27 - 发现端口不匹配,但修复后仍有问题
+- 22:35 - 发现 PM2 冲突,停止 PM2
+- 22:37 - 最终修复完成
+
+**总耗时**: 27 分钟
+**用户影响**: 网站部分功能不可用约 20 分钟
+
+---
+
+## 🎯 改进措施
+
+1. **更新 REGRESSION_GUIDE.txt** - 添加端口检查规则
+2. **增强 deploy_full.py** - 添加更多预检查
+3. **创建测试脚本** - 部署前自动运行所有检查
+4. **文档化端口配置** - 在项目 README 中明确说明
+
+---
+
+**最后更新**: 2025-12-23 22:39
+**下次审查**: 每次部署前必读

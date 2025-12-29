@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - QuickToolsHub{% endblock %}
+{% block description %}Contact QuickToolsHub - We'd love to hear from you!{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Contact Us</h1>
+    </div>
+    
+    <div class="page-content">
+        <section class="content-section">
+            <h2>Get in Touch</h2>
+            <p>
+                We'd love to hear from you! Whether you have a question, suggestion, or feedback, 
+                please don't hesitate to reach out to us.
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2>Email</h2>
+            <p>
+                For general inquiries, please email us at:
+            </p>
+            <p>
+                <a href="mailto:baifan7574@gmail.com" class="email-link">baifan7574@gmail.com</a>
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2>Response Time</h2>
+            <p>
+                We aim to respond to all inquiries within 2-3 business days.
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2>Feedback</h2>
+            <p>
+                Your feedback helps us improve our tools and services. We appreciate your input!
+            </p>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.page-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.content-section {
+    margin-bottom: 3rem;
+}
+.content-section h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+.content-section p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+.email-link {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.email-link:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
+

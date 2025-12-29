@@ -1,0 +1,294 @@
+/* 
+   SoEasyHub Total Transformation
+   Theme: Luxury Minimalist (Elite Western Aesthetics)
+*/
+
+:root {
+    --primary: #0f172a;
+    --accent: #c2410c;
+    --text-main: #334155;
+    --text-dark: #0f172a;
+    --bg-light: #ffffff;
+    --bg-soft: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.8);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Luxury Navbar */
+.navbar {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary) !important;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+/* High-End Hero Section */
+.hero-section {
+    padding: 8rem 0 6rem;
+    background: radial-gradient(circle at top right, #fff5f0 0%, #ffffff 50%);
+    text-align: center;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: var(--primary);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero-slogan {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    color: var(--text-main);
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+}
+
+/* Premium Buttons */
+.btn-premium {
+    background: var(--accent);
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 99px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+.btn-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(194, 65, 12, 0.3);
+}
+
+/* Tools Grid Section */
+.tools-grid-section {
+    padding: 6rem 0;
+}
+
+.section-label {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.tool-card-premium {
+    background: var(--bg-soft);
+    border-radius: 20px;
+    padding: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+.tool-card-premium:hover {
+    background: white;
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.12);
+    border-color: rgba(194, 65, 12, 0.1);
+}
+
+.tool-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.tool-desc {
+    font-size: 1rem;
+    color: var(--text-main);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.link-premium {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.link-premium:hover {
+    gap: 0.75rem;
+}
+
+/* Expert Insights */
+.expert-insights-preview {
+    padding: 4rem 0;
+}
+
+.expert-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.expert-header h3 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.insights-placeholder {
+    background: var(--bg-soft);
+    padding: 3rem;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-main);
+}
+
+/* Dark Minimalist Footer */
+.footer {
+    background: var(--primary);
+    color: white;
+    padding: 6rem 0 3rem;
+    margin-top: 8rem;
+}
+
+.grid-footer {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+}
+
+.footer .logo {
+    color: white !important;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.footer-about p {
+    opacity: 0.8;
+    line-height: 1.8;
+}
+
+.footer-group h4 {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-group a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.footer-group a:hover {
+    opacity: 1;
+}
+
+.footer-bottom {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.mt-8 {
+    margin-top: 2rem;
+}
+
+.mt-16 {
+    margin-top: 4rem;
+}
+
+.playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="hero-title playfair">Solving Troubles with Tech</h1>
+        <h2 class="hero-slogan playfair italic">Soothing Minds with Humanities</h2>
+        <p class="hero-description Outfit">The most seamless, professional online tool suite designed for elites and
+            experts.</p>
+        <div class="mt-8">
+            <a href="/tools" class="btn btn-premium">Explore All Tools</a>
+        </div>
+    </div>
+</div>
+
+<section class="tools-grid-section container">
+    <h3 class="section-label Outfit">Featured Tools</h3>
+    <div class="tools-grid">
+        {% for tool in tools %}
+        <div class="tool-card-premium shadow-sm">
+            <div class="card-body">
+                <h4 class="tool-name playfair">{{ tool.name }}</h4>
+                <p class="tool-desc Outfit">{{ tool.short_description or tool.description[:100] + '...' }}</p>
+                <div class="card-actions">
+                    <a href="{{ url_for('tools.tool_detail', slug=tool.slug) }}" class="link-premium">Use Tool
+                        <span>→</span></a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="expert-insights-preview container mt-16">
+    <div class="expert-header">
+        <h3 class="playfair">Expert Advice</h3>
+        <p class="Outfit">Bridging the gap between technological efficiency and human values.</p>
+    </div>
+    <div class="insights-placeholder shadow-sm">
+        <p class="italic">"We believe that every digital action has a human consequence. Our tools are built to respect
+            your time and protect your professional integrity."</p>
+    </div>
+</section>
+{% endblock %}

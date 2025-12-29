@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tool.name }} - Free Online Tool | QuickToolsHub{% endblock %}
+{% block description %}{{ tool.short_description or tool.description or 'Use ' + tool.name + ' for free online. No registration required.' }}{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<div class="breadcrumb">
+    <div class="container">
+        <nav>
+            <a href="/">Home</a> / 
+            <a href="/tools">Tools</a> / 
+            {% if tool.categories %}
+            <a href="/tools?category={{ tool.categories.slug }}">{{ tool.categories.name }}</a> / 
+            {% endif %}
+            <span>{{ tool.name }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tool-detail-layout">
+        <!-- 主内容区 -->
+        <main class="tool-main">
+            <!-- 工具标题和描述 -->
+            <div class="tool-header">
+                <h1>{{ tool.name }}</h1>
+                {% if tool.description %}
+                <p class="tool-description">{{ tool.description }}</p>
+                {% endif %}
+                {% if tool.short_description %}
+                <p class="tool-short-desc">{{ tool.short_description }}</p>
+                {% endif %}
+            </div>
+
+            <!-- 工具使用界面 -->
+            <div class="tool-interface">
+                {% if tool.tool_type == 'external_link' and tool.external_url %}
+                    <!-- 外部链接工具 -->
+                    <h2>About This Tool</h2>
+                    {% if tool.description %}
+                    <div class="tool-description-content">
+                        <p>{{ tool.description }}</p>
+                    </div>
+                    {% endif %}
+                    <div class="external-tool-link">
+                        <a href="{{ tool.external_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                            Visit Tool →
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- 自开发工具 -->
+                    <h2>Use This Tool</h2>
+                    
+                    <!-- 根据工具 slug 显示不同的界面 -->
+                    {% if tool.slug == 'pdf-compressor' or 'compress' in tool.slug %}
+                        <!-- PDF 压缩工具 -->
+                        <form id="compress-pdf-form" class="tool-form">
+                            <div class="form-group">
+                                <label for="pdf-file">Select PDF File</label>
+                                <input type="file" id="pdf-file" name="file" accept=".pdf" required>
+                            </div>
+                            <button type="submit" class="btn">Compress PDF</button>
+                        </form>
+                    {% elif tool.slug == 'pdf-to-word' or 'pdf-to-word' in tool.slug %}
+                        <!-- PDF 转 Word 工具 -->
+                        <form id="pdf-to-word-form" class="tool-form">
+                            <div class="form-group">
+                                <label for="pdf-file">Select PDF File</label>
+                                <input type="file" id="pdf-file" name="file" accept=".pdf" required>
+                            </div>
+                            <button type="submit" class="btn">Convert to Word</button>
+                        </form>
+                    {% elif tool.slug == 'background-remover' or 'background' in tool.slug or 'remove' in tool.slug %}
+                        <!-- 背景移除工具 -->
+                        <form id="remove-background-form" class="tool-form">
+                            <div class="form-group">
+                                <label for="image-file">Select Image File</label>
+                                <input type="file" id="image-file" name="file" accept="image/*" required>
+                            </div>
+                            <button type="submit" class="btn">Remove Background</button>
+                        </form>
+                    {% elif tool.slug == 'word-counter' %}
+                        <!-- 字数统计工具 -->
+                        <div id="word-counter-tool">
+                            <div class="word-stats"></div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="text-input">Enter or paste your text below</label>
+                                    <button class="clear-btn text-sm text-gray-600 hover:text-gray-900">Clear</button>
+                                </div>
+                                <textarea id="text-input" class="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono" placeholder="Start typing or paste your text here..."></textarea>
+                            </div>
+                        </div>
+                        <script src="{{ url_for('static', filename='js/tools/word-counter.js') }}"></script>
+                    {% elif tool.slug == 'text-case-converter' %}
+                        <!-- 文本大小写转换工具 -->
+                        <div id="text-case-converter-tool">
+                            <div class="form-group">
+                                <label for="case-type">Convert to:</label>
+                                <select id="case-type" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                    <option value="lowercase">lowercase</option>
+                                    <option value="uppercase">UPPERCASE</option>
+                                    <option value="title">Title Case</option>
+                                    <option value="sentence">Sentence case</option>
+                                    <option value="camel">camelCase</option>
+                                    <option value="pascal">PascalCase</option>
+                                    <option value="snake">snake_case</option>
+                                    <option value="kebab">kebab-case</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="input-text">Input Text</label>
+                                    <button class="clear-btn text-sm text-gray-600 hover:text-gray-900">Clear</button>
+                                </div>
+                                <textarea id="input-text" class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Enter or paste your text here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="output-text">Converted Text</label>
+                                    <button class="copy-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Copy</button>
+                                </div>
+                                <textarea id="output-text" readonly class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none"></textarea>
+                            </div>
+                        </div>
+                        <script src="{{ url_for('static', filename='js/tools/text-case-converter.js') }}"></script>
+                    {% elif tool.slug == 'json-formatter' %}
+                        <!-- JSON 格式化工具 -->
+                        <div id="json-formatter-tool">
+                            <div class="flex flex-wrap gap-3 mb-4">
+                                <button class="format-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Format JSON</button>
+                                <button class="minify-btn px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Minify JSON</button>
+                                <button class="validate-btn px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Validate JSON</button>
+                                <button class="clear-btn px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Clear</button>
+                            </div>
+                            <div class="flex items-center space-x-4 mb-4">
+                                <label for="indent">Indentation:</label>
+                                <select id="indent" class="px-3 py-2 border border-gray-300 rounded-lg">
+                                    <option value="2">2 spaces</option>
+                                    <option value="4">4 spaces</option>
+                                    <option value="0">No indent</option>
+                                </select>
+                            </div>
+                            <div class="error-message" style="display: none; padding: 1rem; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33; margin-bottom: 1rem;"></div>
+                            <div class="form-group">
+                                <label for="json-input">Input JSON</label>
+                                <textarea id="json-input" class="w-full h-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono" placeholder='Paste your JSON here, e.g., {"name": "John", "age": 30}'></textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="json-output">Formatted JSON</label>
+                                    <button class="copy-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Copy</button>
+                                </div>
+                                <textarea id="json-output" readonly class="w-full h-48 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none font-mono"></textarea>
+                            </div>
+                        </div>
+                        <script src="{{ url_for('static', filename='js/tools/json-formatter.js') }}"></script>
+                    {% elif tool.slug == 'base64-encoder' %}
+                        <!-- Base64 编码/解码工具 -->
+                        <div id="base64-encoder-tool">
+                            <div class="form-group">
+                                <label>Mode:</label>
+                                <div class="flex space-x-4">
+                                    <label><input type="radio" name="mode" id="mode-encode" value="encode" checked> Encode (Text → Base64)</label>
+                                    <label><input type="radio" name="mode" id="mode-decode" value="decode"> Decode (Base64 → Text)</label>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 mb-4">
+                                <button class="convert-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Convert</button>
+                                <button class="clear-btn px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Clear</button>
+                            </div>
+                            <div class="form-group">
+                                <label id="base64-input-label">Input Text</label>
+                                <textarea id="base64-input" class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono" placeholder="Enter text to encode..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label id="base64-output-label">Base64 Output</label>
+                                    <button class="copy-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Copy</button>
+                                </div>
+                                <textarea id="base64-output" readonly class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none font-mono"></textarea>
+                            </div>
+                        </div>
+                        <script src="{{ url_for('static', filename='js/tools/base64-encoder.js') }}"></script>
+                    {% elif tool.slug == 'url-encoder' %}
+                        <!-- URL 编码/解码工具 -->
+                        <div id="url-encoder-tool">
+                            <div class="form-group">
+                                <label>Mode:</label>
+                                <div class="flex space-x-4">
+                                    <label><input type="radio" name="mode" id="mode-encode" value="encode" checked> Encode (Text → URL)</label>
+                                    <label><input type="radio" name="mode" id="mode-decode" value="decode"> Decode (URL → Text)</label>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 mb-4">
+                                <button class="convert-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Convert</button>
+                                <button class="clear-btn px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Clear</button>
+                            </div>
+                            <div class="form-group">
+                                <label id="url-input-label">Input Text</label>
+                                <textarea id="url-input" class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono" placeholder="Enter text to encode..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label id="url-output-label">URL-encoded Output</label>
+                                    <button class="copy-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Copy</button>
+                                </div>
+                                <textarea id="url-output" readonly class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none font-mono"></textarea>
+                            </div>
+                        </div>
+                        <script src="{{ url_for('static', filename='js/tools/url-encoder.js') }}"></script>
+                    {% elif tool.slug == 'lorem-ipsum-generator' %}
+                        <!-- Lorem Ipsum 生成器 -->
+                        <div id="lorem-ipsum-tool">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="form-group">
+                                    <label for="type">Generate:</label>
+                                    <select id="type" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                        <option value="words">Words</option>
+                                        <option value="sentences">Sentences</option>
+                                        <option value="paragraphs">Paragraphs</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="count">Count:</label>
+                                    <input type="number" id="count" min="1" max="1000" value="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            <div class="flex gap-3 mb-4">
+                                <button class="generate-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Generate Lorem Ipsum</button>
+                                <button class="clear-btn px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Clear</button>
+                            </div>
+                            <div class="form-group">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="lorem-output">Generated Text</label>
+                                    <button class="copy-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Copy</button>
+                                </div>
+                                <textarea id="lorem-output" readonly class="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 resize-none"></textarea>
+                            </div>
+                        </div>
+                        <script src="{{ url_for('static', filename='js/tools/lorem-ipsum.js') }}"></script>
+                    {% else %}
+                        <!-- 通用工具界面（开发中） -->
+                        <div class="generic-tool">
+                            <p>This tool is under development. Please check back soon!</p>
+                            <div class="coming-soon-placeholder">
+                                <p>Tool Interface Coming Soon</p>
+                                <p class="placeholder-hint">(Tool functionality will be implemented here)</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- 使用说明（SEO内容） -->
+            <div class="tool-instructions">
+                <h2>How to Use {{ tool.name }}</h2>
+                <p>{{ tool.name }} is a free online tool that allows you to {{ (tool.description or 'perform this task')|lower }} quickly and easily. No registration or sign-up is required. Simply upload your files or enter your data, and our tool will process it instantly.</p>
+                
+                <h3>Key Features</h3>
+                <ul>
+                    <li>100% free to use - no hidden costs</li>
+                    <li>No registration required - use instantly</li>
+                    <li>Secure and private - your data is safe</li>
+                    <li>Fast processing - results in seconds</li>
+                    <li>Works in your browser - no software download needed</li>
+                </ul>
+
+                <h3>Common Use Cases</h3>
+                <p>{{ tool.name }} is perfect for a variety of tasks. Whether you're working on a personal project, preparing documents for work, or handling files for school, our tool makes it easy to get the job done.</p>
+            </div>
+
+            <!-- 相关工具 -->
+            {% if related_tools|length > 0 %}
+            <div class="related-tools-section">
+                <h2>Related Tools</h2>
+                <div class="tools-grid">
+                    {% for related_tool in related_tools %}
+                    <div class="tool-card">
+                        <h3><a href="/tools/{{ related_tool.slug }}">{{ related_tool.name }}</a></h3>
+                        <p>{{ related_tool.short_description or related_tool.description[:100] }}...</p>
+                        <a href="/tools/{{ related_tool.slug }}" class="btn">Use Tool</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+<!-- 结构化数据 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "{{ tool.name }}",
+  "description": "{{ tool.description or tool.short_description }}",
+  "url": "https://soeasyhub.com/tools/{{ tool.slug }}",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.breadcrumb {
+    background-color: #f9fafb;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.breadcrumb nav {
+    display: flex;
+    gap: 0.5rem;
+    color: #666;
+}
+.breadcrumb a {
+    color: #2563eb;
+    text-decoration: none;
+}
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+.tool-detail-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.tool-header {
+    margin-bottom: 2rem;
+}
+.tool-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.tool-description {
+    font-size: 1.125rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+.tool-short-desc {
+    color: #888;
+}
+.tool-interface {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+.tool-interface h2 {
+    margin-bottom: 1.5rem;
+}
+.tool-form {
+    max-width: 500px;
+}
+.tool-instructions {
+    background: #f9fafb;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+.tool-instructions h2 {
+    margin-bottom: 1rem;
+}
+.tool-instructions h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.tool-instructions ul {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+.tool-instructions li {
+    margin-bottom: 0.5rem;
+}
+.tool-description-content {
+    margin-bottom: 1.5rem;
+}
+.tool-description-content p {
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+.external-tool-link {
+    margin-top: 1.5rem;
+}
+.generic-tool {
+    text-align: center;
+    padding: 2rem;
+}
+.coming-soon-placeholder {
+    background: var(--bg-color);
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 3rem 2rem;
+    margin-top: 1rem;
+    color: var(--text-secondary);
+}
+.placeholder-hint {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+.related-tools-section {
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border-color);
+}
+.related-tools-section h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+</style>
+{% endblock %}
+

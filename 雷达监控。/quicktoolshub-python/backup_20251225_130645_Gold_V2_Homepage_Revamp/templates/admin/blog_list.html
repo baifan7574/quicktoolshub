@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Blog Management - QuickToolsHub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-header">
+        <h1>Blog Management</h1>
+        <a href="/admin/blog/new" class="btn">Create New Article</a>
+    </div>
+
+    <div class="articles-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Published</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td><a href="/blog/{{ article.slug }}">{{ article.title }}</a></td>
+                    <td>{{ article.category or '-' }}</td>
+                    <td>
+                        {% if article.is_published %}
+                        <span class="status published">Published</span>
+                        {% else %}
+                        <span class="status draft">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ article.published_at[:10] if article.published_at else '-' }}</td>
+                    <td>
+                        <a href="/admin/blog/{{ article.id }}/edit" class="btn btn-small">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.articles-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead {
+    background-color: #f3f4f6;
+}
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+th {
+    font-weight: 600;
+}
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+}
+.status.published {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+.status.draft {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}
+

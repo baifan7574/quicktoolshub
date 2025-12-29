@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 苍穹全量自动化注入 (CangQiong V4.0 Automation: GSC + Clarity) -->
+    <meta name="google-site-verification" content="ywGUpboShDk141_-Lf1r2V6zyzAYVBwRnch6oTHO5yM" />
+    <script type="text/javascript">
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "uqdvocl0y5");
+    </script>
+    <!-- End Automation Config -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SoEasyHub - Free Online Tools{% endblock %}</title>
+    <meta name="description"
+        content="{% block description %}Free online tools for PDF, images, text, and more. No registration required.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}online tools, free tools, PDF tools, image tools{% endblock %}">
+
+    <!-- SEO -->
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">SoEasyHub</a>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/tools">Tools</a>
+                <a href="/categories">Categories</a>
+                <a href="/blog">Blog</a>
+                <a href="/search">Search</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- 网站信息 -->
+                <div class="footer-section footer-about">
+                    <h3>SoEasyHub</h3>
+                    <p>Free online tools for PDF, Image, Text, and more. Quick & Easy Solutions.</p>
+                </div>
+
+                <!-- 重要链接 -->
+                <div class="footer-section">
+                    <h4>Important Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service">Terms of Service</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
+                        <li><a href="/disclaimer">Disclaimer</a></li>
+                    </ul>
+                </div>
+
+                <!-- 工具分类 -->
+                <div class="footer-section">
+                    <h4>Tool Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="/categories/pdf-tools">PDF Tools</a></li>
+                        <li><a href="/categories/image-tools">Image Tools</a></li>
+                        <li><a href="/categories/text-tools">Text Tools</a></li>
+                        <li><a href="/categories/developer-tools">Developer Tools</a></li>
+                        <li><a href="/tools">All Tools</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- 快速链接 -->
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/tools">All Tools</a></li>
+                        <li><a href="/categories">Categories</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                        <li><a href="/search">Search</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 SoEasyHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

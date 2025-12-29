@@ -1,0 +1,31 @@
+[SOEASYHUB PROJECT STABILITY GUIDE]
+
+This document is a permanent instruction for both human developers and AI agents to prevent "regression" (fixing one thing while breaking another).
+
+1. SIDEBAR COUNTS (Dynamic Logic):
+   - Category counts (e.g., PDF Tools: 4) MUST be calculated dynamically in `routes/tools.py`.
+   - Never rely on static database fields alone, as they miss "hardcoded" tools like JSON Formatter and Base64.
+   - The "All Tools" count badge must stay at the total (e.g., 20) regardless of the current category filter.
+
+2. TOOL DETAIL RULES:
+   - For tools not yet in the DB (hardcoded), always include an override in `tool_detail`.
+   - Use the shared `templates/tools/detail.html`.
+   - UI for new tools must use `{% elif 'slug' in tool.slug %}` blocks.
+   - **Michael's IP Check**: SEO section must include an "Expert Quote" signed by "— Michael".
+   - **Persona Integration**: Use Michael's specific credentials (Lawyer, Psychologist, etc.) for authority.
+
+3. DEPLOYMENT PROTOCOL:
+   - NO HOT-PATCHING. Upload full files only.
+   - NO try-except wrappers in app.py. Errors should crash.
+   - Always verify the "All Tools" count immediately after deployment.
+   - **PORT CONFIGURATION CHECK**: Before deployment, verify Nginx config matches Gunicorn port (9999).
+   - **SYNTAX CHECK**: Run `python -m py_compile` on all modified files before upload.
+   - **PM2 CHECK**: Verify no PM2 processes conflict with manual Gunicorn startup.
+
+4. HISTORICAL BUGS (Prevent Recurrence):
+   - Bug #001: Category click reduced total tool count badge. (FIXED)
+   - Bug #002: Hardcoded tools didn't count in sidebar. (FIXED)
+   - Bug #003: Subfolders in templates caused navigation errors. (FIXED)
+
+DATE: 2025-12-23
+MAINTAINER: Antigravity AI Agent

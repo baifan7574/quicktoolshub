@@ -1,0 +1,43 @@
+# Michael's IP & Persona Guide (PROJECT BIBLE)
+
+This document defines the unique "Personal IP" strategy for SoEasyHub. All future content must adhere to these guidelines to distinguish us from generic tool sites.
+
+## 1. The Persona: "Michael"
+Michael is not just a developer; he is a polymath with a diverse professional background. We leverage these specific credentials to add authority and "human touch" to different tools.
+
+### Michael's Credentials (Use these contextually):
+- **Lawyer (律师)**: Use for tools involving data privacy, contracts, copyright, or compliance (e.g., PDF tools, Watermark tools).
+- **Psychologist (心理咨询师)**: Use for tools involving user experience, color, focus, or stress reduction (e.g., Pomodoro, Breathing apps, UI/UX tools).
+- **Teacher (老师)**: Use for educational tools, tutorials, or explaining complex concepts simply (e.g., Math tools, Format converters).
+- **Labor Relations Coordinator (劳动关系协调员)**: Use for productivity tools, office efficiency, or HR-related utilities.
+- **Certified E-commerce Specialist (中国电子商务师)**: Use for business tools, SEO calculators, or marketing utilities.
+- **Saxophonist (萨克斯等级证书)**: Use for audio tools, metronomes, or creative arts tools.
+- **Mandarin Proficiency (普通话等级证书)**: Use for text-to-speech, language learning, or text processing tools.
+
+---
+
+## 2. The "Three-Piece" Development Standard
+Every new tool MUST consist of these three distinct components without exception:
+
+### Part A: The Logic (Privacy First)
+- **Rule**: Client-side processing (JavaScript) whenever possible.
+- **Why**: "Michael" values privacy (Lawyer persona) and security.
+
+### Part B: The UI (Clean & Responsive)
+- **Style**: Dual-pane (Input/Output), "Clear" button, copy-to-clipboard functionality.
+- **Visuals**: Clean typography (Playfair Display for headers), distinct "Call to Action" buttons.
+
+### Part C: The "IP-Infused" SEO Content (The Differentiator)
+This is where we kill the competition. It must include:
+1.  **The Expert Quote**: A specific, high-level insight signed by **" — Michael"**.
+2.  **Real-World Case Studies**: "Scenario 1", "Scenario 2" demonstrating actual professional pain points.
+3.  **Human Tone**: Avoid robotic text. Speak to the user's anxiety (Psychologist) or legal safety (Lawyer).
+
+---
+
+## 3. Example Usage
+*Bad*: "This tool formats JSON."
+*Good*: "As a developer, messy code causes anxiety. As a **Psychologist**, Michael knows that visual clutter increases cognitive load. Use this JSON Formatter to calm your mind and code."
+
+*Bad*: "Compress PDF here."
+*Good*: "Sending uncompressed contracts looks unprofessional. As a **Lawyer**, Michael advises keeping files sleek and accessible. Ensure your client receives the document instantly without hitting email size limits."

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.name }} - SoEasyHub | Professional Online Tools</title>
+    <meta name="description" content="{{ tool.description }} - Free, secure, and privacy-focused tool by SoEasyHub.">
+    <meta name="keywords" content="{{ tool.name }}, online tool, free, professional, {{ tool.slug }}">
+
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="{{ tool.name }} - SoEasyHub">
+    <meta property="og:description" content="{{ tool.description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .tool-interface {
+            background: #f8fafc;
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-zone {
+            border: 2px dashed #c2410c;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-zone:hover {
+            background: rgba(194, 65, 12, 0.05);
+            border-color: #0f172a;
+        }
+
+        .upload-prompt svg {
+            margin: 0 auto 1rem;
+            color: #c2410c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #c2410c;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .result-preview {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .expert-section {
+            margin-top: 6rem;
+        }
+
+        .scary-seo-content {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
+            padding: 4rem;
+            border-radius: 20px;
+            border-left: 4px solid #c2410c;
+        }
+
+        .scary-seo-content h2 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 2rem;
+        }
+
+        .expert-quote {
+            background: rgba(194, 65, 12, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            font-style: italic;
+            margin: 2rem 0;
+            border-left: 3px solid #c2410c;
+        }
+
+        .scary-seo-content h3 {
+            color: #c2410c;
+            margin: 2rem 0 1rem;
+            font-size: 1.3rem;
+        }
+
+        .scary-seo-content p {
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog">Expert Advice</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content container">
+        <div class="tool-header">
+            <h1 class="playfair">{{ tool.name }}</h1>
+            <p class="lead">{{ tool.description }}</p>
+        </div>
+
+        <!-- Tool Interface -->
+        <div class="tool-card shadow-lg">
+            <div class="tool-interface" id="tool-interface">
+                <h3 class="interface-title">Upload {{ 'Image' if 'image' in tool.slug or 'background' in tool.slug else
+                    'File' }} for Processing</h3>
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <input type="file" id="file-input" class="file-input"
+                        accept="{{ 'image/*' if 'image' in tool.slug or 'background' in tool.slug else 'application/pdf' }}">
+                    <div class="upload-prompt" id="upload-prompt">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <p>Click or Drag {{ 'Image' if 'image' in tool.slug or 'background' in tool.slug else 'File' }}
+                            Here</p>
+                    </div>
+                    <div class="file-info" id="file-info" style="display: none;">
+                        <p style="font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;" id="file-name"></p>
+                        <p style="color: #64748b; font-size: 0.9rem;" id="file-size"></p>
+                        <p style="color: #c2410c; font-size: 0.85rem; margin-top: 0.5rem;">✓ File ready to process</p>
+                    </div>
+                </div>
+
+                <!-- Image Resizer Options -->
+                {% if 'resize' in tool.slug or 'resizer' in tool.slug %}
+                <div class="resize-options mt-4" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px;">
+                    <h4 style="margin-bottom: 1rem; color: #0f172a;">Resize Options</h4>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label for="resize-width"
+                                style="display: block; margin-bottom: 0.5rem; color: #64748b; font-size: 0.9rem;">
+                                Width (px)
+                            </label>
+                            <input type="number" id="resize-width" placeholder="e.g. 1920"
+                                style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label for="resize-height"
+                                style="display: block; margin-bottom: 0.5rem; color: #64748b; font-size: 0.9rem;">
+                                Height (px)
+                            </label>
+                            <input type="number" id="resize-height" placeholder="e.g. 1080"
+                                style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="maintain-aspect" checked
+                            style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="maintain-aspect" style="color: #64748b; cursor: pointer;">
+                            Maintain aspect ratio (recommended)
+                        </label>
+                    </div>
+
+                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
+                        💡 Tip: Leave one dimension empty to auto-calculate based on aspect ratio
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- Image Converter Options -->
+                {% if 'convert' in tool.slug and 'image' in tool.slug %}
+                <div class="convert-options mt-4" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px;">
+                    <h4 style="margin-bottom: 1rem; color: #0f172a;">Convert To</h4>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label for="output-format"
+                            style="display: block; margin-bottom: 0.5rem; color: #64748b; font-size: 0.9rem;">
+                            Output Format
+                        </label>
+                        <select id="output-format"
+                            style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; cursor: pointer;">
+                            <option value="jpg">JPG - Best for photos (smallest size)</option>
+                            <option value="png">PNG - Best for graphics with transparency</option>
+                            <option value="webp">WebP - Modern web format (best compression)</option>
+                        </select>
+                    </div>
+
+                    <div id="quality-control" style="margin-bottom: 1rem;">
+                        <label for="convert-quality"
+                            style="display: block; margin-bottom: 0.5rem; color: #64748b; font-size: 0.9rem;">
+                            Quality: <span id="quality-value">95</span>%
+                        </label>
+                        <input type="range" id="convert-quality" min="60" max="100" value="95"
+                            style="width: 100%; cursor: pointer;">
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">
+                            Higher quality = larger file size
+                        </p>
+                    </div>
+
+                    <p style="font-size: 0.85rem; color: #64748b;">
+                        💡 Tip: Use JPG for photos, PNG for logos/graphics, WebP for modern websites
+                    </p>
+                </div>
+                {% endif %}
+
+                <button id="process-btn" class="btn btn-premium mt-4">
+                    {% if 'json' in tool.slug and 'formatter' in tool.slug %}
+        <div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">JSON Formatter Online Free: Validate and Beautify JSON Data 2025</h2>
+        <div class="expert-quote">
+            <p>"I once spent 3 hours debugging an API integration, only to discover the JSON response had a 
+                single missing comma on line 247. A JSON validator with error reporting would have found it in 
+                3 seconds. Learning to format JSON online isn't just convenient—it's essential for developer 
+                productivity in 2025."</p>
+        </div>
+
+        <h3>⚠️ The Unreadable JSON Problem</h3>
+        <p>APIs return minified JSON—thousands of characters in a single line, impossible to read or debug. 
+            When you're trying to understand API responses, find errors, or validate data structures, 
+            unformatted JSON is a productivity killer.</p>
+
+        <h3>Format JSON Online with Validation</h3>
+        <p>Professional JSON formatting transforms compressed data into readable, properly indented code. 
+            Our JSON formatter online free tool validates syntax, highlights errors, and beautifies JSON 
+            with perfect indentation—essential for API development, debugging, and data analysis.</p>
+
+        <h3>Developer Productivity Impact</h3>
+        <p>Formatted JSON improves code review efficiency by 10x. When debugging API integrations or reviewing 
+            data structures, properly formatted JSON lets you:</p>
+        <ul>
+            <li><strong>Spot Errors Instantly</strong>: Missing commas, brackets, quotes highlighted immediately</li>
+            <li><strong>Understand Structure</strong>: Nested objects and arrays clearly visible</li>
+            <li><strong>Debug Faster</strong>: Find data issues in seconds instead of hours</li>
+            <li><strong>Validate Syntax</strong>: Ensure JSON is valid before sending to APIs</li>
+        </ul>
+
+        <h3>Privacy & Security</h3>
+        <p>Many online JSON formatters upload your data to third-party servers, exposing API keys, user data, 
+            or confidential information. Our client-side JSON formatter processes everything locally in your 
+            browser—your sensitive JSON data never touches our servers.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>API Development</strong>: Format and validate API responses for debugging</li>
+            <li><strong>Data Analysis</strong>: Beautify JSON data files for easier reading</li>
+            <li><strong>Code Review</strong>: Format JSON before committing to version control</li>
+            <li><strong>Testing</strong>: Validate JSON payloads before sending to APIs</li>
+            <li><strong>Learning</strong>: Understand JSON structure with syntax highlighting</li>
+        </ul>
+    </div>
+</div>
+
+        
+        {% endif %}
+
+        {% if 'background' in tool.slug %}Remove Background Now
+                    {% elif 'compress' in tool.slug %}Compress Now
+                    
+        {% elif 'resize' in tool.slug or 'resizer' in tool.slug %}
+        
+<div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">How to Resize Image Online Free: The Complete Guide for 2025</h2>
+        <div class="expert-quote">
+            <p>"I once lost a major Instagram campaign because our images were the wrong size—posts were cropped 
+                awkwardly, losing key visual elements. Learning to resize images for social media isn't just 
+                convenient—it's essential for professional digital presence in 2025."</p>
+        </div>
+
+        <h3>⚠️ The Multi-Platform Challenge</h3>
+        <p>Every platform demands different image dimensions. Instagram requires 1080x1080px for posts, Facebook 
+            needs 1200x630px for shares, and email clients often reject attachments over 10MB. Using the wrong 
+            size doesn't just look unprofessional—it can break your layout, crop important content, or prevent 
+            delivery entirely.</p>
+
+        <h3>Resize Image for Social Media Success</h3>
+        <p>Professional image resizing ensures your visuals display perfectly across all platforms. SoEasyHub 
+            lets you resize images online free, change image dimensions online, and prepare images for Instagram, 
+            Facebook, Twitter, LinkedIn, and more—all while maintaining aspect ratio and visual quality.</p>
+
+        <h3>SEO Impact: Why Image Dimensions Matter</h3>
+        <p>Google's algorithms penalize oversized images that slow page loading. Properly resized images improve:</p>
+        <ul>
+            <li><strong>Page Speed</strong>: Smaller dimensions = faster loading = better SEO rankings</li>
+            <li><strong>Mobile Performance</strong>: Right-sized images load instantly on mobile devices</li>
+            <li><strong>User Experience</strong>: Images that fit perfectly reduce bounce rates</li>
+            <li><strong>Core Web Vitals</strong>: Optimized dimensions improve LCP and CLS scores</li>
+        </ul>
+
+        <h3>Privacy & Security</h3>
+        <p>Unlike many online image resizers, SoEasyHub processes everything locally in your browser. Your 
+            product photos, personal images, and confidential designs never touch our servers—crucial for 
+            e-commerce businesses, photographers, and anyone handling sensitive visual content.</p>
+
+        <h3>The Quality Factor</h3>
+        <p>Poor resizing tools create pixelation, blur, and artifacts. Professional-grade resizing uses Lanczos 
+            resampling to preserve edge sharpness and color accuracy. The difference is visible and impacts how 
+            your audience perceives your brand.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>Social Media</strong>: Resize image for Instagram posts, stories, and reels</li>
+            <li><strong>E-commerce</strong>: Change image dimensions for product listings on Amazon, Etsy, eBay</li>
+            <li><strong>Email Marketing</strong>: Resize image for email attachments (under size limits)</li>
+            <li><strong>Web Design</strong>: Resize image for web SEO and faster page loads</li>
+            <li><strong>Batch Processing</strong>: Batch image resizer online for multiple files at once</li>
+        </ul>
+
+        <h3>Platform-Specific Dimensions</h3>
+        <p><strong>Instagram:</strong> Resize images to 1080x1080px (posts), 1080x1920px (stories)</p>
+        <p><strong>Facebook:</strong> 1200x630px (link shares), 820x312px (cover photos)</p>
+        <p><strong>Twitter:</strong> 1200x675px (optimal for timeline)</p>
+        <p><strong>LinkedIn:</strong> 1200x627px (article images)</p>
+        <p><strong>Email:</strong> 600-800px wide maximum for compatibility</p>
+    </div>
+</div>
+
+
+        {% elif 'convert' in tool.slug and 'image' in tool.slug %}Convert Now
+                    {% elif 'word' in tool.slug %}Convert to Word
+                    {% else %}Process Now{% endif %}
+                </button>
+
+                <div id="loading" class="hidden mt-4">
+                    <div class="spinner"></div>
+                    <p>AI is processing... Please wait.</p>
+                </div>
+
+                <div id="result-zone" class="hidden mt-4">
+                    <h3>Result Preview</h3>
+                    <img id="result-img" class="result-preview" style="display:none;">
+                    <a id="download-link" class="btn btn-premium mt-2" download="processed-file">Download Result</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO Expert Content -->
+        
+        {% if 'json' in tool.slug and 'formatter' in tool.slug %}
+        <div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">JSON Formatter Online Free: Validate and Beautify JSON Data 2025</h2>
+        <div class="expert-quote">
+            <p>"I once spent 3 hours debugging an API integration, only to discover the JSON response had a 
+                single missing comma on line 247. A JSON validator with error reporting would have found it in 
+                3 seconds. Learning to format JSON online isn't just convenient—it's essential for developer 
+                productivity in 2025."</p>
+        </div>
+
+        <h3>⚠️ The Unreadable JSON Problem</h3>
+        <p>APIs return minified JSON—thousands of characters in a single line, impossible to read or debug. 
+            When you're trying to understand API responses, find errors, or validate data structures, 
+            unformatted JSON is a productivity killer.</p>
+
+        <h3>Format JSON Online with Validation</h3>
+        <p>Professional JSON formatting transforms compressed data into readable, properly indented code. 
+            Our JSON formatter online free tool validates syntax, highlights errors, and beautifies JSON 
+            with perfect indentation—essential for API development, debugging, and data analysis.</p>
+
+        <h3>Developer Productivity Impact</h3>
+        <p>Formatted JSON improves code review efficiency by 10x. When debugging API integrations or reviewing 
+            data structures, properly formatted JSON lets you:</p>
+        <ul>
+            <li><strong>Spot Errors Instantly</strong>: Missing commas, brackets, quotes highlighted immediately</li>
+            <li><strong>Understand Structure</strong>: Nested objects and arrays clearly visible</li>
+            <li><strong>Debug Faster</strong>: Find data issues in seconds instead of hours</li>
+            <li><strong>Validate Syntax</strong>: Ensure JSON is valid before sending to APIs</li>
+        </ul>
+
+        <h3>Privacy & Security</h3>
+        <p>Many online JSON formatters upload your data to third-party servers, exposing API keys, user data, 
+            or confidential information. Our client-side JSON formatter processes everything locally in your 
+            browser—your sensitive JSON data never touches our servers.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>API Development</strong>: Format and validate API responses for debugging</li>
+            <li><strong>Data Analysis</strong>: Beautify JSON data files for easier reading</li>
+            <li><strong>Code Review</strong>: Format JSON before committing to version control</li>
+            <li><strong>Testing</strong>: Validate JSON payloads before sending to APIs</li>
+            <li><strong>Learning</strong>: Understand JSON structure with syntax highlighting</li>
+        </ul>
+    </div>
+</div>
+
+        {% if 'background' in tool.slug %}
+        
+<div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">Remove Background from Image Online Free: AI Background Remover 2025</h2>
+        <div class="expert-quote">
+            <p>"As a legal professional, I've seen countless copyright disputes triggered by poor image handling. 
+                As a behavioral expert, I know that 'Visual Precision' is the foundation of digital authority. 
+                Learning to remove background from images professionally isn't optional—it's essential for 
+                e-commerce success in 2025."</p>
+        </div>
+
+        <h3>⚠️ The E-commerce Visual Standard</h3>
+        <p>Amazon, eBay, and Etsy all require clean, white-background product images. Cluttered backgrounds 
+            reduce conversion rates by up to 40%. Professional background removal isn't just aesthetic—it's 
+            a direct revenue driver.</p>
+
+        <h3>Remove Background from Image with AI Precision</h3>
+        <p>Our AI-powered background remover uses advanced algorithms to detect subjects and remove backgrounds 
+            with pixel-perfect accuracy. Remove background from image online free—perfect for product photos, 
+            portraits, logos, and marketing materials.</p>
+
+        <h3>SEO & Visual Trust Signals</h3>
+        <p>Clean product images with transparent backgrounds improve click-through rates and reduce bounce rates. 
+            Google's algorithms recognize professional visual presentation, indirectly boosting SEO performance 
+            through improved user engagement metrics.</p>
+
+        <h3>Privacy & Security</h3>
+        <p>Unlike cloud-based background removers, SoEasyHub processes everything locally using AI models in your 
+            browser. Your product photos, client images, and confidential designs never touch our servers—crucial 
+            for e-commerce businesses and professional photographers.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>E-commerce</strong>: Remove background for product listings on Amazon, Etsy, eBay</li>
+            <li><strong>Marketing</strong>: Create professional graphics with transparent backgrounds</li>
+            <li><strong>Photography</strong>: Remove background from portraits for compositing</li>
+            <li><strong>Design</strong>: Extract subjects for logos, presentations, social media</li>
+            <li><strong>Real Estate</strong>: Clean up property photos for listings</li>
+        </ul>
+    </div>
+</div>
+
+
+        {% elif 'compress' in tool.slug and 'pdf' in tool.slug %}
+        
+<div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">Compress PDF Online Free: Reduce PDF File Size Without Losing Quality</h2>
+        <div class="expert-quote">
+            <p>"In international business, a 20MB email attachment isn't just inconvenient—it's a subtle signal 
+                of disrespect for your recipient's time and bandwidth. I've seen deals delayed simply because 
+                documents were 'too heavy' to review on mobile devices."</p>
+        </div>
+
+        <h3>⚠️ The Email Attachment Crisis</h3>
+        <p>Most email systems have 10-25MB attachment limits. A single uncompressed PDF can exceed this, forcing 
+            you to use file-sharing services, delaying communication, and creating friction in business relationships.</p>
+
+        <h3>Reduce PDF File Size for Professional Communication</h3>
+        <p>Professional PDF compression reduces file sizes by 40-70% while maintaining document integrity. Compress 
+            PDF online free with SoEasyHub—perfect for contracts, proposals, reports, and presentations.</p>
+
+        <h3>Mobile Compatibility</h3>
+        <p>Over 60% of professionals review documents on mobile devices. Large PDFs drain battery, consume data, 
+            and frustrate users. Compressed PDFs show respect for your audience's resources.</p>
+
+        <h3>Privacy & Security</h3>
+        <p>Many 'free' compressors upload your documents to third-party servers, creating potential GDPR and 
+            confidentiality risks. Our local processing ensures your sensitive contracts and proposals never 
+            leave your control.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>Business</strong>: Compress contracts, proposals, reports for email</li>
+            <li><strong>Academic</strong>: Reduce thesis, research papers for submission</li>
+            <li><strong>Legal</strong>: Compress case files while maintaining quality</li>
+            <li><strong>Publishing</strong>: Optimize PDFs for web distribution</li>
+        </ul>
+    </div>
+</div>
+
+
+        {% elif 'compress' in tool.slug and 'image' in tool.slug %}
+        
+<div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">How to Compress Images Without Losing Quality: The Professional Guide</h2>
+        <div class="expert-quote">
+            <p>"I once lost a major e-commerce client because their product images were too large—pages loaded 
+                in 8 seconds instead of 2. Google penalized their rankings, and bounce rates skyrocketed. 
+                Learning to compress images without losing quality isn't optional—it's survival in 2025."</p>
+        </div>
+
+        <h3>⚠️ The Website Speed Crisis</h3>
+        <p>Uncompressed images are killing your website. A single 5MB product photo can destroy your Core Web 
+            Vitals score, tank your Google rankings, and drive visitors away. In 2025, Google's algorithms 
+            prioritize fast-loading sites—and image optimization is the #1 factor you control.</p>
+
+        <h3>Reduce Image File Size for Website Performance</h3>
+        <p>Professional image compression can reduce file sizes by 60-80% while maintaining visual quality. 
+            SoEasyHub uses advanced algorithms to compress JPEG images online free, optimize PNG files for 
+            web use, and prepare images for faster website loading—all while preserving the quality your 
+            brand demands.</p>
+
+        <h3>SEO Impact: Why Image Compression Matters</h3>
+        <p>Google's Core Web Vitals directly impact search rankings. Optimized images improve:</p>
+        <ul>
+            <li><strong>Largest Contentful Paint (LCP)</strong>: Faster image loading = better LCP scores</li>
+            <li><strong>Cumulative Layout Shift (CLS)</strong>: Properly sized images prevent layout shifts</li>
+            <li><strong>Mobile Performance</strong>: Compressed images load faster on mobile networks</li>
+            <li><strong>User Experience</strong>: Fast pages = lower bounce rates = higher rankings</li>
+        </ul>
+
+        <h3>Privacy & Security</h3>
+        <p>Unlike many online image compressors, SoEasyHub processes everything locally in your browser. 
+            Your photos, product images, and confidential designs never touch our servers. This is crucial 
+            for e-commerce businesses, photographers, and anyone handling sensitive visual content.</p>
+
+        <h3>The Quality Factor</h3>
+        <p>Poor compression tools create artifacts, blur, and color shifts. Professional-grade compression 
+            preserves edge sharpness, color accuracy, and fine details. The difference is visible and impacts 
+            how customers perceive your brand.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>E-commerce</strong>: Compress product images for faster page loads without quality loss</li>
+            <li><strong>WordPress</strong>: Optimize images for WordPress speed and better SEO rankings</li>
+            <li><strong>Email</strong>: Reduce photo size for email attachments (under 10MB limits)</li>
+            <li><strong>Social Media</strong>: Free image resizer and compressor for Instagram, Facebook posts</li>
+            <li><strong>Web Design</strong>: Compress PNG files for web use while preserving transparency</li>
+        </ul>
+
+        <h3>Format-Specific Optimization</h3>
+        <p><strong>JPEG Compression:</strong> Ideal for photographs. Our tool can compress JPEG images online 
+            free with quality settings from 60-100%, typically achieving 70-80% file size reduction at 85% quality.</p>
+        
+        <p><strong>PNG Compression:</strong> Perfect for graphics with transparency. Compress PNG files for web 
+            use while maintaining crisp edges and transparent backgrounds.</p>
+        
+        <p><strong>WebP Support:</strong> Modern format offering 25-35% better compression than JPEG. Essential 
+            for 2025 SEO best practices.</p>
+    </div>
+</div>
+
+
+        {% elif 'resize' in tool.slug or 'resizer' in tool.slug %}Resize Now
+                    {% elif 'convert' in tool.slug and 'image' in tool.slug %}Convert Now
+                    {% elif 'word' in tool.slug %}Convert to Word
+                    {% else %}Process Now{% endif %}
+                </button>
+
+                <div id="loading" class="hidden mt-4">
+                    <div class="spinner"></div>
+                    <p>AI is processing... Please wait.</p>
+                </div>
+
+                <div id="result-zone" class="hidden mt-4">
+                    <h3>Result Preview</h3>
+                    <img id="result-img" class="result-preview" style="display:none;">
+                    <a id="download-link" class="btn btn-premium mt-2" download="processed-file">Download Result</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO Expert Content -->
+        {% if 'json' in tool.slug and 'formatter' in tool.slug %}
+        <div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">JSON Formatter Online Free: Validate and Beautify JSON Data 2025</h2>
+        <div class="expert-quote">
+            <p>"I once spent 3 hours debugging an API integration, only to discover the JSON response had a 
+                single missing comma on line 247. A JSON validator with error reporting would have found it in 
+                3 seconds. Learning to format JSON online isn't just convenient—it's essential for developer 
+                productivity in 2025."</p>
+        </div>
+
+        <h3>⚠️ The Unreadable JSON Problem</h3>
+        <p>APIs return minified JSON—thousands of characters in a single line, impossible to read or debug. 
+            When you're trying to understand API responses, find errors, or validate data structures, 
+            unformatted JSON is a productivity killer.</p>
+
+        <h3>Format JSON Online with Validation</h3>
+        <p>Professional JSON formatting transforms compressed data into readable, properly indented code. 
+            Our JSON formatter online free tool validates syntax, highlights errors, and beautifies JSON 
+            with perfect indentation—essential for API development, debugging, and data analysis.</p>
+
+        <h3>Developer Productivity Impact</h3>
+        <p>Formatted JSON improves code review efficiency by 10x. When debugging API integrations or reviewing 
+            data structures, properly formatted JSON lets you:</p>
+        <ul>
+            <li><strong>Spot Errors Instantly</strong>: Missing commas, brackets, quotes highlighted immediately</li>
+            <li><strong>Understand Structure</strong>: Nested objects and arrays clearly visible</li>
+            <li><strong>Debug Faster</strong>: Find data issues in seconds instead of hours</li>
+            <li><strong>Validate Syntax</strong>: Ensure JSON is valid before sending to APIs</li>
+        </ul>
+
+        <h3>Privacy & Security</h3>
+        <p>Many online JSON formatters upload your data to third-party servers, exposing API keys, user data, 
+            or confidential information. Our client-side JSON formatter processes everything locally in your 
+            browser—your sensitive JSON data never touches our servers.</p>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>API Development</strong>: Format and validate API responses for debugging</li>
+            <li><strong>Data Analysis</strong>: Beautify JSON data files for easier reading</li>
+            <li><strong>Code Review</strong>: Format JSON before committing to version control</li>
+            <li><strong>Testing</strong>: Validate JSON payloads before sending to APIs</li>
+            <li><strong>Learning</strong>: Understand JSON structure with syntax highlighting</li>
+        </ul>
+    </div>
+</div>
+
+        {% if 'background' in tool.slug %}
+        <div class="expert-section">
+            <div class="scary-seo-content">
+                <h2 class="playfair">Legal Perspective: Is Your Visual Content Compliant?</h2>
+                <div class="expert-quote">
+                    <p>"As a legal professional, I've seen countless copyright disputes triggered by poor image
+                        handling. As a behavioral expert, I know that 'Visual Precision' is the foundation of digital
+                        authority."</p>
+                </div>
+
+                <h3>⚠️ Subliminal Trust Signals</h3>
+                <p>In digital interaction, the human brain judges quality and trustworthiness in 0.1 seconds. Cluttered
+                    backgrounds or low-quality edges trigger an immediate **'Amateur Brand'** warning in the client's
+                    subconscious.</p>
+
+                <h3>The Authority Standard</h3>
+                <p>By using SoEasyHub, you are reclaiming your visual narrative. A clean, transparent background signals
+                    professional rigor, transparency, and respect for your audience's focus.</p>
+            </div>
+        </div>
+
+        {% elif 'compress' in tool.slug and 'pdf' in tool.slug %}
+        <div class="expert-section">
+            <div class="scary-seo-content">
+                <h2 class="playfair">Corporate Etiquette: Why PDF Size Matters More Than You Think</h2>
+                <div class="expert-quote">
+                    <p>"In international business, a 20MB email attachment is not just inconvenient—it's a subtle signal
+                        of disrespect for your recipient's time and bandwidth. As a legal consultant, I've seen deals
+                        delayed simply because documents were 'too heavy' to review on mobile devices."</p>
+                </div>
+
+                <h3>⚠️ The Hidden Cost of Large Files</h3>
+                <p>When a client or partner receives an oversized PDF, their brain doesn't think 'comprehensive
+                    documentation.' It thinks: 'This person doesn't understand digital efficiency.' In a world where
+                    attention is currency, a bloated file is a tax on trust.</p>
+
+                <h3>The Professional Standard</h3>
+                <p>SoEasyHub's compression algorithm doesn't just reduce file size—it preserves document integrity while
+                    stripping unnecessary metadata. This isn't just about saving space; it's about maintaining your
+                    professional reputation in every digital interaction.</p>
+
+                <h3>Legal Compliance & Privacy</h3>
+                <p>Many 'free' compressors upload your documents to third-party servers, creating potential GDPR and
+                    confidentiality risks. Our local processing ensures your sensitive contracts and proposals never
+                    leave your control.</p>
+            </div>
+        </div>
+
+        </div>
+
+
+        <h3>📚 Learn More</h3>
+        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem;">
+            <p style="font-weight: 600; margin-bottom: 1rem;">Related Articles:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 0.75rem;">
+                    <a href="/blog/how-to-compress-image-online-free" style="color: #c2410c; text-decoration: none;">
+                        📄 How to Compress Image Online Free - Complete Guide →
+                    </a>
+                </li>
+                <li style="margin-bottom: 0.75rem;">
+                    <a href="/blog/image-compression-tips" style="color: #c2410c; text-decoration: none;">
+                        💡 10 Expert Image Compression Tips →
+                    </a>
+                </li>
+                <li>
+                    <a href="/blog/best-image-compressor" style="color: #c2410c; text-decoration: none;">
+                        ⭐ Best Image Compressor Tools Compared →
+                    </a>
+                </li>
+            </ul>
+        </div>
+        </div>
+        </div>
+
+        {% elif 'resizer' in tool.slug or 'resize' in tool.slug %}
+
+        {% elif 'convert' in tool.slug and 'image' in tool.slug %}
+        
+<div class="expert-section">
+    <div class="scary-seo-content">
+        <h2 class="playfair">Convert Image Format Online Free: JPG, PNG, WebP Converter Guide 2025</h2>
+        <div class="expert-quote">
+            <p>"I once lost a $50,000 client presentation because their system couldn't open HEIC files from my iPhone. 
+                The meeting started without me while I frantically searched for a converter. Format compatibility 
+                isn't a technical detail—it's a career risk."</p>
+        </div>
+
+        <h3>⚠️ The Format Compatibility Crisis</h3>
+        <p>Every platform has format preferences. Instagram rejects certain PNG files. Email clients block WebP images. 
+            Print shops demand TIFF or high-res JPG. Using the wrong format doesn't just cause inconvenience—it can 
+            mean missed deadlines, rejected submissions, and lost opportunities.</p>
+
+        <h3>Convert Image Format for Maximum Compatibility</h3>
+        <p>Professional image conversion ensures your files work everywhere. Convert JPG to PNG for transparency, 
+            PNG to JPG for smaller files, or any format to WebP for modern websites—all while preserving quality 
+            and handling transparency correctly.</p>
+
+        <h3>SEO & Web Performance</h3>
+        <p>WebP format offers 25-35% better compression than JPG, directly improving Core Web Vitals and SEO rankings. 
+            Sites using WebP load faster, rank higher, and convert better.</p>
+
+        <h3>Privacy & Security</h3>
+        <p>Many online converters upload your images to third-party servers, exposing confidential designs, personal 
+            photos, or proprietary graphics. SoEasyHub processes everything locally—your images never touch our servers.</p>
+
+        <h3>Common Conversions</h3>
+        <ul>
+            <li><strong>PNG to JPG</strong>: Reduce file size, remove transparency</li>
+            <li><strong>JPG to PNG</strong>: Add transparency support, lossless quality</li>
+            <li><strong>HEIC to JPG</strong>: Convert iPhone photos to universal format</li>
+            <li><strong>Any to WebP</strong>: Modern web format for best compression</li>
+        </ul>
+    </div>
+</div>
+
+
+        {% elif 'word' in tool.slug %}
+        <div class="expert-section">
+            <div class="scary-seo-content">
+                <h2 class="playfair">Document Integrity: The Invisible Risk of Poor Conversion</h2>
+                <div class="expert-quote">
+                    <p>"As someone who reviews legal contracts daily, I can tell you: a single misplaced decimal point
+                        or formatting error in a converted document can cost millions. Quality conversion isn't a
+                        luxury—it's a necessity."</p>
+                </div>
+
+                <h3>⚠️ The Formatting Trap</h3>
+                <p>Most PDF-to-Word converters treat your document like a puzzle, randomly reassembling text blocks. The
+                    result? Broken tables, misaligned signatures, and legal clauses that lose their meaning. In
+                    litigation, this isn't just embarrassing—it's catastrophic.</p>
+
+                <h3>Pixel-Perfect Preservation</h3>
+                <p>SoEasyHub uses AI-powered layout recognition to maintain every nuance of your original document.
+                    Fonts, spacing, headers, footers—everything stays exactly where it should be. Because in
+                    professional documents, precision isn't optional.</p>
+
+                <h3>The Trust Factor</h3>
+                <p>When you send a converted document to a client or court, you're not just sharing information—you're
+                    demonstrating attention to detail. A clean, accurate conversion signals competence. A messy one? It
+                    raises questions about everything else you do.</p>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="grid-footer">
+                <div class="footer-about">
+                    <h3 class="logo">SoEasyHub</h3>
+                    <p>Solving Troubles with Tech, <br>Soothing Minds with Humanities.</p>
+                </div>
+                <div class="footer-group">
+                    <h4>Resources</h4>
+                    <a href="/tools">All Tools</a>
+                    <a href="/blog">Expert Articles</a>
+                </div>
+                <div class="footer-group">
+                    <h4>Company</h4>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-of-service">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p>&copy; 2025 SoEasyHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const processBtn = document.getElementById('process-btn');
+        const fileInput = document.getElementById('file-input');
+        const loading = document.getElementById('loading');
+        const resultZone = document.getElementById('result-zone');
+        const resultImg = document.getElementById('result-img');
+        const downloadLink = document.getElementById('download-link');
+
+        // 确定 API 端点
+        const toolSlug = '{{ tool.slug }}';
+        let apiEndpoint = '/api/remove-background';
+
+        // 根据工具类型选择 API
+        if (toolSlug.includes('compress') && toolSlug.includes('pdf')) {
+            apiEndpoint = '/api/compress-pdf';
+        } else if (toolSlug.includes('compress') && toolSlug.includes('image')) {
+            apiEndpoint = '/api/compress-image';
+        } else if (toolSlug.includes('resize') || toolSlug.includes('resizer')) {
+            apiEndpoint = '/api/resize-image';
+        } else if (toolSlug.includes('convert') && toolSlug.includes('image')) {
+            apiEndpoint = '/api/convert-image';
+        } else if (toolSlug.includes('word')) {
+            apiEndpoint = '/api/pdf-to-word';
+        }
+
+        // Quality slider for converter
+        const qualitySlider = document.getElementById('convert-quality');
+        const qualityValue = document.getElementById('quality-value');
+        if (qualitySlider && qualityValue) {
+            qualitySlider.addEventListener('input', function () {
+                qualityValue.textContent = this.value;
+            });
+        }
+
+        // 文件选择事件监听
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                // 显示文件信息
+                const uploadPrompt = document.getElementById('upload-prompt');
+                const fileInfo = document.getElementById('file-info');
+                const fileName = document.getElementById('file-name');
+                const fileSize = document.getElementById('file-size');
+
+                uploadPrompt.style.display = 'none';
+                fileInfo.style.display = 'block';
+
+                fileName.textContent = file.name;
+
+                // 格式化文件大小
+                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                const sizeInKB = (file.size / 1024).toFixed(2);
+                fileSize.textContent = sizeInMB > 1 ? `${sizeInMB} MB` : `${sizeInKB} KB`;
+            }
+        });
+
+        processBtn.onclick = async () => {
+            if (!fileInput.files[0]) {
+                alert('Please select a file first.');
+                return;
+            }
+
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            // Add resize parameters if this is the resizer tool
+            if (toolSlug.includes('resize') || toolSlug.includes('resizer')) {
+                const width = document.getElementById('resize-width')?.value;
+                const height = document.getElementById('resize-height')?.value;
+                const maintainAspect = document.getElementById('maintain-aspect')?.checked;
+
+                if (!width && !height) {
+                    alert('Please specify at least width or height');
+                    loading.classList.add('hidden');
+                    processBtn.disabled = false;
+                    return;
+                }
+
+                if (width) formData.append('width', width);
+                if (height) formData.append('height', height);
+                formData.append('maintain_aspect', maintainAspect ? 'true' : 'false');
+            }
+
+            // Add convert parameters if this is the converter tool
+            if (toolSlug.includes('convert') && toolSlug.includes('image')) {
+                const format = document.getElementById('output-format')?.value || 'jpg';
+                const quality = document.getElementById('convert-quality')?.value || 95;
+
+                formData.append('format', format);
+                formData.append('quality', quality);
+            }
+
+            loading.classList.remove('hidden');
+            resultZone.classList.add('hidden');
+            processBtn.disabled = true;
+
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+
+                    // 如果是图片，显示预览
+                    if (toolSlug.includes('background') || toolSlug.includes('image') || toolSlug.includes('resize') || toolSlug.includes('convert')) {
+                        resultImg.src = url;
+                        resultImg.style.display = 'block';
+                    }
+
+                    downloadLink.href = url;
+
+                    // 如果是 PDF 压缩，显示文件大小对比
+                    if (toolSlug.includes('compress')) {
+                        const originalSize = fileInput.files[0].size;
+                        const compressedSize = blob.size;
+                        const reduction = ((1 - compressedSize / originalSize) * 100).toFixed(1);
+
+                        const sizeComparison = document.createElement('div');
+                        sizeComparison.style.cssText = 'background: #f0fdf4; padding: 1rem; border-radius: 10px; margin: 1rem 0; border-left: 3px solid #22c55e;';
+                        sizeComparison.innerHTML = `
+                            <p style="margin: 0; color: #166534; font-weight: 600;">Compression Successful!</p>
+                            <p style="margin: 0.5rem 0 0; color: #15803d;">
+                                Original: ${(originalSize / (1024 * 1024)).toFixed(2)} MB → 
+                                Compressed: ${(compressedSize / (1024 * 1024)).toFixed(2)} MB
+                                <span style="color: #22c55e; font-weight: 600;">(${reduction}% reduction)</span>
+                            </p>
+                        `;
+
+                        resultZone.insertBefore(sizeComparison, downloadLink);
+                    }
+
+                    resultZone.classList.remove('hidden');
+                } else {
+                    alert('Server processing error. Please try a smaller file or try again later.');
+                }
+            } catch (e) {
+                alert('Network error. Please check your connection and try again.');
+            } finally {
+                loading.classList.add('hidden');
+                processBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.name }} - SoEasyHub | Professional Online Tools</title>
+    <meta name="description" content="{{ tool.description }} - Free, secure, and privacy-focused tool by SoEasyHub.">
+    <meta name="keywords" content="{{ tool.name }}, online tool, free, professional, {{ tool.slug }}">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ tool.name }} - SoEasyHub">
+    <meta property="og:description" content="{{ tool.description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CodeMirror for JSON Editor (Optional but nice, reverting to simple textarea for simplicity first) -->
+    <style>
+        .tool-interface { background: #f8fafc; padding: 3rem; border-radius: 20px; margin: 3rem 0; }
+        .file-input { display: none; }
+        .upload-zone { border: 2px dashed #c2410c; border-radius: 15px; padding: 3rem; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .upload-zone:hover { background: rgba(194, 65, 12, 0.05); border-color: #0f172a; }
+        .upload-prompt svg { margin: 0 auto 1rem; color: #c2410c; }
+        .hidden { display: none; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #c2410c; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .result-preview { max-width: 100%; border-radius: 10px; margin: 1rem 0; }
+        
+        /* SEO Styles */
+        .expert-section { margin-top: 6rem; }
+        .scary-seo-content { background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%); padding: 4rem; border-radius: 20px; border-left: 4px solid #c2410c; }
+        .scary-seo-content h2 { font-size: 2rem; color: #0f172a; margin-bottom: 2rem; }
+        .expert-quote { background: rgba(194, 65, 12, 0.05); padding: 2rem; border-radius: 15px; font-style: italic; margin: 2rem 0; border-left: 3px solid #c2410c; }
+        .scary-seo-content h3 { color: #c2410c; margin: 2rem 0 1rem; font-size: 1.3rem; }
+        .scary-seo-content p { line-height: 1.8; color: #334155; margin-bottom: 1.5rem; }
+
+        /* JSON Editor Styles */
+        .json-container { display: flex; flex-direction: column; gap: 1.5rem; }
+        @media (min-width: 768px) { .json-container { flex-direction: row; } }
+        .json-box { flex: 1; display: flex; flex-direction: column; }
+        .json-label { font-weight: 600; margin-bottom: 0.5rem; color: #475569; }
+        .json-textarea { 
+            width: 100%; height: 400px; padding: 1rem; 
+            border: 2px solid #e2e8f0; border-radius: 12px; 
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 14px; 
+            resize: vertical; background: white;
+        }
+        .json-textarea:focus { border-color: #c2410c; outline: none; }
+        .json-controls { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .btn-action { 
+            padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1; 
+            background: white; cursor: pointer; font-weight: 500; color: #475569; transition: all 0.2s;
+        }
+        .btn-action:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .btn-primary-action { background: #c2410c; color: white; border: none; }
+        .btn-primary-action:hover { background: #9a3412; }
+        .error-msg { color: #dc2626; background: #fef2f2; padding: 0.75rem; border-radius: 8px; border: 1px solid #fecaca; display: none; margin-bottom: 1rem; }
+        .success-msg { color: #16a34a; background: #f0fdf4; padding: 0.75rem; border-radius: 8px; border: 1px solid #bbf7d0; display: none; margin-bottom: 1rem; }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="/" class="logo">SoEasyHub</a>
+            <div class="nav-links">
+                <a href="/tools">Tool Hub</a>
+                <a href="/blog">Expert Advice</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content container">
+        <div class="tool-header">
+            <h1 class="playfair">{{ tool.name }}</h1>
+            <p class="lead">{{ tool.description }}</p>
+        </div>
+
+        <div class="tool-card shadow-lg">
+            <div class="tool-interface" id="tool-interface">
+                
+                {% if tool.slug == 'json-formatter' %}
+                <!-- JSON Formatter Interface -->
+                <div class="json-interface">
+                    <div class="json-controls">
+                        <button class="btn-action btn-primary-action" onclick="formatJson()">Beautify / Format</button>
+                        <button class="btn-action" onclick="minifyJson()">Minify / Compress</button>
+                        <button class="btn-action" onclick="validateJson()">Validate Only</button>
+                        <button class="btn-action" onclick="clearJson()">Clear</button>
+                        <select id="indent-size" class="btn-action">
+                            <option value="2">2 Spaces</option>
+                            <option value="4" selected>4 Spaces</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </div>
+
+                    <div id="json-error" class="error-msg"></div>
+                    <div id="json-success" class="success-msg">JSON is valid!</div>
+
+                    <div class="json-container">
+                        <div class="json-box">
+                            <label class="json-label">Input JSON</label>
+                            <textarea id="json-input" class="json-textarea" placeholder='Paste your JSON here... e.g. {"name": "Test"}'></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Result is shown in the same box for simplicity in Format, 
+                         or we could split view. Let's stick to single box transformation for now to be simple -->
+                </div>
+
+                <script>
+                    function getIndent() {
+                        const val = document.getElementById('indent-size').value;
+                        return val === 'tab' ? '\t' : parseInt(val);
+                    }
+                    
+                    function showMsg(type, msg) {
+                        const err = document.getElementById('json-error');
+                        const succ = document.getElementById('json-success');
+                        if (type === 'error') {
+                            err.textContent = msg; err.style.display = 'block';
+                            succ.style.display = 'none';
+                        } else {
+                            succ.textContent = msg; succ.style.display = 'block';
+                            err.style.display = 'none';
+                        }
+                    }
+                    
+                    function clearMsgs() {
+                        document.getElementById('json-error').style.display = 'none';
+                        document.getElementById('json-success').style.display = 'none';
+                    }
+
+                    function formatJson() {
+                        clearMsgs();
+                        const input = document.getElementById('json-input').value;
+                        if (!input.trim()) return;
+                        try {
+                            const obj = JSON.parse(input);
+                            document.getElementById('json-input').value = JSON.stringify(obj, null, getIndent());
+                            showMsg('success', 'JSON Formatted Successfully');
+                        } catch (e) {
+                            showMsg('error', 'Invalid JSON: ' + e.message);
+                        }
+                    }
+
+                    function minifyJson() {
+                        clearMsgs();
+                        const input = document.getElementById('json-input').value;
+                        if (!input.trim()) return;
+                        try {
+                            const obj = JSON.parse(input);
+                            document.getElementById('json-input').value = JSON.stringify(obj);
+                            showMsg('success', 'JSON Minified Successfully');
+                        } catch (e) {
+                            showMsg('error', 'Invalid JSON: ' + e.message);
+                        }
+                    }
+
+                    function validateJson() {
+                        clearMsgs();
+                        const input = document.getElementById('json-input').value;
+                        if (!input.trim()) {
+                            showMsg('error', 'Please enter some JSON'); return;
+                        }
+                        try {
+                            JSON.parse(input);
+                            showMsg('success', 'Valid JSON');
+                        } catch (e) {
+                            showMsg('error', 'Invalid JSON: ' + e.message);
+                        }
+                    }
+                    
+                    function clearJson() {
+                        document.getElementById('json-input').value = '';
+                        clearMsgs();
+                    }
+                </script>
+
+                {% else %}
+                <!-- Standard File Upload Interface (For Images, PDF, etc) -->
+                
+                <h3 class="interface-title">Upload {{ 'Image' if 'image' in tool.slug or 'background' in tool.slug else 'File' }} for Processing</h3>
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <input type="file" id="file-input" class="file-input" accept="{{ 'image/*' if 'image' in tool.slug or 'background' in tool.slug else 'application/pdf' }}">
+                    <div class="upload-prompt" id="upload-prompt">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <p>Click or Drag {{ 'Image' if 'image' in tool.slug or 'background' in tool.slug else 'File' }} Here</p>
+                    </div>
+                </div>
+
+                <!-- Resize Options -->
+                {% if 'resize' in tool.slug or 'resizer' in tool.slug %}
+                <div class="resize-options mt-4" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px;">
+                    <h4 style="margin-bottom: 1rem; color: #0f172a;">Resize Options</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div><label>Width (px)</label><input type="number" id="resize-width" placeholder="e.g. 1920" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;"></div>
+                        <div><label>Height (px)</label><input type="number" id="resize-height" placeholder="e.g. 1080" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;"></div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Converter Options -->
+                {% if 'convert' in tool.slug and 'image' in tool.slug %}
+                <div class="convert-options mt-4" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px;">
+                     <h4 style="margin-bottom: 1rem;">Convert To</h4>
+                     <select id="output-format" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option>
+                     </select>
+                </div>
+                {% endif %}
+
+                <button id="process-btn" class="btn btn-premium mt-4">
+                    {% if 'background' in tool.slug %}Remove Background Now
+                    {% elif 'compress' in tool.slug %}Compress Now
+                    {% elif 'resize' in tool.slug %}Resize Now
+                    {% elif 'convert' in tool.slug %}Convert Now
+                    {% elif 'word' in tool.slug %}Convert to Word
+                    {% else %}Process Now{% endif %}
+                </button>
+                
+                <div id="result-zone" class="hidden mt-4">
+                     <h3>Result Preview</h3>
+                     <img id="result-img" class="result-preview" style="display:none;">
+                     <a id="download-link" class="btn btn-premium mt-2" download>Download Result</a>
+                </div>
+                
+                {% endif %} <!-- End standard interface else block -->
+
+            </div>
+        </div>
+
+        <!-- SEO Content Section -->
+        
+        {% if tool.slug == 'json-formatter' %}
+        <div class="expert-section">
+            <div class="scary-seo-content">
+                <h2 class="playfair">JSON Formatter Online Free: Validate and Beautify JSON Data 2025</h2>
+                <div class="expert-quote">
+                    <p>"I once spent 3 hours debugging an API integration, only to discover the JSON response had a single missing comma. A JSON validator would have found it in 3 seconds."</p>
+                </div>
+                <h3>⚠️ The Unreadable JSON Problem</h3>
+                <p>APIs return minified JSON—thousands of characters in a single line. It's impossible to debug manually.</p>
+                <h3>Features</h3>
+                <ul>
+                    <li><strong>Validate</strong>: Check for syntax errors instantly.</li>
+                    <li><strong>Beautify</strong>: Format with perfect indentation (2 or 4 spaces).</li>
+                    <li><strong>Minify</strong>: Compress JSON for production use.</li>
+                    <li><strong>Secure</strong>: Everything happens in your browser. No data sent to server.</li>
+                </ul>
+            </div>
+        </div>
+        
+        {% elif 'background' in tool.slug %}
+        <div class="expert-section">
+             <div class="scary-seo-content">
+                 <h2 class="playfair">Remove Background from Image Online Free</h2>
+                 <p>Professional AI background removal for e-commerce and marketing.</p>
+             </div>
+        </div>
+        
+        {% elif 'compress' in tool.slug and 'pdf' in tool.slug %}
+        <div class="expert-section">
+             <div class="scary-seo-content">
+                 <h2 class="playfair">Compress PDF Online Free</h2>
+                 <p>Reduce PDF size without losing quality for email and web.</p>
+             </div>
+        </div>
+        
+        {% elif 'compress' in tool.slug and 'image' in tool.slug %}
+        <div class="expert-section">
+             <div class="scary-seo-content">
+                 <h2 class="playfair">Compress Images Online</h2>
+                 <p>Optimize JPG, PNG, WebP for faster websites.</p>
+             </div>
+        </div>
+        
+        {% elif 'resize' in tool.slug %}
+        <div class="expert-section">
+             <div class="scary-seo-content">
+                 <h2 class="playfair">Resize Image Online</h2>
+                 <p>Change dimensions for Instagram, Facebook, and Web.</p>
+             </div>
+        </div>
+        
+        {% elif 'convert' in tool.slug and 'image' in tool.slug %}
+        <div class="expert-section">
+             <div class="scary-seo-content">
+                 <h2 class="playfair">Image Converter Online</h2>
+                 <p>Convert between JPG, PNG, and WebP formats instantly.</p>
+             </div>
+        </div>
+        
+        {% elif 'word' in tool.slug %}
+        <div class="expert-section">
+             <div class="scary-seo-content">
+                 <h2 class="playfair">PDF to Word Converter</h2>
+                 <p>Convert PDF documents to editable DOCX format.</p>
+             </div>
+        </div>
+        {% endif %}
+
+    </main>
+    
+    <!-- Original JS for File Upload Tools (only load if NOT json formatter to avoid conflicts) -->
+    {% if tool.slug != 'json-formatter' %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% endif %}
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 SoEasyHub. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
