@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Gemini GitHub Updater",
+        "active": true,
+        "nodes": [
+            {
+                "parameters": {
+                    "httpMethod": "POST",
+                    "path": "gemini-update",
+                    "options": {}
+                },
+                "name": "Webhook",
+                "type": "n8n-nodes-base.webhook",
+                "typeVersion": 1,
+                "position": [
+                    100,
+                    300
+                ],
+                "id": "node-webhook-v16"
+            },
+            {
+                "parameters": {
+                    "command": "C:\\Users\\bai\\AppData\\Local\\Programs\\Python\\Python311\\python.exe \"d:\\quicktoolshub\\雷达监~1\\GRICH\\super_sync.py\""
+                },
+                "name": "Super Sync Driver",
+                "type": "n8n-nodes-base.executeCommand",
+                "typeVersion": 1,
+                "position": [
+                    400,
+                    300
+                ],
+                "id": "node-super-sync-v16"
+            }
+        ],
+        "connections": {
+            "Webhook": {
+                "main": [
+                    [
+                        {
+                            "node": "Super Sync Driver",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            }
+        },
+        "settings": {
+            "executionOrder": "v1"
+        }
+    }
+]

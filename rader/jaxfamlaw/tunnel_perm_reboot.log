@@ -1,0 +1,61 @@
+2026-01-06T14:59:36Z INF Starting tunnel tunnelID=d31e03fa-3482-418d-afa8-3149d98508ef
+2026-01-06T14:59:36Z INF Version 2025.11.1 (Checksum 1e76c0d4e6ff2576db46ad1a7397415729fbaf886b22aa49327f66185a2e8fc8)
+2026-01-06T14:59:36Z INF GOOS: windows, GOVersion: go1.24.9, GoArch: 386
+2026-01-06T14:59:36Z INF Settings: map[token:*****]
+2026-01-06T14:59:36Z INF cloudflared will not automatically update on Windows systems.
+2026-01-06T14:59:36Z INF Generated Connector ID: 52da8cc0-8fa7-4929-8652-694165acc800
+2026-01-06T14:59:36Z INF Initial protocol quic
+2026-01-06T14:59:36Z INF ICMP proxy will use 172.18.0.1 as source for IPv4
+2026-01-06T14:59:36Z INF ICMP proxy will use fe80::9d6c:a21c:106e:1c9 in zone singbox_tun as source for IPv6
+2026-01-06T14:59:36Z WRN ICMP proxy feature is disabled error="cannot create ICMPv4 proxy: ICMP proxy is not implemented on windows 386 nor ICMPv6 proxy: ICMP proxy is not implemented on windows 386"
+2026-01-06T14:59:37Z ERR Cannot determine default origin certificate path. No file cert.pem in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp]. You need to specify the origin certificate path by specifying the origincert option in the configuration file, or set TUNNEL_ORIGIN_CERT environment variable originCertPath=
+2026-01-06T14:59:37Z INF ICMP proxy will use 172.18.0.1 as source for IPv4
+2026-01-06T14:59:37Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:37Z INF ICMP proxy will use fe80::9d6c:a21c:106e:1c9 in zone singbox_tun as source for IPv6
+2026-01-06T14:59:37Z INF Starting metrics server on 127.0.0.1:20242/metrics
+2026-01-06T14:59:39Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:39Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:39Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:39Z INF Retrying connection in up to 2s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:40Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:41Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:41Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:41Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:41Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:42Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:43Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:43Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:43Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:43Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:46Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:47Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:47Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:47Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:47Z INF Retrying connection in up to 16s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T14:59:59Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:00Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:00Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:00Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:00Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:08Z INF Switching to fallback protocol http2 connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:10Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:10Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:10Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:12Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.77
+2026-01-06T15:00:12Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.77
+2026-01-06T15:00:12Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.77
+2026-01-06T15:00:21Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.27
+2026-01-06T15:00:21Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.27
+2026-01-06T15:00:21Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.192.27
+2026-01-06T15:00:26Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.200.233
+2026-01-06T15:00:26Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.200.233
+2026-01-06T15:00:26Z INF Retrying connection in up to 16s connIndex=0 event=0 ip=198.41.200.233
+2026-01-06T15:00:34Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:34Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:00:34Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.167
+2026-01-06T15:01:00Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.200.233
+2026-01-06T15:01:00Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.200.233
+2026-01-06T15:01:00Z INF Retrying connection in up to 1m4s connIndex=0 event=0 ip=198.41.200.233
+2026-01-06T15:01:21Z ERR Unable to establish connection with Cloudflare edge error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.57
+2026-01-06T15:01:21Z ERR Serve tunnel error error="TLS handshake with edge error: EOF" connIndex=0 event=0 ip=198.41.192.57
+2026-01-06T15:01:21Z INF Retrying connection in up to 1m4s connIndex=0 event=0 ip=198.41.192.57

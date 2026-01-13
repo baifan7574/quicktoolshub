@@ -1,0 +1,35 @@
+[GRICH PROJECT STATUS - 2026-01-07 HANDOFF]
+Target: Engine 2 (Scheduled A Defendant Sniper) - FULLY AUTOMATED & DEPLOYED
+
+1. SYSTEM STATUS (系统当前状态)
+   - [x] Engine 2 ("Sniper"): FULLY OPERATIONAL (全功能正常)
+   - [x] Backend Automation: GitHub Actions runs daily at 8:00 AM UTC+8.
+   - [x] Frontend: `jaxfamlaw.com` displays REAL data from Supabase.
+   - [x] Secrets: GitHub & Cloudflare keys are CONFIGURED.
+
+2. WHAT WAS DONE IN LAST SESSION (上个窗口做了什么)
+   - Created `gbc_full_auto.js` (Puppeteer + Excel Parser + Supabase Import).
+   - Deployed `gbc-sniper.yml` workflow to GitHub.
+   - Updated frontend `[defendant].astro` to query Supabase `defendants` table.
+   - Assisted user in configuring ALL secrets (GitHub & Cloudflare).
+   - Verified automated download flow bypasses SharePoint login.
+
+3. KEY RESOURCES (关键资源路径)
+   - DB Table: `defendants` (Supabase: rdlmumybuwveaaeceohj)
+   - Automation Script: `d:\quicktoolshub\雷达监控。\GRICH\grich-astro\scripts\monitoring\gbc_full_auto.js`
+   - Workflow File: `d:\quicktoolshub\.github\workflows\gbc-sniper.yml`
+   - Frontend Page: `d:\quicktoolshub\雷达监控。\GRICH\grich-astro\src\pages\compliance\scan\[defendant].astro`
+
+4. HOW TO VERIFY (新窗口如何验证)
+   - Backend: Check GitHub Actions run history for "GBC Sniper Automation".
+   - Frontend: Visit `https://jaxfamlaw.com/compliance/scan/[ANY_REAL_DEFENDANT_NAME]`
+   - Evidence: If frontend shows red "CRITICAL ALERT", system is working.
+
+5. KNOWN SECRETS (已知密钥状态)
+   - user has configured `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` in GitHub.
+   - user has configured `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY` in Cloudflare.
+   - *DO NOT ASK USER TO RE-CONFIGURE UNLESS ERRORS OCCUR.*
+
+6. NEXT IMMEDIATE GOAL (下一步建议)
+   - Monitor the first automated run tomorrow morning.
+   - Focus on Commercialization (PayPal integration is mocked, needs real credentials if not done).

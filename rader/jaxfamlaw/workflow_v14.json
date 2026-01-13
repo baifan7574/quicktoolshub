@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Gemini GitHub Updater",
+        "active": true,
+        "nodes": [
+            {
+                "parameters": {
+                    "httpMethod": "POST",
+                    "path": "gemini-update",
+                    "options": {}
+                },
+                "name": "Webhook",
+                "type": "n8n-nodes-base.webhook",
+                "typeVersion": 1,
+                "position": [
+                    100,
+                    300
+                ],
+                "id": "node-webhook-v14"
+            },
+            {
+                "parameters": {
+                    "command": "powershell -Command \"Set-Content -Path 'd:\\quicktoolshub\\雷达监控。\\GRICH\\auto_payload.json' -Value '{{JSON.stringify($json.body)}}'; & 'C:\\Users\\bai\\AppData\\Local\\Programs\\Python\\Python311\\python.exe' 'd:\\quicktoolshub\\雷达监控。\\GRICH\\super_sync.py' 'd:\\quicktoolshub\\雷达监控。\\GRICH\\auto_payload.json'\""
+                },
+                "name": "Super Sync Driver",
+                "type": "n8n-nodes-base.executeCommand",
+                "typeVersion": 1,
+                "position": [
+                    400,
+                    300
+                ],
+                "id": "node-super-sync-v14"
+            }
+        ],
+        "connections": {
+            "Webhook": {
+                "main": [
+                    [
+                        {
+                            "node": "Super Sync Driver",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            }
+        },
+        "settings": {
+            "executionOrder": "v1"
+        }
+    }
+]

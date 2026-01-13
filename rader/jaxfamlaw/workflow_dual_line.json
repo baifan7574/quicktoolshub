@@ -1,0 +1,90 @@
+[
+    {
+        "name": "Gemini GitHub Updater",
+        "active": true,
+        "nodes": [
+            {
+                "parameters": {
+                    "httpMethod": "POST",
+                    "path": "gemini-update",
+                    "options": {}
+                },
+                "name": "Webhook",
+                "type": "n8n-nodes-base.webhook",
+                "typeVersion": 1,
+                "position": [
+                    100,
+                    300
+                ],
+                "id": "webhook-node"
+            },
+            {
+                "parameters": {
+                    "resource": "file",
+                    "owner": "={{$json.body.owner}}",
+                    "repository": "={{$json.body.repo}}",
+                    "filePath": "={{ $json.body.path }}",
+                    "fileContent": "={{ $json.body.content }}",
+                    "commitMessage": "={{ $json.body.message }}"
+                },
+                "name": "GitHub",
+                "type": "n8n-nodes-base.github",
+                "typeVersion": 1,
+                "position": [
+                    350,
+                    200
+                ],
+                "id": "github-node",
+                "credentials": {
+                    "githubApi": {
+                        "id": "7s9yn9S5CKwyoPWp",
+                        "name": "GitHub account"
+                    }
+                }
+            },
+            {
+                "parameters": {
+                    "resource": "file",
+                    "operation": "update",
+                    "fileId": {
+                        "__rl": true,
+                        "value": "GRICH_AI_BRAIN/GRICH_MASTER_LOG.md",
+                        "mode": "name"
+                    },
+                    "updateFields": {
+                        "appendData": "={{ JSON.stringify($json.body) }}"
+                    }
+                },
+                "name": "Google Drive",
+                "type": "n8n-nodes-base.googleDrive",
+                "typeVersion": 3,
+                "position": [
+                    350,
+                    400
+                ],
+                "id": "gdrive-node"
+            }
+        ],
+        "connections": {
+            "Webhook": {
+                "main": [
+                    [
+                        {
+                            "node": "GitHub",
+                            "type": "main",
+                            "index": 0
+                        },
+                        {
+                            "node": "Google Drive",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            }
+        },
+        "settings": {
+            "executionOrder": "v1"
+        }
+    }
+]

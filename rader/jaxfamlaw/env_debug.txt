@@ -1,0 +1,71 @@
+
+Name                           Value                                                                                                                                                 
+----                           -----                                                                                                                                                 
+ALLUSERSPROFILE                C:\ProgramData                                                                                                                                        
+ANTIGRAVITY_AGENT              1                                                                                                                                                     
+ANTIGRAVITY_CLI_ALIAS          agy                                                                                                                                                   
+APPDATA                        C:\Users\bai\AppData\Roaming                                                                                                                          
+BITLY_TOKEN                    547ee577b4340e9b819ecd9c4214624f3e614e81                                                                                                              
+BUNDLED_DEBUGPY_PATH           c:\Users\bai\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\libs\debugpy                                                       
+CHROME_CRASHPAD_PIPE_NAME      \\.\pipe\crashpad_2400_UKJGVJQKVOKCYUTR                                                                                                               
+COLORTERM                      truecolor                                                                                                                                             
+CommonProgramFiles             C:\Program Files\Common Files                                                                                                                         
+CommonProgramFiles(x86)        C:\Program Files (x86)\Common Files                                                                                                                   
+CommonProgramW6432             C:\Program Files\Common Files                                                                                                                         
+COMPUTERNAME                   DESKTOP-75RPDB1                                                                                                                                       
+ComSpec                        C:\WINDOWS\system32\cmd.exe                                                                                                                           
+DriverData                     C:\Windows\System32\Drivers\DriverData                                                                                                                
+EFC_9000                       1                                                                                                                                                     
+FPS_BROWSER_APP_PROFILE_STRING Internet Explorer                                                                                                                                     
+FPS_BROWSER_USER_PROFILE_ST... Default                                                                                                                                               
+GIT_ASKPASS                    c:\Users\bai\AppData\Local\Programs\Antigravity\resources\app\extensions\git\dist\askpass.sh                                                          
+HOMEDRIVE                      C:                                                                                                                                                    
+HOMEPATH                       \Users\bai                                                                                                                                            
+iGame                          D:\iGame\                                                                                                                                             
+LANG                           zh_CN.UTF-8                                                                                                                                           
+LOCALAPPDATA                   C:\Users\bai\AppData\Local                                                                                                                            
+LOGONSERVER                    \\DESKTOP-75RPDB1                                                                                                                                     
+NUMBER_OF_PROCESSORS           16                                                                                                                                                    
+OneDrive                       C:\Users\bai\OneDrive                                                                                                                                 
+ORIGINAL_XDG_CURRENT_DESKTOP   undefined                                                                                                                                             
+OS                             Windows_NT                                                                                                                                            
+PAGER                          cat                                                                                                                                                   
+Path                           C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\B...
+PATHEXT                        .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL                                                                                            
+PDD_OBS_CHANNEL                PDD_liveobs-win_workbench.exe                                                                                                                         
+PROCESSOR_ARCHITECTURE         AMD64                                                                                                                                                 
+PROCESSOR_IDENTIFIER           Intel64 Family 6 Model 191 Stepping 2, GenuineIntel                                                                                                   
+PROCESSOR_LEVEL                6                                                                                                                                                     
+PROCESSOR_REVISION             bf02                                                                                                                                                  
+ProgramData                    C:\ProgramData                                                                                                                                        
+ProgramFiles                   C:\Program Files                                                                                                                                      
+ProgramFiles(x86)              C:\Program Files (x86)                                                                                                                                
+ProgramW6432                   C:\Program Files                                                                                                                                      
+PSModulePath                   C:\Users\bai\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules        
+PUBLIC                         C:\Users\Public                                                                                                                                       
+PYDEVD_DISABLE_FILE_VALIDATION 1                                                                                                                                                     
+PYTHON_BASIC_REPL              1                                                                                                                                                     
+PYTHONSTARTUP                  c:\Users\bai\AppData\Roaming\Antigravity\User\workspaceStorage\337a2cc1573762fc685b9cabf89e0163\ms-python.python\pythonrc.py                          
+SESSIONNAME                    Console                                                                                                                                               
+SystemDrive                    C:                                                                                                                                                    
+SystemRoot                     C:\WINDOWS                                                                                                                                            
+TEMP                           C:\Users\bai\AppData\Local\Temp                                                                                                                       
+TERM_PROGRAM                   vscode                                                                                                                                                
+TERM_PROGRAM_VERSION           1.104.0                                                                                                                                               
+TMP                            C:\Users\bai\AppData\Local\Temp                                                                                                                       
+USERDOMAIN                     DESKTOP-75RPDB1                                                                                                                                       
+USERDOMAIN_ROAMINGPROFILE      DESKTOP-75RPDB1                                                                                                                                       
+USERNAME                       bai                                                                                                                                                   
+USERPROFILE                    C:\Users\bai                                                                                                                                          
+VSCODE_DEBUGPY_ADAPTER_ENDP... c:\Users\bai\.antigravity\extensions\ms-python.debugpy-2025.18.0-win32-x64\.noConfigDebugAdapterEndpoints\endpoint-a333e128451eef54.txt               
+VSCODE_GIT_ASKPASS_EXTRA_ARGS                                                                                                                                                        
+VSCODE_GIT_ASKPASS_MAIN        c:\Users\bai\AppData\Local\Programs\Antigravity\resources\app\extensions\git\dist\askpass-main.js                                                     
+VSCODE_GIT_ASKPASS_NODE        C:\Users\bai\AppData\Local\Programs\Antigravity\Antigravity.exe                                                                                       
+VSCODE_GIT_IPC_HANDLE          \\.\pipe\vscode-git-fd5c182dca-sock                                                                                                                   
+VSCODE_INJECTION               1                                                                                                                                                     
+VSCODE_PYTHON_AUTOACTIVATE_... 1                                                                                                                                                     
+windir                         C:\WINDOWS                                                                                                                                            
+WP_TOKEN                       VKHe3Bj7E)QyE(wW0rwQUxwvz(H7GYSNHRP6(kTElq9sJW&5AJcdYcLyjK7nHvj                                                                                       
+
+
+

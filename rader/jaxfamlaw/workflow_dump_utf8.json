@@ -1,0 +1,59 @@
+﻿{
+  "name": "Gemini GitHub Updater",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gemini-update",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        96,
+        288
+      ],
+      "id": "fdd9cb57-99a4-4c27-8b95-a3652353b72c",
+      "webhookId": "2e9b7b38-62f8-403d-8d88-95089c479851"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": "={{$json.body.owner}}",
+        "repository": "={{$json.body.repo}}",
+        "filePath": "={{ $json.body.path }}",
+        "fileContent": "={{ $json.body.content }}",
+        "commitMessage": "={{ $json.body.message }}"
+      },
+      "name": "GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        320,
+        288
+      ],
+      "id": "d569e958-4375-461b-9b60-df758064f352",
+      "webhookId": "80ec78ed-7b1e-4828-8268-0f56dbac5cc1",
+      "credentials": {
+        "githubApi": {
+          "id": "7s9yn9S5CKwyoPWp",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

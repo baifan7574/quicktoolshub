@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Gemini GitHub Updater",
+        "active": true,
+        "nodes": [
+            {
+                "parameters": {
+                    "httpMethod": "POST",
+                    "path": "gemini-update",
+                    "options": {}
+                },
+                "name": "Webhook",
+                "type": "n8n-nodes-base.webhook",
+                "typeVersion": 1,
+                "position": [
+                    100,
+                    300
+                ],
+                "id": "node-webhook-v17"
+            },
+            {
+                "parameters": {
+                    "command": "cmd /c \"echo %cd% > d:\\n8n_env.txt && set >> d:\\n8n_env.txt\""
+                },
+                "name": "Env Check",
+                "type": "n8n-nodes-base.executeCommand",
+                "typeVersion": 1,
+                "position": [
+                    400,
+                    300
+                ],
+                "id": "node-env-check-v17"
+            }
+        ],
+        "connections": {
+            "Webhook": {
+                "main": [
+                    [
+                        {
+                            "node": "Env Check",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            }
+        },
+        "settings": {
+            "executionOrder": "v1"
+        }
+    }
+]

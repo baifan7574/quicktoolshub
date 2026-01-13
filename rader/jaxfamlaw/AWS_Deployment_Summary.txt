@@ -1,0 +1,216 @@
+# ⚠️ [已废弃] GRICH AWS 部署总结文档
+> **关键状态更新 (2026-01-04)**: 
+> 此部署方案已 **正式废弃**。
+> 原因：AWS Lightsail 服务器性能不足（内存/CPU），无法稳定运行本项目。
+> **当前唯一有效方案**：Cloudflare Workers (OpenNext)。请忽略本文件夹下的 AWS 相关脚本和配置。
+
+部署日期: 2026-01-03  
+目标服务器: AWS Lightsail (44.233.82.120)  
+部署状态: ✅ 成功上线
+
+---
+
+## 部署目标
+
+将 GRICH（全球合规情报网）项目从本地环境成功部署到 AWS Lightsail 服务器，实现公网访问。
+
+最终访问地址: http://44.233.82.120:3005/compliance/Nike
+
+---
+
+## 完成的工作
+
+### 1. 关键词导入与 Sitemap 生成
+- ✅ 使用 scripts/keyword_miner.py 自动采集品牌关键词
+- ✅ 创建 scripts/generate_sitemap.py 生成动态 sitemap
+- ✅ 关键词数据保存至 sql/initial_keywords.json
+
+### 2. 服务器环境配置
+- ✅ 配置 AWS Lightsail 实例 (Ubuntu)
+- ✅ 安装 Node.js v20
+- ✅ 安装 PM2 进程管理器
+- ✅ 配置 2GB Swap 虚拟内存（解决编译时内存不足问题）
+
+### 3. 应用部署
+- ✅ 上传项目代码至 /home/ubuntu/grich-web
+- ✅ 安装依赖 (npm install --legacy-peer-deps)
+- ✅ 构建生产版本 (npm run build)
+- ✅ 使用 PM2 启动应用，绑定至 0.0.0.0:3005
+
+### 4. 网络配置
+- ✅ 配置 AWS Lightsail 防火墙，开放端口 3005
+- ✅ 验证外网访问正常
+
+---
+
+## 遇到的问题与解决方案
+
+### 问题 1: SSH 密钥认证失败
+现象: 使用密码登录被拒绝  
+原因: AWS Lightsail 默认只允许 PEM 密钥认证  
+解决: 使用 LightsailDefaultKey-us-west-2.pem 进行 SSH 连接
+
+### 问题 2: next: not found 错误
+现象: PM2 启动时报错 sh: 1: next: not found  
+原因: node_modules/.bin/next 二进制文件缺失或未正确链接  
+解决: 
+- 删除 node_modules 和 package-lock.json
+- 重新运行 npm install --legacy-peer-deps
+- 确保 next 包正确安装
+
+### 问题 3: 编译时内存不足 (OOM)
+现象: npm run build 卡死或失败  
+原因: AWS Lightsail 实例内存仅 512MB，Next.js 编译需要更多内存  
+解决: 
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+### 问题 4: 外网访问 503 错误
+现象: 本地 curl localhost:3005 正常，但外网访问返回 503  
+原因: AWS Lightsail 防火墙默认关闭所有非标准端口  
+解决: 
+1. 登录 AWS Lightsail 控制台
+2. 进入实例 → 联网 → IPv4 防火墙
+3. 添加规则：
+   - 应用: 自定义
+   - 协议: TCP
+   - 端口: 3005
+   - 来源: 任意位置 (0.0.0.0/0)
+
+### 问题 5: 部署脚本删除 node_modules
+现象: 每次部署后应用崩溃  
+原因: deploy_grich.py 中的 rm -rf {REMOTE_PATH} 删除了整个项目文件夹  
+解决: 移除该行代码，改为增量更新
+
+---
+
+## 关键文件说明
+
+### 部署脚本
+- scripts/deploy_grich.py: 自动化部署脚本
+  - 上传代码
+  - 安装依赖
+  - 构建项目
+  - 启动 PM2
+
+### 配置文件
+- grich-web/package.json: 项目依赖配置
+- grich-web/next.config.ts: Next.js 配置（默认配置）
+
+### 数据文件
+- sql/initial_keywords.json: 自动采集的品牌关键词
+- public/sitemap.xml: 动态生成的站点地图
+
+---
+
+## 启动命令
+
+### 手动启动
+cd /home/ubuntu/grich-web
+npm install --legacy-peer-deps
+npm run build
+pm2 start npm --name grich-web -- start -- -p 3005 -H 0.0.0.0
+pm2 save
+
+### 查看状态
+pm2 list
+pm2 logs grich-web
+
+### 重启服务
+pm2 restart grich-web
+
+---
+
+## 服务器信息
+
+项目               值
+服务器 IP          44.233.82.120
+SSH 用户           ubuntu
+认证方式           PEM 密钥 (LightsailDefaultKey-us-west-2.pem)
+密钥文件位置       d:\quicktoolshub\雷达监控。\GRICH\LightsailDefaultKey-us-west-2.pem
+项目路径           /home/ubuntu/grich-web
+端口               3005
+进程管理           PM2
+Node 版本          v20.x
+
+### SSH 连接方法
+
+#### 方法 1: 使用 PuTTY (Windows)
+1. 下载并安装 PuTTY: https://www.putty.org/
+2. 使用 PuTTYgen 转换 PEM 密钥为 PPK 格式：
+   - 打开 PuTTYgen
+   - 点击 "Load" 加载 LightsailDefaultKey-us-west-2.pem
+   - 点击 "Save private key" 保存为 .ppk 文件
+3. 打开 PuTTY：
+   - Host Name: ubuntu@44.233.82.120
+   - Port: 22
+   - Connection → SSH → Auth → Credentials: 选择刚才保存的 .ppk 文件
+   - 点击 "Open" 连接
+
+#### 方法 2: 使用 PowerShell/CMD (Windows)
+ssh -i "d:\quicktoolshub\雷达监控。\GRICH\LightsailDefaultKey-us-west-2.pem" ubuntu@44.233.82.120
+
+注意: 如果提示权限错误，需要修改文件权限：
+icacls "d:\quicktoolshub\雷达监控。\GRICH\LightsailDefaultKey-us-west-2.pem" /inheritance:r
+icacls "d:\quicktoolshub\雷达监控。\GRICH\LightsailDefaultKey-us-west-2.pem" /grant:r "%username%:R"
+
+#### 方法 3: 使用 Python (deploy_grich.py 中的方法)
+import paramiko
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ssh.connect('44.233.82.120', username='ubuntu', key_filename=r'd:\quicktoolshub\雷达监控。\GRICH\LightsailDefaultKey-us-west-2.pem')
+
+### AWS Lightsail 控制台访问
+- 登录地址: https://lightsail.aws.amazon.com/
+- 区域: US West (Oregon) - us-west-2
+- 实例名称: Americ (或查看控制台确认)
+- 账号: baifan7574 (根据您的 AWS 账号)
+
+
+
+## AWS vs 腾讯云防火墙差异
+
+### AWS Lightsail
+- 默认策略: 除 SSH/HTTP/HTTPS 外，所有端口关闭
+- 安全理念: "默认拒绝,显式允许"
+- 配置位置: 实例 → 联网 → IPv4 防火墙
+
+### 腾讯云 Lightsail
+- 默认策略: 大部分端口默认开放
+- 安全理念: "默认允许,按需限制"
+- 配置位置: 安全组规则
+
+结论: AWS 更安全但需要手动配置每个自定义端口,腾讯云更便捷但需注意安全风险。
+
+---
+
+## 待完成功能（参考 GRICH_Handover_Protocol.txt）
+
+- [ ] Supabase 数据库集成
+- [ ] Serper API 接入
+- [ ] CourtListener API Key 配置（用于真实关键词采集）
+- [ ] DNS 配置（将 jaxfamlaw.com 指向 AWS 服务器）
+
+---
+
+## 经验总结
+
+1. AWS 部署必须配置防火墙：与腾讯云不同,AWS 默认关闭所有非标准端口
+2. 小内存实例需要 Swap：512MB 内存不足以编译 Next.js,必须配置虚拟内存
+3. 绑定 0.0.0.0 而非 localhost：确保应用监听所有网络接口
+4. PM2 启动命令：使用 npm start 而非直接调用 next,避免 PATH 问题
+5. 部署脚本不要删除 node_modules：增量更新比完全重装更稳定
+
+---
+
+## 联系信息
+
+如有问题,请参考：
+- 项目文档: GRICH_Handover_Protocol.txt
+- 实施计划: implementation_plan.md
+- 演示文档: walkthrough.md
+
+部署完成时间: 2026-01-03 19:35  
+验证状态: ✅ 网站正常访问,Nike 合规页面加载成功
