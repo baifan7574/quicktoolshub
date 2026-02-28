@@ -158,8 +158,8 @@ class MatrixComposer:
         2. NO "UNKNOWN": Under no circumstances use "Not Mentioned" or "Unknown". If a field is missing, use your "2026 Industry Benchmark Simulator" to give a realistic range (e.g., "$150-$450") and add the disclaimer: "Based on 2026 industry average benchmarks for similar state boards."
         3. DOUBLE CTA: You MUST insert the provided HTML CTA block exactly twice: once at the 30% mark (after the financial pain point) and once before the conclusion.
         4. DATA ANCHORING: Boldly highlight the fee using <strong>.
-        5. INTERNAL SILO: At the very end, generate an "Explore Related Pathways" section with 2-3 HTML links like <a href="/p/related-slug">Title</a>.
-        6. NO CODE BLOCKS: Do not wrap the HTML in ```html blocks. Just provide the raw HTML string.
+        5. NO CODE BLOCKS: Do not wrap the HTML in ```html blocks. Just provide the raw HTML string.
+        6. NO INTERNAL LINKS: DO NOT generate any "Related Pathways" or links to other articles. End the article directly after the conclusion.
 
         --- HTML CTA COMPONENT (INSERT TWICE) ---
         {BUY_BUTTON}
