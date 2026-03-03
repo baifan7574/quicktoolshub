@@ -5,8 +5,12 @@ import re
 import json
 import requests
 import csv
+import sys
 from datetime import datetime, timezone
 from supabase import create_client, Client
+
+# Force UTF-8 output for Windows CMD
+sys.stdout.reconfigure(encoding='utf-8')
 
 # ================= Configuration & Constants =================
 TOKEN_FILE = os.path.join(".agent", "Token..txt")  # Fallback for local development
@@ -48,7 +52,7 @@ class GrichMiner:
     def __init__(self):
         self.config = self._load_config()
         self.supabase: Client = create_client(self.config['url'], self.config['key'])
-        print(f"🔌 Connected to Supabase: {self.config['url']}")
+        print(f"🔌 Connected to Supabase: {self.config['url']}", flush=True)
         
         self.ua_list = [
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -65,7 +69,7 @@ class GrichMiner:
         if supabase_url and supabase_key:
             config['url'] = supabase_url
             config['key'] = supabase_key
-            print("✅ Config loaded from environment variables.")
+            print("✅ Config loaded from environment variables.", flush=True)
             return config
         
         # Priority 2: Fallback to local Token file (development)
@@ -95,7 +99,7 @@ class GrichMiner:
         if 'url' not in config or 'key' not in config:
             raise ValueError("Configuration incomplete. Check Token..txt or environment variables.")
         
-        print("⚠️  Config loaded from local Token file (development mode).")
+        print("⚠️  Config loaded from local Token file (development mode).", flush=True)
         return config
 
     def load_csv_seeds(self):
@@ -127,11 +131,17 @@ class GrichMiner:
             res = requests.get(url, headers=headers, timeout=5)
             if res.status_code == 200:
                 try:
-                    return json.loads(res.text)[1]
-                except:
+                    suggestions = json.loads(res.text)[1]
+                    # print(f"      🔍 Suggestions for '{query}': {suggestions}")
+                    return suggestions
+                except Exception as json_err:
+                    print(f"      ⚠️  JSON Parse Error for '{query}': {json_err}")
                     return []
-            return []
+            else:
+                print(f"      ⚠️  HTTP Error {res.status_code} for '{query}'")
+                return []
         except Exception as e:
+            print(f"      ⚠️  Request Error for '{query}': {e}")
             time.sleep(5) # Backoff on error
             return []
 
@@ -192,8 +202,10 @@ class GrichMiner:
 
         try:
             self.supabase.table("grich_keywords_pool").upsert(data, on_conflict="slug").execute()
+            print(f"      ✅ Saved: {keyword}")
             return True
         except Exception as e:
+            print(f"      ❌ Failed to save '{keyword}': {e}")
             return False
 
     def analyze_seed_context(self, seed_text):
@@ -220,8 +232,9 @@ class GrichMiner:
 
         for seed in seeds:
             count += 1
+            # Recalculate context for each seed to ensure accuracy
             seed_context = self.analyze_seed_context(seed)
-            print(f"\n[{count}/{total_seeds}] 🔥 ROOT JOB: {seed} ({seed_context.get('category')})")
+            print(f"\n[{count}/{total_seeds}] 🔥 ROOT JOB: {seed} (Category: {seed_context.get('category')}, State: {seed_context.get('state')})")
 
             # === Layer 1: Base Suggestions ===
             l1_suggestions = self.fetch_suggestions(seed)
@@ -233,6 +246,7 @@ class GrichMiner:
             
             for char1 in shuffled_alpha:
                 query_l2 = f"{seed} {char1}"
+                # print(f"   [L2] Querying: {query_l2}")
                 l2_suggestions = self.fetch_suggestions(query_l2)
                 self.process_batch(l2_suggestions, seed_context, layer=2)
                 
@@ -244,6 +258,7 @@ class GrichMiner:
                     
                     for char2 in sub_alpha:
                             query_l3 = f"{seed} {char1}{char2}"
+                            # print(f"      [L3] Querying: {query_l3}")
                             l3_suggestions = self.fetch_suggestions(query_l3)
                             self.process_batch(l3_suggestions, seed_context, layer=3)
                             
