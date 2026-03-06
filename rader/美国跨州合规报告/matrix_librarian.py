@@ -24,7 +24,7 @@ class MatrixLibrarian:
     def __init__(self):
         self.config = self._load_config()
         self.supabase: Client = create_client(self.config['url'], self.config['key'])
-        self.tavily_key = self.config.get('tavily_key')
+        # tavily_keys are managed in _load_config and get_tavily_key
         
     def _load_config(self):
         config = {}
@@ -38,7 +38,7 @@ class MatrixLibrarian:
             config['url'] = supabase_url
             config['key'] = supabase_key
             if tavily_key:
-                config['tavily_key'] = tavily_key
+                config['tavily_keys'] = [k.strip() for k in tavily_key.split(',') if k.strip()]
             else:
                 raise ValueError(f"Critical: Environment variable {ENV_TAVILY_KEY} is missing.")
             
@@ -69,16 +69,31 @@ class MatrixLibrarian:
                 if "Secret keys:" in line:
                     config['key'] = line.split("keys:")[1].strip()
                 if "tvly-" in line:
-                    config['tavily_key'] = line.split()[0].strip()
+                    if 'tavily_keys' not in config:
+                        config['tavily_keys'] = []
+                    # Could be multiple keys if space-separated, but let's grab the token
+                    for part in line.split():
+                        if part.startswith("tvly-"):
+                            config['tavily_keys'].append(part.strip())
         
         if 'url' not in config or 'key' not in config:
             raise ValueError("Configuration incomplete. Check Token..txt or environment variables.")
 
-        if 'tavily_key' not in config:
+        if 'tavily_keys' not in config:
              raise ValueError("Critical: TAVILY_KEY is missing. Search cannot proceed.")
+        
+        self.tavily_keys = config['tavily_keys']
+        self.current_tavily_idx = 0
         
         print("⚠️  Config loaded from local Token file (development mode).")
         return config
+
+    def get_tavily_key(self):
+        return self.tavily_keys[self.current_tavily_idx % len(self.tavily_keys)]
+
+    def next_tavily_key(self):
+        self.current_tavily_idx += 1
+        print(f"   🔄 Switched to Tavily Key {self.current_tavily_idx % len(self.tavily_keys) + 1}")
 
     def fetch_pending_tasks(self) -> List[dict]:
         print(f"📋 Fetching batch of {BATCH_SIZE} tasks (Simple & Brutal)...")
@@ -98,51 +113,102 @@ class MatrixLibrarian:
             print(f"❌ Fetch Error: {e}")
             return []
 
-    def search_pdf(self, keyword):
-        if not self.tavily_key: 
-            raise ValueError("Critical: TAVILY_KEY is not set in configuration. Aborting search.")
-        
-        # Tavily Search Query
-        query = f"site:.gov filetype:pdf {keyword} report handbook"
+    def search_document(self, keyword):
+        # 1. First Tap: Search for PDF
+        query_pdf = f"site:.gov filetype:pdf {keyword} report handbook"
         url = "https://api.tavily.com/search"
-        payload = {
-            "api_key": self.tavily_key,
-            "query": query,
+        payload_pdf = {
+            "api_key": self.get_tavily_key(),
+            "query": query_pdf,
             "max_results": 1,
             "search_depth": "advanced"
         }
+        
         try:
-            res = requests.post(url, json=payload, timeout=15)
+            res = requests.post(url, json=payload_pdf, timeout=15)
+            if res.status_code == 429 or res.status_code == 401 or res.status_code == 403:
+                self.next_tavily_key()
+                payload_pdf["api_key"] = self.get_tavily_key()
+                res = requests.post(url, json=payload_pdf, timeout=15)
+                
             data = res.json()
             if 'results' in data and len(data['results']) > 0:
-                return data['results'][0] 
-            return None
+                result = data['results'][0]
+                result['file_type'] = 'pdf'
+                return result
         except Exception as e:
-            print(f"   ⚠️ Search Error: {e}")
-            return None
-
-    def download_and_upload(self, pdf_url, slug):
+            print(f"   ⚠️ PDF Search Error: {e}")
+            
+        # 2. Second Tap: Search for HTML if PDF not found
+        print(f"   🔄 PDF not found, performing Second Tap (HTML)...")
+        query_html = f"site:.gov {keyword} requirements"
+        payload_html = {
+            "api_key": self.get_tavily_key(),
+            "query": query_html,
+            "max_results": 1,
+            "search_depth": "advanced"
+        }
+        
         try:
-            print(f"   ⬇️ Downloading (Bypassing SSL): {pdf_url}")
+            res = requests.post(url, json=payload_html, timeout=15)
+            if res.status_code == 429 or res.status_code == 401 or res.status_code == 403:
+                self.next_tavily_key()
+                payload_html["api_key"] = self.get_tavily_key()
+                res = requests.post(url, json=payload_html, timeout=15)
+                
+            data = res.json()
+            if 'results' in data and len(data['results']) > 0:
+                result = data['results'][0]
+                # Default to html if not explicitly ending in pdf
+                result['file_type'] = 'pdf' if result['url'].lower().endswith('.pdf') else 'html'
+                return result
+        except Exception as e:
+            print(f"   ⚠️ HTML Search Error: {e}")
+            
+        return None
+
+    def download_and_upload(self, doc_url, slug, file_type):
+        try:
+            print(f"   ⬇️ Downloading (Bypassing SSL): {doc_url}")
             headers = {'User-Agent': 'Mozilla/5.0'}
             # verify=False is critical for CDPH and other gov sites
-            with requests.get(pdf_url, headers=headers, stream=True, timeout=30, verify=False) as r:
+            with requests.get(doc_url, headers=headers, stream=True, timeout=30, verify=False) as r:
                 r.raise_for_status()
                 content_type = r.headers.get('Content-Type', '').lower()
-                if 'html' in content_type:
-                     print(f"   ⚠️ Skipped: Content-Type is {content_type} (Not PDF)")
-                     return None
                 
-                file_path = f"{slug}.pdf"
-                self.supabase.storage.from_(STORAGE_BUCKET).upload(
-                    file_path, r.content, 
-                    file_options={"content-type": "application/pdf", "upsert": "true"}
-                )
-                print(f"   ☁️ Uploaded: {file_path}")
-                return file_path
+                # Check actual content type
+                actual_file_type = 'pdf' if 'pdf' in content_type else 'html'
+                
+                if actual_file_type == 'html':
+                    # Instead of uploading to bucket, just return HTML text
+                    # We will save this directly to the database
+                    html_content = r.text
+                    print(f"   ☁️ Downloaded HTML content ({len(html_content)} bytes)")
+                    return "HTML_CONTENT", actual_file_type, html_content
+                else:
+                    file_path = f"{slug}.pdf"
+                    self.supabase.storage.from_(STORAGE_BUCKET).upload(
+                        file_path, r.content, 
+                        file_options={"content-type": "application/pdf", "upsert": "true"}
+                    )
+                    
+                    # Strict check to verify file exists in bucket before marking DB
+                    try:
+                        # We use the public URL and verify it returns 200 OK
+                        public_url = self.supabase.storage.from_(STORAGE_BUCKET).get_public_url(file_path)
+                        verify_req = requests.head(public_url, timeout=10)
+                        if verify_req.status_code >= 400:
+                            print(f"   ❌ Upload Verification Failed: 404 Not Found at {public_url}")
+                            return None, None, None
+                    except Exception as ve:
+                        print(f"   ❌ Upload Verification Exception: {ve}")
+                        return None, None, None
+                        
+                    print(f"   ☁️ Uploaded and Verified: {file_path}")
+                    return file_path, actual_file_type, None
         except Exception as e:
             print(f"   ❌ Download Failed: {e}")
-            return None
+            return None, None, None
 
     def run_batch(self):
         tasks = self.fetch_pending_tasks()
@@ -154,24 +220,30 @@ class MatrixLibrarian:
             print(f"\n======== Processing Task {task.get('id')} ========")
             print(f"🔍 Searching: {task['keyword']}")
             
-            # 1. Search for PDF
-            result = self.search_pdf(task['keyword'])
+            # 1. Search for document (Double Tap)
+            result = self.search_document(task['keyword'])
             
             if result:
-                pdf_url = result['url']
-                print(f"   🎯 Found URL: {pdf_url}")
+                doc_url = result['url']
+                doc_type = result.get('file_type', 'pdf')
+                print(f"   🎯 Found {doc_type.upper()} URL: {doc_url}")
                 
-                # 2. Download & Upload
-                path = self.download_and_upload(pdf_url, task['slug'])
+                # 2. Download & Process
+                path, actual_type, html_content = self.download_and_upload(doc_url, task['slug'], doc_type)
                 
                 if path:
                     # Success
-                    self.supabase.table("grich_keywords_pool").update({
+                    update_data = {
                         "is_downloaded": True, 
                         "state": "downloaded",
-                        "pdf_url": pdf_url  # Optional: Store source URL if schema allows
-                    }).eq("id", task['id']).execute()
-                    print("   ✅ [DB Success] Marked as downloaded.")
+                        "pdf_url": doc_url,  # Optional: Store source URL if schema allows
+                        "file_type": actual_type
+                    }
+                    if actual_type == 'html' and html_content:
+                        update_data["content_raw"] = html_content
+                        
+                    self.supabase.table("grich_keywords_pool").update(update_data).eq("id", task['id']).execute()
+                    print(f"   ✅ [DB Success] Marked as downloaded ({actual_type}).")
                 else:
                     # Download failed but search succeeded
                     self.supabase.table("grich_keywords_pool").update({
@@ -179,9 +251,7 @@ class MatrixLibrarian:
                     }).eq("id", task['id']).execute()
                     print("   ⚠️ [DB Update] Marked as download_failed.")
             else:
-                print("   🚫 No PDF found via Tavily.")
-                # Optional: Mark as not found to avoid infinite retries?
-                # self.supabase.table("grich_keywords_pool").update({"state": "not_found"}).eq("id", task['id']).execute()
+                print("   🚫 No document found via Tavily.")
             
             time.sleep(1) # Rate limit protection
 
