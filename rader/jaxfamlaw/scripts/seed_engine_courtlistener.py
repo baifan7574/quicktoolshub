@@ -5,28 +5,31 @@ import time
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables
-env_path = r'd:\quicktoolshub\雷达监控。\GRICH\grich-astro\.env'
+# Load environment variables (Improved: Search for .env relative to script location)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(BASE_DIR, 'grich-astro', '.env')
 
-# 直接读取.env文件
+# 直接读取.env文件 (增强容错)
 env_vars = {}
-try:
-    with open(env_path, 'r', encoding='utf-8-sig') as f:  # utf-8-sig自动移除BOM
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith('#') and '=' in line:
-                key, value = line.split('=', 1)
-                env_vars[key.strip()] = value.strip()  # 清理空格
-except Exception as e:
-    print(f"❌ Error reading .env file: {e}")
-    exit(1)
+if os.path.exists(env_path):
+    try:
+        with open(env_path, 'r', encoding='utf-8-sig') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    env_vars[key.strip()] = value.strip().strip('"').strip("'")
+    except Exception as e:
+        print(f"⚠️ Warning reading .env file: {e}")
+else:
+    # 尝试从系统环境变量获取 (针对 GitHub Actions)
+    env_vars = os.environ
 
 SUPABASE_URL = env_vars.get("PUBLIC_SUPABASE_URL")
-SUPABASE_KEY = env_vars.get("PUBLIC_SUPABASE_ANON_KEY")
+SUPABASE_KEY = env_vars.get("PUBLIC_SUPABASE_ANON_KEY") or env_vars.get("SUPABASE_SERVICE_ROLE_KEY")
 
 if not SUPABASE_URL or not SUPABASE_KEY:
-    print(f"❌ Error: Supabase credentials not found in .env")
-    print(f"   Found keys: {list(env_vars.keys())}")
+    print(f"❌ Error: Supabase credentials not found. Ensure .env exists or ENV vars are set.")
     exit(1)
 
 # Supabase REST API endpoint
@@ -46,7 +49,7 @@ COURTLISTENER_HEADERS = {
     "User-Agent": "GRICH-Legal-Monitor/1.0"
 }
 
-KEYWORDS_FILE = r'd:\quicktoolshub\雷达监控。\GRICH\sql\initial_keywords.json'
+KEYWORDS_FILE = os.path.join(BASE_DIR, 'sql', 'initial_keywords.json')
 
 # ⏰ REQUEST DELAY: 防止API限流
 REQUEST_DELAY_SECONDS = 8  # 每个品牌间隔8秒,避免403错误
